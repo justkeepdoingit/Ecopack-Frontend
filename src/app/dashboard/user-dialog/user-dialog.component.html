@@ -1,0 +1,67 @@
+<!-- <div class="sm:max-h-96 overflow-y-auto">
+
+</div> -->
+<form [formGroup]="additionalInfo" (ngSubmit)="saveInfo(additionalInfo.value)">
+<mat-dialog-content>
+        <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input autocomplete="false" formControlName="firstname" matInput>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input autocomplete="false" formControlName="lastname" matInput>
+        </mat-form-field><br>
+        <mat-form-field appearance="outline">
+            <mat-label>Phone</mat-label>
+            <input #number id="numberType" type="number" (keyup)="replace($event)" autocomplete="false" formControlName="contact" matInput>
+            <mat-hint align="end">{{number.value.length}} / 10</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input autocomplete="false" formControlName="email" matInput>
+        </mat-form-field><br>
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input autocomplete="false" formControlName="username" matInput>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input autocomplete="false" formControlName="password" matInput>
+        </mat-form-field>
+        <div class=" text-secondary-800 font-semibold text-lg">
+            Access: 
+        </div>
+        <div class="justify grid sm:grid-cols-2 gap-1">
+            <div class="flex flex-col md:flex-row md:max-w-full">
+                <div class=" flex flex-col justify-start w-full">
+                    <mat-checkbox formControlName="planner">  Planner</mat-checkbox>
+                    <mat-checkbox formControlName="converting">  Converting</mat-checkbox>
+                    <mat-checkbox formControlName="delivery">  Delivery</mat-checkbox>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row md:max-w-full">
+                <div class=" flex flex-col justify-start w-full">
+                    <mat-checkbox formControlName="edit_orders">  Edit Orders</mat-checkbox>
+                    <mat-checkbox formControlName="lineup">  Lineup</mat-checkbox>
+                    <mat-checkbox formControlName="fg">  FG</mat-checkbox>    
+                </div>
+            </div> 
+            <div class="flex flex-col md:flex-row md:max-w-full">
+                <div class=" flex flex-col justify-start w-full">
+                    <mat-checkbox formControlName="returns">  Returns</mat-checkbox>
+                    <mat-checkbox formControlName="status_page">  Status Page</mat-checkbox>
+                    <mat-checkbox formControlName="useracc">  UserAcc</mat-checkbox>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row md:max-w-full">
+                <div class=" flex flex-col justify-start w-full">
+                    <mat-checkbox formControlName="import_orders">  Import Orders</mat-checkbox>
+                </div>
+            </div>
+        </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button [disabled]="additionalInfo.invalid" color="primary">Save</button>
+    <button mat-stroked-button color="warn" [mat-dialog-close]="cancel">Cancel</button>
+</mat-dialog-actions>
+</form>

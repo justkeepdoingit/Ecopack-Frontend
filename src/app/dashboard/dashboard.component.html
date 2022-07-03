@@ -1,0 +1,49 @@
+<div class=" m-2 ">
+    <div [ngClass]="admin != '1' ? dashboardAdmins.nonAdmin : dashboardAdmins.adminClass">
+        <div [ngClass]="admin != '1' ? dashboardAdmins.useraccNA : dashboardAdmins.useraccA">
+          <!-- <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg" alt="" /> -->
+          <div class="p-6 flex flex-col justify-start w-full">
+            <h2 class="text-secondary-700 text-xl font-medium mb-2">Users Information</h2>
+            <mat-form-field style="width: 100%;" appearance="standard">
+              <mat-label>Filter</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+            </mat-form-field>
+            <mat-table matRipple [matRippleCentered]="centered" [matRippleRadius]="radius" class=" text-secondary-700 font-medium uppercase" #table matSort [dataSource]="newDataSource">
+          
+              <ng-container matColumnDef="id">
+                <mat-header-cell mat-sort-header *matHeaderCellDef> ID </mat-header-cell>
+                <mat-cell (click)="getInfos(element)" *matCellDef="let element"> {{element.id}} </mat-cell>
+              </ng-container>  
+             
+              <ng-container matColumnDef="username">
+                <mat-header-cell mat-sort-header *matHeaderCellDef> Username </mat-header-cell>
+                <mat-cell (click)="getInfos(element)" *matCellDef="let element"> {{element.username}} </mat-cell>
+              </ng-container>
+        
+              <ng-container matColumnDef="user_rights">
+                <mat-header-cell mat-sort-header *matHeaderCellDef> User RIghts </mat-header-cell>
+                <mat-cell (click)="getInfos(element)" *matCellDef="let element"> {{element.user_rights | transformRights}} </mat-cell>
+              </ng-container>
+          
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              
+            </mat-table>
+            <mat-paginator 
+                        [pageSize]="5"
+                        [pageSizeOptions]="[ 5, 10, 25, 100]"
+                        aria-label="Select page">
+          </mat-paginator>
+          </div>
+        </div>
+        <div *ngIf="admin == '1'" class="flex flex-col md:flex-row md:max-w-full p-4 rounded-lg bg-white shadow-lg shadow-secondary-500">
+            <div class="p-6 flex flex-col justify-start">
+              <h5 class="text-gray-900 text-xl font-medium mb-2">Card title</h5>
+              <p class="text-gray-700 text-base mb-4">
+                Graph Goes Here
+              </p>
+              <p class="text-gray-600 text-xs">Last updated 3 mins ago</p>
+            </div>
+          </div>
+    </div>
+</div>

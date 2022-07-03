@@ -1,0 +1,26 @@
+<form [formGroup]="lineupOrders" (ngSubmit)="updateData(lineupOrders.value)">
+    <mat-dialog-content>
+        <button (click)="orderMoveFG()" [mat-dialog-close] style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem" mat-dialog-header mat-stroked-button color="primary">Move to FG</button>
+        <button (click)="orderMoveCon()" [mat-dialog-close] style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem" mat-dialog-header mat-stroked-button color="primary">Move to Converting</button>
+        <mat-form-field appearance="outline">
+            <mat-label>Machine Qty</mat-label>
+            <input formControlName="shipqty" matInput placeholder="Enter Qty">
+        </mat-form-field><br>
+        <mat-form-field appearance="outline">
+            <mat-label>Order Qty</mat-label>
+            <input formControlName="qty" matInput placeholder="Enter Username" readonly>
+        </mat-form-field><br>
+        <mat-form-field appearance="outline">
+            <mat-label>Item</mat-label>
+            <input formControlName="itemdesc" matInput placeholder="Enter Username" readonly>
+        </mat-form-field><br>
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Comment</mat-label>
+            <textarea formControlName="comment" matInput></textarea>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button [disabled]="lineupOrders.invalid" color="primary">Save</button>
+        <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+    </mat-dialog-actions>
+</form>

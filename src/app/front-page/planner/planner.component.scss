@@ -1,0 +1,20 @@
+mat-table{
+    mat-cell{
+        min-width: 5rem;
+    }
+    mat-header-cell{
+        min-width: 5rem;
+    }
+    #ids{
+        max-width: 50px;
+    }
+    #ids2{
+        max-width: 50px;
+    }
+    .cb{
+        max-width: 50px;
+    }
+    .so{
+        max-width: 50px;
+    }
+}

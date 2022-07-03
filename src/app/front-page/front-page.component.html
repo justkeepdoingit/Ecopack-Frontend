@@ -1,0 +1,113 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav class="bg-secondary-900 text-secondary-100" @fadeIn>
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div class="relative flex items-center justify-start h-16">
+        <!-- <div class="absolute inset-y-0 left-0 flex items-center sm:hidden"> -->
+        <div class="absolute inset-y-0 left-0 flex items-center md:hidden">     
+          <!-- Mobile menu button-->
+          <button (click)="openMenu()" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+           
+            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+           
+            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <!-- <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start"> -->
+        <div class="flex-1 flex items-center justify-center md:items-stretch md:justify-start">
+          
+          <div class="flex-shrink-0 flex items-center">
+            <!-- <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Ecopack">
+            <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Ecopack"> -->
+            <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Ecopack">
+            <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Ecopack">
+            <div class=" text-secondary-300 pl-1 font-semibold tracking-wider">Ecopack</div>
+          </div>
+          <!-- <div class="hidden sm:block sm:ml-6"> -->
+          <div class="hidden md:block ml-6">
+            <div class="flex space-x-4">
+              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <a *ngIf="useracc == 'true' || user_rights == '1'" routerLink="Dashboard" [ngClass]="classStatus.dashboard ? classStrings.dashboardAcc : classStrings.dashboardInac" aria-current="page">Dashboard</a>
+              <a *ngIf="edit_orders == 'true' || user_rights == '1'" routerLink="Edit_Orders" [ngClass]="classStatus.editOrders ? classStrings.dashboardAcc : classStrings.dashboardInac">Order Editor</a>
+              <a *ngIf="import_orders == 'true' || user_rights == '1'" routerLink="Import_Orders" [ngClass]="classStatus.importOrders? classStrings.dashboardAcc : classStrings.dashboardInac">Import Orders</a>
+              <div class=" relative inline-block text-left">
+                <div>
+                  <button (click)="showDropdown()" type="button" class=" inline-flex justify-center w-full rounded-md border-solid border-secondary-800 shadow-sm px-4 py-2 bg-secondary-200 text-sm font-medium text-secondary-800 hover:bg-primary-800 hover:text-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary-500 focus:ring-primary-800 focus:text-secondary-800" id="dropdown" aria-expanded="true">
+                    More Options
+                    <svg class=" -mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div @fadeIn id="showDropdown" class=" hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md bg-secondary-50 ring-1 ring-secondary-800 ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="dropdown" tabindex="-1">
+                  <div class=" p-1 text-secondary-800" role="none">
+                    <a *ngIf="status_page == 'true' || user_rights == '1'" routerLink="Status_Page" [ngClass]="classStatus.statusPage ? classStrings.dashboardAcc : classStrings.dashboardInac">Status Page</a>
+                    <a *ngIf="planner == 'true' || user_rights == '1'" routerLink="Planner" [ngClass]="classStatus.planner ? classStrings.dashboardAcc : classStrings.dashboardInac">Planner</a>
+                    <a *ngIf="lineup == 'true' || user_rights == '1'" routerLink="Line_Up" [ngClass]="classStatus.lineup ? classStrings.dashboardAcc : classStrings.dashboardInac">Line Up</a>
+                    <a *ngIf="converting == 'true' || user_rights == '1'" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Converting</a>
+                    <a *ngIf="fg == 'true' || user_rights == '1'" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">FG</a>
+                    <a *ngIf="delivery == 'true' || user_rights == '1'" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Delivery</a>
+                    <a *ngIf="returns == 'true' || user_rights == '1'" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Returns</a>
+                    <a (click)="logout()" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Log Out</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <button type="button" class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+            <span class="sr-only">View notifications</span>
+            <!-- Heroicon name: outline/bell -->
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </button>
+  
+          <!-- Profile dropdown -->
+          <div class="ml-3 relative">
+            <div>
+              <button type="button" class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              </button>
+            </div>
+  
+            <!--
+              Dropdown menu, show/hide based on menu state.
+  
+              Entering: "transition ease-out duration-100"
+                From: "transform opacity-0 scale-95"
+                To: "transform opacity-100 scale-100"
+              Leaving: "transition ease-in duration-75"
+                From: "transform opacity-100 scale-100"
+                To: "transform opacity-0 scale-95"
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <!-- <div class="sm:hidden rounded-sm text-primary-100 bg-secondary-900" id="mobile-menu"> -->
+    <div class="md:hidden rounded-sm text-primary-100 bg-secondary-900" id="mobile-menu">
+      <div id="menuB" class="px-2 pt-2 pb-3 space-y-1 hidden">
+        <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+        <a routerLink="Dashboard" *ngIf="useracc == 'true' || user_rights == '1'" [ngClass]="classStatus.dashboard ? classStrings.mobileAcc : classStrings.mobileInac" aria-current="page">Dashboard</a>
+        <a routerLink="Edit_Orders" *ngIf="edit_orders == 'true' || user_rights == '1'" [ngClass]="classStatus.editOrders ? classStrings.mobileAcc : classStrings.mobileInac">Order Editor</a>
+        <a routerLink="Import_Orders" *ngIf="import_orders == 'true' || user_rights == '1'" [ngClass]="classStatus.importOrders ? classStrings.mobileAcc : classStrings.mobileInac">Import Orders</a>
+        <a routerLink="Status_Page" *ngIf="status_page == 'true' || user_rights == '1'" [ngClass]="classStatus.statusPage ? classStrings.mobileAcc : classStrings.mobileInac">Status Page</a>
+        <a routerLink="Planner" *ngIf="planner == 'true' || user_rights == '1'" [ngClass]="classStatus.planner ? classStrings.mobileAcc : classStrings.mobileInac">Planner</a>
+        <a routerLink="Line_Up" *ngIf="lineup == 'true' || user_rights == '1'" [ngClass]="classStatus.lineup ? classStrings.mobileAcc : classStrings.mobileInac">Line Up</a>
+        <a *ngIf="converting == 'true' || user_rights == '1'" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Converting</a>
+        <a *ngIf="fg == 'true' || user_rights == '1'" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">FG</a>
+        <a *ngIf="delivery == 'true' || user_rights == '1'" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Delivery</a>
+        <a *ngIf="returns == 'true' || user_rights == '1'" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Returns</a>
+        <a (click)="logout()" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Logout</a>
+      </div>
+    </div>
+  </nav>
+    <router-outlet></router-outlet>
