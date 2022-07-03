@@ -1,0 +1,7 @@
+{
+    "/api/*": {
+      "target": "http://your-ip:3000",
+      "secure": false,
+      "pathRewrite": { "^/api" : "" }
+    }
+}

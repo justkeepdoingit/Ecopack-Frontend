@@ -72,7 +72,7 @@ export class AppService {
 
   logreg(username: string, password: string, status: number){
     if(status == 2){
-      this.http.post<userModel>('http://localhost:3000/user-account/register',{
+      this.http.post<userModel>('api/user-account/register',{
         username: username,
         password: password
       }).subscribe(data=>{
@@ -80,7 +80,7 @@ export class AppService {
       })
     }
     else{
-      this.http.post<userModel>('http://localhost:3000/user-account/login', {
+      this.http.post<userModel>('api/user-account/login', {
         username: username,
         password: password
       }, {withCredentials:true}).subscribe(data=>{
