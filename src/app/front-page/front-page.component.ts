@@ -113,7 +113,7 @@ export class FrontPageComponent implements OnInit {
 
 
   logout(){
-    this.appservice.http.get('http://localhost:3000/user-account/logout',{withCredentials:true}).subscribe()
+    this.appservice.http.get('api/user-account/logout',{withCredentials:true}).subscribe()
     this.appservice.router.navigate([''])
   }
 }

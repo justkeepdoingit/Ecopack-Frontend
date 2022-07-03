@@ -319,7 +319,7 @@ export class LineupComponent implements OnInit {
 
     moveToFG(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `http://localhost:3000/order-list/fg/`
+      let link = `api/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
@@ -332,7 +332,7 @@ export class LineupComponent implements OnInit {
 
     moveToConverting(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `http://localhost:3000/order-list/convert/`
+      let link = `api/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;

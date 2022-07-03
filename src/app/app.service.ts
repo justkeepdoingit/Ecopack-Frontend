@@ -22,19 +22,19 @@ export class AppService {
   userInfos!: userModel;
 
   getPlannerOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('http://localhost:3000/order-list/planners')
+    return this.http.get<orderList[]>('api/order-list/planners')
   }
 
   getLineupOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('http://localhost:3000/order-list/lineupOrders')
+    return this.http.get<orderList[]>('api/order-list/lineupOrders')
   }
 
   getAllUsers(): Observable<userModel[]>{
-    return this.http.get<userModel[]>('http://localhost:3000/user-account/getAllUsers')
+    return this.http.get<userModel[]>('api/user-account/getAllUsers')
   }
 
   getInfo(id: number): Observable<userModel>{
-    return this.http.get<userModel>(`http://localhost:3000/user-account/findUser/${id}`, {withCredentials:true})
+    return this.http.get<userModel>(`api/user-account/findUser/${id}`, {withCredentials:true})
   }
 
   updateUsers(datas: userModel){
@@ -48,7 +48,7 @@ export class AppService {
     else{
       rights = 2
     }
-    this.http.patch<userModel>(`http://localhost:3000/user-account/updateUsers/${datas.id}`,{
+    this.http.patch<userModel>(`api/user-account/updateUsers/${datas.id}`,{
       id: datas.id,
       username: datas.username,
       password: datas.password,
