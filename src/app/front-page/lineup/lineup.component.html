@@ -36,8 +36,8 @@
                     </mat-cell>
               </ng-container>
           <ng-container matColumnDef="id">
-            <mat-header-cell id="ids2" mat-sort-header *matHeaderCellDef> ID </mat-header-cell>
-            <mat-cell id="ids" (click)="editInfo(element)" *matCellDef="let element"> {{element.id}} </mat-cell>
+            <mat-header-cell class="ids" mat-sort-header *matHeaderCellDef> ID </mat-header-cell>
+            <mat-cell class="ids" (click)="editInfo(element)" *matCellDef="let element"> {{element.id}} </mat-cell>
           </ng-container>
           
           <ng-container matColumnDef="date">
@@ -46,13 +46,13 @@
           </ng-container>  
 
           <ng-container matColumnDef="so">
-            <mat-header-cell class="so" mat-sort-header *matHeaderCellDef> SO# </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" class="so" *matCellDef="let element"> {{element.so}} </mat-cell>
+            <mat-header-cell class="so" class="so" mat-sort-header *matHeaderCellDef> SO# </mat-header-cell>
+            <mat-cell class="so" (click)="editInfo(element)" class="so" *matCellDef="let element"> {{element.so}} </mat-cell>
           </ng-container> 
 
           <ng-container matColumnDef="po">
-            <mat-header-cell mat-sort-header *matHeaderCellDef> PO# </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.po}} </mat-cell>
+            <mat-header-cell class="po" mat-sort-header *matHeaderCellDef> PO# </mat-header-cell>
+            <mat-cell class="po" (click)="editInfo(element)" *matCellDef="let element"> {{element.po}} </mat-cell>
           </ng-container> 
 
           <ng-container matColumnDef="name">

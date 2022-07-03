@@ -17,6 +17,11 @@ module.exports = {
     borderWidth: {
       1: '1px'
     },
+    maxWidth: {
+      "ssm": "50px",
+      "msm": "100px",
+      "lsm": "150px",
+    },
     minWidth: {
       '1': '0.5rem',
       '2': '1rem',
