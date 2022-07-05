@@ -34,7 +34,7 @@ export class AppService {
   }
 
   getInfo(id: number): Observable<userModel>{
-    return this.http.get<userModel>(`https://ecopack2.herokuapp.com//user-account/findUser/${id}`, {withCredentials:true})
+    return this.http.get<userModel>(`https://ecopack2.herokuapp.com/user-account/findUser/${id}`, {withCredentials:true})
   }
 
   updateUsers(datas: userModel){
