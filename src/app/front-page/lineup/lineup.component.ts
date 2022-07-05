@@ -229,7 +229,7 @@ export class LineupComponent implements OnInit {
         }
         return
       }
-      else if(t.deliverydate.toString().includes(this.filteredItems) && this.filteredItems != ''){
+      else if(t.deliverydate?.includes(this.filteredItems) && this.filteredItems != ''){
         t.completed = completed
         object.push(t)
         if(t.completed){
@@ -319,7 +319,7 @@ export class LineupComponent implements OnInit {
 
     moveToFG(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `api/order-list/fg/`
+      let link = `https://ecopack2.herokuapp.com/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
@@ -332,7 +332,7 @@ export class LineupComponent implements OnInit {
 
     moveToConverting(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `api/order-list/convert/`
+      let link = `https://ecopack2.herokuapp.com/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;

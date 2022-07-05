@@ -226,7 +226,7 @@ export class PlannerComponent implements OnInit {
         }
         return
       }
-      else if(t.deliverydate.toString().includes(this.filteredItems) && this.filteredItems != ''){
+      else if(t.deliverydate?.includes(this.filteredItems) && this.filteredItems != ''){
         t.completed = completed
         object.push(t)
         if(t.completed){
@@ -331,7 +331,7 @@ export class PlannerComponent implements OnInit {
 
     moveToLineUp(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `api/order-list/lineup/`
+      let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getPlannerOrders().subscribe(orders=>{
           this.newDataSource.data = orders;

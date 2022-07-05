@@ -13,7 +13,7 @@ export interface orderList{
     fg: boolean
     delivery: boolean
     shipqty: number
-    deliverydate: Date
+    deliverydate: string
     comment: string
     color?: string
     completed?: boolean

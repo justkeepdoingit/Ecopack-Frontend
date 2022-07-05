@@ -84,20 +84,34 @@ export class AppService {
         username: username,
         password: password
       }, {withCredentials:true}).subscribe(data=>{
-        
         if(!data){
           this.snackbar.open('Incorrect Username or Password', '', {duration: 1000})
         }
-        else if(data.user_rights == 1 || data.useracc){
-          this.router.navigate(['/Ecopack/Dashboard']);
-          this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', {duration:3000})
-          this.userInfos = data
+        else if(data){
+          this.cookieService.set('id', data.id.toString())
+          this.cookieService.set('user_rights', data.user_rights.toString())
+          this.cookieService.set('planner', data.planner.toString())
+          this.cookieService.set('converting', data.converting.toString())
+          this.cookieService.set('delivery', data.delivery.toString())
+          this.cookieService.set('edit_orders', data.edit_orders.toString())
+          this.cookieService.set('lineup', data.lineup.toString())
+          this.cookieService.set('fg', data.fg.toString())
+          this.cookieService.set('returns', data.returns.toString())
+          this.cookieService.set('status_page', data.status_page.toString())
+          this.cookieService.set('useracc', data.useracc.toString())
+          this.cookieService.set('import_orders', data.import_orders.toString())
+          if(data.user_rights == 1 || data.useracc){
+            this.router.navigate(['/Ecopack/Dashboard']);
+            this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', {duration:3000})
+            this.userInfos = data
+          }
+          else{
+            this.router.navigate(['/Ecopack']);
+            this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', {duration:3000})
+            this.userInfos = data
+          }
         }
-        else{
-          this.router.navigate(['/Ecopack']);
-          this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', {duration:3000})
-          this.userInfos = data
-        }
+        
       })
     }
   }

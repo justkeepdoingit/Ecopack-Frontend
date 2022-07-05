@@ -113,7 +113,8 @@ export class FrontPageComponent implements OnInit {
 
 
   logout(){
-    this.appservice.http.get('api/user-account/logout',{withCredentials:true}).subscribe()
+    this.appservice.cookieService.deleteAll();
+    this.appservice.http.get('https://ecopack2.herokuapp.com/user-account/logout',{withCredentials:true}).subscribe()
     this.appservice.router.navigate([''])
   }
 }
