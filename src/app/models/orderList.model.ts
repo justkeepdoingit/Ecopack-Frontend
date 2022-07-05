@@ -1,7 +1,7 @@
 import { ThemePalette } from "@angular/material/core";
 export interface orderList{
     id?: number
-    date: Date
+    date: string
     po: string
     so: string
     name: string

@@ -22,19 +22,19 @@ export class AppService {
   userInfos!: userModel;
 
   getPlannerOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('api/order-list/planners')
+    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/planners')
   }
 
   getLineupOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('api/order-list/lineupOrders')
+    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/lineupOrders')
   }
 
   getAllUsers(): Observable<userModel[]>{
-    return this.http.get<userModel[]>('api/user-account/getAllUsers')
+    return this.http.get<userModel[]>('https://ecopack2.herokuapp.com/user-account/getAllUsers')
   }
 
   getInfo(id: number): Observable<userModel>{
-    return this.http.get<userModel>(`api/user-account/findUser/${id}`, {withCredentials:true})
+    return this.http.get<userModel>(`https://ecopack2.herokuapp.com//user-account/findUser/${id}`, {withCredentials:true})
   }
 
   updateUsers(datas: userModel){
@@ -48,7 +48,7 @@ export class AppService {
     else{
       rights = 2
     }
-    this.http.patch<userModel>(`api/user-account/updateUsers/${datas.id}`,{
+    this.http.patch<userModel>(`https://ecopack2.herokuapp.com//user-account/updateUsers/${datas.id}`,{
       id: datas.id,
       username: datas.username,
       password: datas.password,
@@ -72,7 +72,7 @@ export class AppService {
 
   logreg(username: string, password: string, status: number){
     if(status == 2){
-      this.http.post<userModel>('api/user-account/register',{
+      this.http.post<userModel>('https://ecopack2.herokuapp.com//user-account/register',{
         username: username,
         password: password
       }).subscribe(data=>{
@@ -80,7 +80,7 @@ export class AppService {
       })
     }
     else{
-      this.http.post<userModel>('api/user-account/login', {
+      this.http.post<userModel>('https://ecopack2.herokuapp.com//user-account/login', {
         username: username,
         password: password
       }, {withCredentials:true}).subscribe(data=>{

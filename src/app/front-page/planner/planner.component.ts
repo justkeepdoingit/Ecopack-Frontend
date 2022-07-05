@@ -270,7 +270,7 @@ export class PlannerComponent implements OnInit {
         }
         return
       }
-      else if(t.date.toString().includes(this.filteredItems) && this.filteredItems != ''){
+      else if(t.date.includes(this.filteredItems) && this.filteredItems != ''){
         t.completed = completed
         object.push(t)
         if(t.completed){
