@@ -322,7 +322,7 @@ export class LineupComponent implements OnInit {
 
     moveToFG(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack-f91d0.web.app/order-list/fg/`
+      let link = `https://ecopack2.herokuapp.com/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
@@ -335,7 +335,7 @@ export class LineupComponent implements OnInit {
 
     moveToConverting(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack-f91d0.web.app/order-list/convert/`
+      let link = `https://ecopack2.herokuapp.com/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
