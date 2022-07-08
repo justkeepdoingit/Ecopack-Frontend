@@ -1,0 +1,115 @@
+<div *ngIf="sw == 1">
+    <form [formGroup]="convertOrders" (ngSubmit)="updateReject(convertOrders.value)">
+        <h2 mat-dialog-title>Update Rejects</h2>
+        <mat-dialog-content>
+            <mat-form-field appearance="outline">
+                <mat-label>Item</mat-label>
+                <input formControlName="item" readonly matInput placeholder="Enter Qty">
+            </mat-form-field>
+            
+            <div class="justify grid sm:grid-cols-2 gap-1">
+                
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Creasing Reject</mat-label>
+                        <input formControlName="creasingr" matInput placeholder="Enter Value">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Printing Reject</mat-label>
+                        <input formControlName="printingr" matInput placeholder="Enter Value">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Die Cut Reject</mat-label>
+                        <input formControlName="dcr" matInput placeholder="Enter Value">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Finishing Reject</mat-label>
+                        <input formControlName="finishr" matInput placeholder="Enter Value">
+                    </mat-form-field>
+                </div>
+            </div>
+            <hr>
+            <div class="justify grid sm:grid-cols-2 gap-1 pt-5">
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Corrugator Reject</mat-label>
+                        <input formControlName="corr" matInput placeholder="Enter Value">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Corrugator Lacking</mat-label>
+                        <input formControlName="corl" matInput placeholder="Enter Value">
+                    </mat-form-field>
+                </div>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Comment</mat-label>
+                <textarea formControlName="comment" matInput></textarea>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-stroked-button [disabled]="convertOrders.invalid" color="primary">Save</button>
+            <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+        </mat-dialog-actions>
+    </form>
+</div>
+<div *ngIf="sw == 2">
+    <form [formGroup]="qtyEdit" (ngSubmit)="updateQty(qtyEdit.value)">
+        <mat-dialog-content>
+            <h2>Edit Machine Quantity</h2>
+            <mat-form-field appearance="outline">
+                <mat-label>Machine Qty</mat-label>
+                <input formControlName="shipqty" matInput placeholder="Enter Qty">
+            </mat-form-field><br>
+            <mat-form-field appearance="outline">
+                <mat-label>Order Qty</mat-label>
+                <input formControlName="qty" matInput placeholder="Enter Username" readonly>
+            </mat-form-field><br>
+            <mat-form-field appearance="outline">
+                <mat-label>Item</mat-label>
+                <input formControlName="itemdesc" matInput placeholder="Enter Username" readonly>
+            </mat-form-field><br>
+            <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Comment</mat-label>
+                <textarea formControlName="comment" matInput></textarea>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-stroked-button [disabled]="qtyEdit.invalid" color="primary">Save</button>
+            <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+        </mat-dialog-actions>
+    </form>
+</div>
+<div *ngIf="sw == 3">
+    <form [formGroup]="cpof" (ngSubmit)="updateStatus(cpof.value)">
+        <mat-dialog-content>
+            <h2>Edit Status</h2>
+            <div class="justify grid sm:grid-cols-2 gap-1 gap-y-5">
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-checkbox formControlName="c">Creasing</mat-checkbox>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-checkbox formControlName="p">Printing</mat-checkbox>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-checkbox formControlName="o">Overhang</mat-checkbox>
+                </div>
+                <div class="flex flex-col md:flex-row md:max-w-full">
+                    <mat-checkbox formControlName="f">Finishing</mat-checkbox>
+                </div>
+            </div>
+            
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-stroked-button [disabled]="cpof.invalid" color="primary">Save</button>
+            <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+        </mat-dialog-actions>
+    </form>
+</div>

@@ -20,6 +20,7 @@ export class LineupComponent implements OnInit {
     frontpage.classStatus.editOrders = false;
     frontpage.classStatus.lineup = true;
     frontpage.classStatus.importOrders = false
+    frontpage.classStatus.converting = false
    }
 
   
@@ -59,22 +60,24 @@ export class LineupComponent implements OnInit {
 
   centered: boolean = false;
   radius: number = 25
-  unbounded: boolean = true;
+  unbounded: boolean = false;
 
   editInfo(data: orderList){
-    let dialog = this.appservice.dialog.open(LineupDialogComponent, {
-      data: data,
-      // width: '35%',
-    })
-
-    dialog.afterClosed().subscribe(data=>{
-      this.appservice.getLineupOrders().subscribe(orders=>{
-        this.newDataSource.data = orders;
-        this.task.subtasks = orders
-        this.clearTasks();
-      });
-      
-    })
+    if(!this.multi){
+      let dialog = this.appservice.dialog.open(LineupDialogComponent, {
+        data: data,
+        // width: '35%',
+      })
+  
+      dialog.afterClosed().subscribe(data=>{
+        this.appservice.getLineupOrders().subscribe(orders=>{
+          this.newDataSource.data = orders;
+          this.task.subtasks = orders
+          this.clearTasks();
+        });
+        
+      })
+    }
   }
 
   allComplete: boolean = false;
@@ -319,7 +322,7 @@ export class LineupComponent implements OnInit {
 
     moveToFG(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/fg/`
+      let link = `api/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
@@ -332,7 +335,7 @@ export class LineupComponent implements OnInit {
 
     moveToConverting(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/convert/`
+      let link = `api/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;

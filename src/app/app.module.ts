@@ -19,6 +19,8 @@ import { DatePipe } from '@angular/common';
 import { LineupComponent } from './front-page/lineup/lineup.component';
 import { LineupDialogComponent } from './front-page/lineup/lineup-dialog/lineup-dialog.component';
 import { ImportOrdersComponent } from './front-page/import-orders/import-orders.component';
+import { ConvertingComponent } from './front-page/converting/converting.component';
+import { ConvertDialogComponent } from './front-page/converting/convert-dialog/convert-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +35,9 @@ import { ImportOrdersComponent } from './front-page/import-orders/import-orders.
     PlannerDialogComponent,
     LineupComponent,
     LineupDialogComponent,
-    ImportOrdersComponent
+    ImportOrdersComponent,
+    ConvertingComponent,
+    ConvertDialogComponent
   ],
   imports: [
     BrowserModule,

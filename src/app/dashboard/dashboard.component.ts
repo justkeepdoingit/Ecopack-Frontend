@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
     frontpage.classStatus.editOrders = false
     frontpage.classStatus.lineup = false
     frontpage.classStatus.importOrders = false
+    frontpage.classStatus.converting = false
     this.admin = this.appservice.cookieService.get('user_rights')
   }
   admin: string = '';

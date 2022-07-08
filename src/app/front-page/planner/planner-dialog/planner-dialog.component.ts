@@ -39,7 +39,7 @@ export class PlannerDialogComponent implements OnInit {
     }
 
     this.orderListInfo.forEach(data=>{
-      let link = `https://ecopack2.herokuapp.com/order-list/updateOrder/${data.id}`;
+      let link = `api/order-list/updateOrder/${data.id}`;
       this.appservice.orderPatch(link, newData).subscribe(datas=>{
         this.dialogRef.close(1);
       })
@@ -47,7 +47,7 @@ export class PlannerDialogComponent implements OnInit {
   }
 
   moveToLineUp(){
-    let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
+    let link = `api/order-list/lineup/`
 
     this.orderListInfo.forEach(data=>{
       this.appservice.movementPost(link, this.orderListInfo).subscribe()

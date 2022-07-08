@@ -1,6 +1,4 @@
 mat-table{
-    // background-color: green;
-    min-width: 600px;
     .ids{
         max-width: 40px;
         min-width: 40px;
@@ -17,10 +15,9 @@ mat-table{
         max-width: 50px;
         min-width: 50px;
     }
-    // mat-cell{
-    //     min-width: 5rem;
-    // }
-    // mat-header-cell{
-    //     min-width: 5rem;
-    // }
+}
+@media screen and (max-width: 586px) {
+    mat-table{
+        min-width: 1000px;
+    }
 }

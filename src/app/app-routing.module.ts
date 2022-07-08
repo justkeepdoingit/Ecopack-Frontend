@@ -8,6 +8,7 @@ import { StatusPageComponent } from './front-page/status-page/status-page.compon
 import { EditOrdersComponent } from './front-page/edit-orders/edit-orders.component';
 import { LineupComponent } from './front-page/lineup/lineup.component';
 import { ImportOrdersComponent } from './front-page/import-orders/import-orders.component';
+import { ConvertingComponent } from './front-page/converting/converting.component';
 
 const routes: Routes = [
   {path: 'Login', component: LogregComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
     {path: 'Planner', component: PlannerComponent},
     {path: 'Edit_Orders', component: EditOrdersComponent},
     {path: 'Line_Up', component: LineupComponent},
-    {path: 'Import_Orders', component: ImportOrdersComponent}
+    {path: 'Import_Orders', component: ImportOrdersComponent},
+    {path: 'Converting', component: ConvertingComponent},
   ]},
   {path: '', redirectTo:'Login', pathMatch: 'full'},
 ];

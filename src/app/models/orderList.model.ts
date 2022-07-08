@@ -15,6 +15,10 @@ export interface orderList{
     shipqty: number
     deliverydate: string
     comment: string
+    c: boolean,
+    p: boolean,
+    o: boolean,
+    f: boolean,
     color?: string
     completed?: boolean
     taskName?: string;

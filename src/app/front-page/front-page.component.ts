@@ -84,6 +84,7 @@ export class FrontPageComponent implements OnInit {
     editOrders: false,
     lineup: false,
     importOrders: false,
+    converting: false,
   }   
 
   menuCheck: boolean = false;
@@ -113,8 +114,33 @@ export class FrontPageComponent implements OnInit {
 
 
   logout(){
-    this.appservice.cookieService.deleteAll();
-    this.appservice.http.get('https://ecopack2.herokuapp.com/user-account/logout',{withCredentials:true}).subscribe()
+          this.appservice.cookieService.delete('id', '/')
+          this.appservice.cookieService.delete('user_rights', '/')
+          this.appservice.cookieService.delete('planner', '/')
+          this.appservice.cookieService.delete('converting', '/')
+          this.appservice.cookieService.delete('delivery', '/')
+          this.appservice.cookieService.delete('edit_orders','/')
+          this.appservice.cookieService.delete('lineup','/')
+          this.appservice.cookieService.delete('fg', '/')
+          this.appservice.cookieService.delete('returns', '/')
+          this.appservice.cookieService.delete('status_page', '/')
+          this.appservice.cookieService.delete('useracc','/')
+          this.appservice.cookieService.delete('import_orders', '/')
+          
+          //
+          this.appservice.cookieService.delete('id', '/Ecopack')
+          this.appservice.cookieService.delete('user_rights', '/Ecopack')
+          this.appservice.cookieService.delete('planner', '/Ecopack')
+          this.appservice.cookieService.delete('converting', '/Ecopack')
+          this.appservice.cookieService.delete('delivery', '/Ecopack')
+          this.appservice.cookieService.delete('edit_orders','/Ecopack')
+          this.appservice.cookieService.delete('lineup','/Ecopack')
+          this.appservice.cookieService.delete('fg', '/Ecopack')
+          this.appservice.cookieService.delete('returns', '/Ecopack')
+          this.appservice.cookieService.delete('status_page', '/Ecopack')
+          this.appservice.cookieService.delete('useracc','/Ecopack')
+          this.appservice.cookieService.delete('import_orders', '/Ecopack')
     this.appservice.router.navigate([''])
+    this.appservice.http.get('api/user-account/logout',{withCredentials:true}).subscribe()
   }
 }

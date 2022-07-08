@@ -20,6 +20,7 @@ export class PlannerComponent implements OnInit {
     frontpage.classStatus.editOrders = false;  
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
+    frontpage.classStatus.converting = false
   }
 
   displayedColumns: string[] = ['cb','id','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'comment'];
@@ -58,20 +59,22 @@ export class PlannerComponent implements OnInit {
 
   centered: boolean = false;
   radius: number = 25
-  unbounded: boolean = true;
+  unbounded: boolean = false;
 
   editInfo(data: orderList){
-    let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
-      data: [data]
-    })
-
-    dialog.afterClosed().subscribe(data=>{
-      this.appservice.getPlannerOrders().subscribe(orders=>{
-        this.newDataSource.data = orders;
-        this.task.subtasks = orders
-        this.clearTasks();
-      });
-    })
+    if(!this.multi){
+      let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
+        data: [data]
+      })
+  
+      dialog.afterClosed().subscribe(data=>{
+        this.appservice.getPlannerOrders().subscribe(orders=>{
+          this.newDataSource.data = orders;
+          this.task.subtasks = orders
+          this.clearTasks();
+        });
+      })
+    }
   }
 
   allComplete: boolean = false;
@@ -331,7 +334,7 @@ export class PlannerComponent implements OnInit {
 
     moveToLineUp(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
+      let link = `api/order-list/lineup/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getPlannerOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
