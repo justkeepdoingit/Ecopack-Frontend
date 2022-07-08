@@ -31,20 +31,20 @@ export class LineupDialogComponent implements OnInit {
   }
 
   updateData(data: orderList){
-    let link = `api/order-list/updateOrder/${this.lineupList.id}`
+    let link = `https://ecopack-f91d0.web.app/order-list/updateOrder/${this.lineupList.id}`
     this.appservice.orderPatch(link, data).subscribe()
     this.appservice.snackbar.open(`PO # ${this.lineupList.po} details has been updated`, 'Dismiss', {duration: 2500})
     this.dialogRef.close()
   }
 
   orderMoveFG(){
-    let link = `api/order-list/fg/`
+    let link = `https://ecopack-f91d0.web.app/order-list/fg/`
     let newData: orderList[] = [this.lineupList];
     this.appservice.movementPost(link, newData).subscribe()
     this.appservice.snackbar.open(`PO # ${this.lineupList.id} was moved to Finished Goods`, 'Okay', {duration:2500})
   }
   orderMoveCon(){
-    let link = `api/order-list/convert/`
+    let link = `https://ecopack-f91d0.web.app/order-list/convert/`
     let newData: orderList[] = [this.lineupList];
     this.appservice.movementPost(link, newData).subscribe()
     this.appservice.snackbar.open(`PO # ${this.lineupList.id} was moved to Converting`, 'Okay', {duration:2500})

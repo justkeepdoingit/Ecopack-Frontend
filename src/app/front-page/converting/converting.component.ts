@@ -358,7 +358,7 @@ export class ConvertingComponent implements OnInit {
  
      moveToFG(){
        let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-       let link = `api/order-list/fg/`
+       let link = `https://ecopack-f91d0.web.app/order-list/fg/`
        this.appservice.movementPost(link, newData).subscribe(data=>{
          this.appservice.getConverting().subscribe(orders=>{
            this.newDataSource.data = orders;

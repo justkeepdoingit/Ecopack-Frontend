@@ -334,7 +334,7 @@ export class PlannerComponent implements OnInit {
 
     moveToLineUp(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `api/order-list/lineup/`
+      let link = `https://ecopack-f91d0.web.app/order-list/lineup/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getPlannerOrders().subscribe(orders=>{
           this.newDataSource.data = orders;

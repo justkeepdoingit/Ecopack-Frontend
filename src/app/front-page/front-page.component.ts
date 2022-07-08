@@ -141,6 +141,6 @@ export class FrontPageComponent implements OnInit {
           this.appservice.cookieService.delete('useracc','/Ecopack')
           this.appservice.cookieService.delete('import_orders', '/Ecopack')
     this.appservice.router.navigate([''])
-    this.appservice.http.get('api/user-account/logout',{withCredentials:true}).subscribe()
+    this.appservice.http.get('https://ecopack-f91d0.web.app/user-account/logout',{withCredentials:true}).subscribe()
   }
 }

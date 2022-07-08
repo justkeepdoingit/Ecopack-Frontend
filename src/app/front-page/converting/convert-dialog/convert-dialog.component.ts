@@ -81,7 +81,7 @@ export class ConvertDialogComponent implements OnInit {
   }
 
   updateQty(data: orderList){
-    let link = `http://localhost:3000/order-list/updateOrder/${this.convertList.id}`
+    let link = `https://ecopack-f91d0.web.app/order-list/updateOrder/${this.convertList.id}`
     this.appservice.orderPatch(link, data).subscribe()
     this.appservice.snackbar.open(`PO # ${this.convertList.po} details has been updated`, 'Dismiss', {duration: 2500})
     this.dialogRef.close()
@@ -98,7 +98,7 @@ export class ConvertDialogComponent implements OnInit {
   //   }
 
   //   this.multiList.forEach(data=>{
-  //     let link = `api/order-list/updateOrder/${data.id}`;
+  //     let link = `https://ecopack-f91d0.web.app/order-list/updateOrder/${data.id}`;
   //     this.appservice.orderPatch(link, newData).subscribe(datas=>{
   //       this.dialogRef.close(1);
   //     })

@@ -23,31 +23,31 @@ export class AppService {
   userInfos!: userModel;
 
   getPlannerOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('api/order-list/planners')
+    return this.http.get<orderList[]>('https://ecopack-f91d0.web.app/order-list/planners')
   }
 
   getLineupOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('api/order-list/lineupOrders')
+    return this.http.get<orderList[]>('https://ecopack-f91d0.web.app/order-list/lineupOrders')
   }
 
   getConverting(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('api/order-list/convertOrders')
+    return this.http.get<orderList[]>('https://ecopack-f91d0.web.app/order-list/convertOrders')
   }
 
   getAllUsers(): Observable<userModel[]>{
-    return this.http.get<userModel[]>('api/user-account/getAllUsers')
+    return this.http.get<userModel[]>('https://ecopack-f91d0.web.app/user-account/getAllUsers')
   }
 
   getRejects(orderid: any): Observable<rejectList>{
-    return this.http.get<rejectList>(`api/order-list/getReject/${orderid}`)
+    return this.http.get<rejectList>(`https://ecopack-f91d0.web.app/order-list/getReject/${orderid}`)
   } 
 
   getInfo(id: number): Observable<userModel>{
-    return this.http.get<userModel>(`api/user-account/findUser/${id}`, {withCredentials:true})
+    return this.http.get<userModel>(`https://ecopack-f91d0.web.app/user-account/findUser/${id}`, {withCredentials:true})
   }
 
   updateReject(data:rejectList, id: any): Observable<rejectList>{
-    return this.http.post<rejectList>(`http://localhost:3000/order-list/updateReject/${id}`, data);
+    return this.http.post<rejectList>(`https://ecopack-f91d0.web.app/order-list/updateReject/${id}`, data);
   }
 
   updateUsers(datas: userModel){
@@ -61,7 +61,7 @@ export class AppService {
     else{
       rights = 2
     }
-    this.http.patch<userModel>(`api/user-account/updateUsers/${datas.id}`,{
+    this.http.patch<userModel>(`https://ecopack-f91d0.web.app/user-account/updateUsers/${datas.id}`,{
       id: datas.id,
       username: datas.username,
       password: datas.password,
@@ -85,7 +85,7 @@ export class AppService {
 
   logreg(username: string, password: string, status: number){
     if(status == 2){
-      this.http.post<userModel>('api/user-account/register',{
+      this.http.post<userModel>('https://ecopack-f91d0.web.app/user-account/register',{
         username: username,
         password: password
       }).subscribe(data=>{
@@ -93,7 +93,7 @@ export class AppService {
       })
     }
     else{
-      this.http.post<userModel>('api/user-account/login', {
+      this.http.post<userModel>('https://ecopack-f91d0.web.app/user-account/login', {
         username: username,
         password: password
       }, {withCredentials:true}).subscribe(data=>{
