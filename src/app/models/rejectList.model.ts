@@ -1,5 +1,5 @@
 export interface rejectList{
-    id: number
+    id?: number
     orderid: number
     creasingr: number
     printingr: number

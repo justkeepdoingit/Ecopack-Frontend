@@ -6,6 +6,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConvertDialogComponent } from './convert-dialog/convert-dialog.component';
 import { orderList, orderTask } from 'src/app/models/orderList.model';
+import { rejectList } from 'src/app/models/rejectList.model';
 @Component({
   selector: 'app-converting',
   templateUrl: './converting.component.html',
@@ -98,8 +99,33 @@ export class ConvertingComponent implements OnInit {
     editInfo(data: orderList){
       if(!this.multi){  
       this.appservice.getRejects(data.id).subscribe(rejects=>{
+        let reject: rejectList;
+        if(rejects){
+          reject = {
+            orderid: rejects.orderid,
+            creasingr: rejects.creasingr,
+            printingr: rejects.printingr,
+            dcr: rejects.dcr,
+            finishr: rejects.finishr,
+            corr: rejects.corr,
+            corl: rejects.corl,
+            comment: rejects.comment
+          }
+        }
+        else{
+          reject = {
+            orderid: data.id!,
+            creasingr: 0,
+            printingr: 0,
+            dcr: 0,
+            finishr: 0,
+            corr: 0,
+            corl: 0,
+            comment: ''
+          }
+        }
         let dialog = this.appservice.dialog.open(ConvertDialogComponent, {
-          data: {data, sw:1, rejects},
+          data: {data, sw:1, reject},
         })
     
         dialog.afterClosed().subscribe(data=>{

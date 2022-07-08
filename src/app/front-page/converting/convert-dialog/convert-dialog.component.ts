@@ -17,7 +17,7 @@ export class ConvertDialogComponent implements OnInit {
   private dialogRef: MatDialogRef<ConvertDialogComponent>, private datepipe: DatePipe) { 
     this.convertList = orderList.data
     this.sw = orderList.sw;
-    this.rejectList = orderList.rejects
+    this.rejectList = orderList.reject
     this.multiList = orderList.data
   }
 
@@ -33,7 +33,6 @@ export class ConvertDialogComponent implements OnInit {
   sw: number = 0;
 
   ngOnInit(): void {
-
     if(this.sw == 1){
       this.convertOrders = this.appservice.formBuilder.group({
         item: [this.convertList.item],
