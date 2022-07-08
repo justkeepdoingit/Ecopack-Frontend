@@ -50,6 +50,10 @@ export class AppService {
     return this.http.post<rejectList>(`https://ecopack2.herokuapp.com/order-list/updateReject/${id}`, data);
   }
 
+  getOrderStatus(): Observable<any[]>{
+    return this.http.get<any[]>('https://ecopack2.herokuapp.com/order-list/getStatuses');
+  }
+
   updateUsers(datas: userModel){
     let rights: number;
     if(datas.username != "admin" && datas.planner && datas.converting && datas.delivery && datas.edit_orders && datas.lineup && datas.fg && datas.returns && datas.status_page && datas.import_orders && datas.useracc){

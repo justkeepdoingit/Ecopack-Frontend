@@ -37,12 +37,10 @@
           </div>
         </div>
         <div *ngIf="admin == '1'" class="flex flex-col md:flex-row md:max-w-full p-4 rounded-lg bg-white shadow-lg shadow-secondary-500">
-            <div class="p-6 flex flex-col justify-start">
-              <h5 class="text-gray-900 text-xl font-medium mb-2">Card title</h5>
-              <p class="text-gray-700 text-base mb-4">
-                Graph Goes Here
-              </p>
-              <p class="text-gray-600 text-xs">Last updated 3 mins ago</p>
+            <div class="p-6 flex flex-col justify-start w-full">
+              <h5 class="text-gray-900 text-xl font-medium mb-2">Dashboard Charts</h5>
+                <canvasjs-chart class=" w-full bg-primary-50" [options]="chartOptions"></canvasjs-chart>
+              <p class="text-gray-600 text-xs"></p>
             </div>
           </div>
     </div>

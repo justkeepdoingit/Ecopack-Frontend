@@ -25,6 +25,9 @@ export class DashboardComponent implements OnInit {
     frontpage.classStatus.converting = false
     this.admin = this.appservice.cookieService.get('user_rights')
   }
+
+  chartOptions = {};
+
   admin: string = '';
   centered: boolean = false;
   radius: number = 25;
@@ -41,6 +44,38 @@ export class DashboardComponent implements OnInit {
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
     })
+
+
+    if(this.admin == '1'){
+
+      this.appservice.getOrderStatus().subscribe(data=>{
+        this.chartOptions = {
+          animationEnabled: true,
+          theme: "white",
+          exportEnabled: true,
+          animationDuration: 700,
+          title: {
+          text: "Orders Production Process"
+          },
+          subtitles: [{
+          text: "Count Per Process"
+          }],
+          data: [{
+          type: "doughnut", //change type to column, line, area, doughnut, etc
+          indexLabel: "{name}: {y}",
+          dataPoints: [
+            { name: "Planning", y: data[0].planning },
+            { name: "Line Up", y: data[0].lineup },
+            { name: "Converting", y: data[0].convert },
+            { name: "Finished Goods", y: data[0].fg },
+            { name: "Delivery", y: data[0].delivery }
+          ]
+          }]
+        }
+      });
+
+      
+    }
   }
 
   applyFilter(event: Event) {

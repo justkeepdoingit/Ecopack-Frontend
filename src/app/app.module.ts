@@ -21,8 +21,11 @@ import { LineupDialogComponent } from './front-page/lineup/lineup-dialog/lineup-
 import { ImportOrdersComponent } from './front-page/import-orders/import-orders.component';
 import { ConvertingComponent } from './front-page/converting/converting.component';
 import { ConvertDialogComponent } from './front-page/converting/convert-dialog/convert-dialog.component';
+import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
+var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
   declarations: [
+    CanvasJSChart,
     AppComponent,
     LogregComponent,
     FrontPageComponent,
