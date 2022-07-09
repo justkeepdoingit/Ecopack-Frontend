@@ -85,6 +85,7 @@ export class FrontPageComponent implements OnInit {
     lineup: false,
     importOrders: false,
     converting: false,
+    fg:false
   }   
 
   menuCheck: boolean = false;

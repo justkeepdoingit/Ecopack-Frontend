@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
     frontpage.classStatus.lineup = false
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
+    frontpage.classStatus.fg = false
     this.admin = this.appservice.cookieService.get('user_rights')
   }
 

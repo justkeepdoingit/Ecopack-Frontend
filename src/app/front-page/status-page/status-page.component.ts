@@ -16,6 +16,7 @@ export class StatusPageComponent implements OnInit {
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
+    frontpage.classStatus.fg = false
   }
 
   ngOnInit(): void {

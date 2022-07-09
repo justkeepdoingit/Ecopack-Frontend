@@ -5,27 +5,27 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { orderList, orderTask } from 'src/app/models/orderList.model';
 import { AppService } from 'src/app/app.service';
-import { PlannerDialogComponent } from './planner-dialog/planner-dialog.component';
+import { FgDialogComponent } from './fg-dialog/fg-dialog.component';
+
 @Component({
-  selector: 'app-planner',
-  templateUrl: './planner.component.html',
-  styleUrls: ['./planner.component.scss']
+  selector: 'app-fg',
+  templateUrl: './fg.component.html',
+  styleUrls: ['./fg.component.scss']
 })
-export class PlannerComponent implements OnInit {
+export class FgComponent implements OnInit {
 
   constructor(private frontpage: FrontPageComponent, private appservice: AppService) {
-    frontpage.classStatus.planner = true;
+    frontpage.classStatus.planner = false;
     frontpage.classStatus.dashboard = false;
     frontpage.classStatus.statusPage = false
     frontpage.classStatus.editOrders = false;  
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
-    frontpage.classStatus.fg = false
-
+    frontpage.classStatus.fg = true
   }
 
-  displayedColumns: string[] = ['cb','id','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'comment'];
+  displayedColumns: string[] = ['cb','id','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'shipqty', 'comment'];
   newDataSource = new MatTableDataSource<orderList>();
   filteredSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
@@ -33,7 +33,7 @@ export class PlannerComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.clear()
-    this.appservice.getPlannerOrders().subscribe(data=>{
+    this.appservice.getFgOrders().subscribe(data=>{
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
@@ -65,12 +65,12 @@ export class PlannerComponent implements OnInit {
 
   editInfo(data: orderList){
     if(!this.multi){
-      let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
+      let dialog = this.appservice.dialog.open(FgDialogComponent, {
         data: [data]
       })
   
       dialog.afterClosed().subscribe(data=>{
-        this.appservice.getPlannerOrders().subscribe(orders=>{
+        this.appservice.getFgOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
           this.task.subtasks = orders
           this.clearTasks();
@@ -150,13 +150,8 @@ export class PlannerComponent implements OnInit {
     if(columnSearch.length == 1){
      this.newDataSource.filter = filterValue.trim().toLowerCase();
      this.filteredItems = filterValue.trim().toLowerCase()
-
      this.columnSearching = false;
      this.filteredSource.data = [];
-     
-     this.newDataSource.paginator = this.paginator
-     this.newDataSource.sort = this.matsort
-
      this.task.subtasks = this.newDataSource.data;
     }
 
@@ -388,29 +383,26 @@ export class PlannerComponent implements OnInit {
 
   updateMultiple(){
     let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
+      let dialog = this.appservice.dialog.open(FgDialogComponent, {
         data: newData
       })
 
-    
-    dialog.afterClosed().subscribe(data=>{
-      this.appservice.getPlannerOrders().subscribe(orders=>{
-        this.newDataSource.data = orders;
-        this.filteredSource.data = orders;
-        this.task.subtasks = orders;
-        this.clearTasks();
-      })
-    })
-  }
-
-    moveToLineUp(){
-      let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
-      this.appservice.movementPost(link, newData).subscribe(data=>{
-        this.appservice.getPlannerOrders().subscribe(orders=>{
+      dialog.afterClosed().subscribe(data=>{
+        this.appservice.getFgOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
           this.task.subtasks = orders;
-          this.filteredSource.data = orders;
+          this.clearTasks();
+        })
+      })
+    }
+
+    moveToDelivery(){
+      let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
+      let link = `https://ecopack2.herokuapp.com/order-list/delivery/`
+      this.appservice.movementPost(link, newData).subscribe(data=>{
+        this.appservice.getFgOrders().subscribe(orders=>{
+          this.newDataSource.data = orders;
+          this.task.subtasks = orders;
           this.clearTasks();
           this.appservice.snackbar.open("Selected items moved to Line Up", "Dismiss", {duration: 2500})
         })
@@ -423,6 +415,5 @@ export class PlannerComponent implements OnInit {
       localStorage.clear()
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
-      this.ngOnInit();
     }
 }

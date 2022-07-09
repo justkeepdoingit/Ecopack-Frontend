@@ -21,12 +21,14 @@ export class LineupComponent implements OnInit {
     frontpage.classStatus.lineup = true;
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
+    frontpage.classStatus.fg = false
+
    }
 
   
-  displayedColumns: string[] = ['cb','id','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'shipqty', 'comment'];
+  displayedColumns: string[] = ['cb','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'shipqty', 'comment'];
   newDataSource = new MatTableDataSource<orderList>();
-
+  filteredSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
@@ -141,18 +143,85 @@ export class LineupComponent implements OnInit {
 
   filteredItems: string = ''
 
-  applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.newDataSource.filter = filterValue.trim().toLowerCase();
-      this.filteredItems = filterValue.trim().toLowerCase()
+  columnSearching: boolean = false;
 
-      this.expandedElement = this.newDataSource.filteredData;
-      
-      if(!filterValue){
-        localStorage.removeItem("allItems")
-        this.allComplete = false
-      }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+
+    let columnSearch = filterValue.split(':');
+
+    if(columnSearch.length == 1){
+     this.newDataSource.filter = filterValue.trim().toLowerCase();
+     this.filteredItems = filterValue.trim().toLowerCase()
+     
+     this.columnSearching = false;
+     this.filteredSource.data = [];
+
+     this.newDataSource.paginator = this.paginator
+     this.newDataSource.sort = this.matsort
+
+     this.task.subtasks = this.newDataSource.data;
     }
+
+    else{
+     let filteredData:orderList[] = []
+     let columsearch = columnSearch[1].toLowerCase()
+     this.newDataSource.filter = ""
+     this.columnSearching = true
+
+     this.filteredSource.paginator = this.paginator
+     this.filteredSource.sort = this.matsort
+
+     this.filteredItems = columnSearch[1];
+
+
+     
+     for(let i = 0;i < this.newDataSource.data.length; i++){
+       if(columnSearch[0].includes("so")){
+         if(this.newDataSource.data[i].so.toString().trim().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+       if(columnSearch[0].includes("po")){
+         if(this.newDataSource.data[i].po.toString().trim().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+       if(columnSearch[0].includes("name")){
+         if(this.newDataSource.data[i].name.trim().toLowerCase().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+       if(columnSearch[0] == "item"){
+         if(this.newDataSource.data[i].item.trim().toLowerCase().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+       if(columnSearch[0].includes("desc")){
+         if(this.newDataSource.data[i].itemdesc.trim().toLowerCase().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+       if(columnSearch[0].includes("qty")){
+         if(this.newDataSource.data[i].qty.toString().trim().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+       if(columnSearch[0].includes("prod")){
+         if(this.newDataSource.data[i].shipqty?.toString().trim().includes(columsearch)){
+           filteredData.push(this.newDataSource.data[i])
+         }
+       }
+     }
+     this.filteredSource.data = filteredData
+     this.task.subtasks = filteredData;
+     }
+
+     if(!filterValue || !columnSearch[1]){
+       localStorage.removeItem("allItems")
+       this.allComplete = false
+     }
+  }
 
   setAll(completed: boolean, data: any) {
     if (this.task.subtasks == null) {
@@ -326,6 +395,7 @@ export class LineupComponent implements OnInit {
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
+          this.filteredSource.data = orders;
           this.task.subtasks = orders;
           this.clearTasks();
           this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
@@ -339,6 +409,7 @@ export class LineupComponent implements OnInit {
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           this.newDataSource.data = orders;
+          this.filteredSource.data = orders;
           this.task.subtasks = orders;
           this.clearTasks();
           this.appservice.snackbar.open("Selected items moved to Converting", "Dismiss", {duration: 2500})
@@ -352,6 +423,7 @@ export class LineupComponent implements OnInit {
       localStorage.clear()
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
+      this.ngOnInit()
     }
 
 }

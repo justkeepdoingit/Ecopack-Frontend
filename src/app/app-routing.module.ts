@@ -9,6 +9,7 @@ import { EditOrdersComponent } from './front-page/edit-orders/edit-orders.compon
 import { LineupComponent } from './front-page/lineup/lineup.component';
 import { ImportOrdersComponent } from './front-page/import-orders/import-orders.component';
 import { ConvertingComponent } from './front-page/converting/converting.component';
+import { FgComponent } from './front-page/fg/fg.component';
 
 const routes: Routes = [
   {path: 'Login', component: LogregComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
     {path: 'Line_Up', component: LineupComponent},
     {path: 'Import_Orders', component: ImportOrdersComponent},
     {path: 'Converting', component: ConvertingComponent},
+    {path: 'Finished_Goods', component: FgComponent},
   ]},
   {path: '', redirectTo:'Login', pathMatch: 'full'},
 ];

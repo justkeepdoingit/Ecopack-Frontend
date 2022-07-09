@@ -22,6 +22,8 @@ import { ImportOrdersComponent } from './front-page/import-orders/import-orders.
 import { ConvertingComponent } from './front-page/converting/converting.component';
 import { ConvertDialogComponent } from './front-page/converting/convert-dialog/convert-dialog.component';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
+import { FgComponent } from './front-page/fg/fg.component';
+import { FgDialogComponent } from './front-page/fg/fg-dialog/fg-dialog.component';
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     LineupDialogComponent,
     ImportOrdersComponent,
     ConvertingComponent,
-    ConvertDialogComponent
+    ConvertDialogComponent,
+    FgComponent,
+    FgDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     BrowserAnimationsModule,
     DesignmoduleModule
   ],
-  entryComponents: [UserDialogComponent, PlannerDialogComponent, LineupDialogComponent],
+  entryComponents: [UserDialogComponent, PlannerDialogComponent, LineupDialogComponent, FgDialogComponent],
   providers: [CookieService, DatePipe],
   bootstrap: [AppComponent]
 })

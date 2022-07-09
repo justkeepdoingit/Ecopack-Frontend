@@ -34,6 +34,10 @@ export class AppService {
     return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/convertOrders')
   }
 
+  getFgOrders(): Observable<orderList[]>{
+    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/fgOrders')
+  }
+
   getAllUsers(): Observable<userModel[]>{
     return this.http.get<userModel[]>('https://ecopack2.herokuapp.com/user-account/getAllUsers')
   }
@@ -53,6 +57,7 @@ export class AppService {
   getOrderStatus(): Observable<any[]>{
     return this.http.get<any[]>('https://ecopack2.herokuapp.com/order-list/getStatuses');
   }
+  
 
   updateUsers(datas: userModel){
     let rights: number;

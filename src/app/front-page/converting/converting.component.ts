@@ -22,16 +22,18 @@ export class ConvertingComponent implements OnInit {
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = true
+    localStorage.clear()
    }
 
-   displayedColumns: string[] = ['cb','id','date','so', 'po', 'name', 'item','itemdesc','qty', 'shipqty', 'deliverydate', 'status', 'comment'];
+   displayedColumns: string[] = ['cb','date','so', 'po', 'name', 'item','itemdesc','qty', 'shipqty', 'deliverydate', 'status', 'comment'];
    newDataSource = new MatTableDataSource<orderList>();
+   filteredSource = new MatTableDataSource<orderList>();
+   expandedElement: orderList[] = [];
  
    @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
    @ViewChild(MatSort) matsort: MatSort = new MatSort()
  
    ngOnInit(): void {
-     localStorage.clear()
      this.appservice.getConverting().subscribe(data=>{
        this.newDataSource.data = data;
        this.newDataSource.paginator = this.paginator
@@ -42,8 +44,8 @@ export class ConvertingComponent implements OnInit {
  
    multi: boolean = false;
  
-   expandedElement: orderList[] = [];
- 
+   
+
    task: orderTask = {
      taskName: 'Indeterminate',
      completed: false,
@@ -72,6 +74,8 @@ export class ConvertingComponent implements OnInit {
         dialog.afterClosed().subscribe(data=>{
           this.appservice.getConverting().subscribe(orders=>{
             this.newDataSource.data = orders;
+            this.filteredSource.data = orders;
+            this.columnSearching = false;
             this.task.subtasks = orders
             this.clearTasks();
           });
@@ -97,6 +101,7 @@ export class ConvertingComponent implements OnInit {
     }
 
     editInfo(data: orderList){
+      console.log(data);
       if(!this.multi){  
       this.appservice.getRejects(data.id).subscribe(rejects=>{
         let reject: rejectList;
@@ -200,20 +205,82 @@ export class ConvertingComponent implements OnInit {
      return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
    }
  
- 
+   
    filteredItems: string = ''
  
+   columnSearching: boolean = false;
+
    applyFilter(event: Event) {
-       const filterValue = (event.target as HTMLInputElement).value;
-       this.newDataSource.filter = filterValue.trim().toLowerCase();
-       this.filteredItems = filterValue.trim().toLowerCase()
- 
-       this.expandedElement = this.newDataSource.filteredData;
-       
-       if(!filterValue){
-         localStorage.removeItem("allItems")
-         this.allComplete = false
+       const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+
+       let columnSearch = filterValue.split(':');
+
+       if(columnSearch.length == 1){
+        this.newDataSource.filter = filterValue.trim().toLowerCase();
+        this.filteredItems = filterValue.trim().toLowerCase()
+        this.columnSearching = false;
+        this.filteredSource.data = [];
+        this.task.subtasks = this.newDataSource.data;
        }
+
+       else{
+        let filteredData:orderList[] = []
+        let columsearch = columnSearch[1].toLowerCase()
+        this.newDataSource.filter = ""
+        this.columnSearching = true
+
+        this.filteredSource.paginator = this.paginator
+        this.filteredSource.sort = this.matsort
+
+        this.filteredItems = columnSearch[1];
+
+
+        
+        for(let i = 0;i < this.newDataSource.data.length; i++){
+          if(columnSearch[0].includes("so")){
+            if(this.newDataSource.data[i].so.toString().trim().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          if(columnSearch[0].includes("po")){
+            if(this.newDataSource.data[i].po.toString().trim().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          if(columnSearch[0].includes("name")){
+            if(this.newDataSource.data[i].name.trim().toLowerCase().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          if(columnSearch[0] == "item"){
+            if(this.newDataSource.data[i].item.trim().toLowerCase().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          if(columnSearch[0].includes("desc")){
+            if(this.newDataSource.data[i].itemdesc.trim().toLowerCase().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          if(columnSearch[0].includes("qty")){
+            if(this.newDataSource.data[i].qty.toString().trim().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          if(columnSearch[0].includes("prod")){
+            if(this.newDataSource.data[i].shipqty?.toString().trim().includes(columsearch)){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+        }
+        this.filteredSource.data = filteredData
+        this.task.subtasks = filteredData;
+        }
+
+        if(!filterValue || !columnSearch[1]){
+          localStorage.removeItem("allItems")
+          this.allComplete = false
+        }
      }
  
    setAll(completed: boolean, data: any) {
@@ -366,6 +433,20 @@ export class ConvertingComponent implements OnInit {
          }
          return
        }
+       else if(t.shipqty?.toString() == this.filteredItems && this.filteredItems != ''){
+        t.completed = completed
+        object.push(t)
+        if(t.completed){
+          localStorage.setItem("allItems", JSON.stringify(object))
+          localStorage.setItem("temporaryData", JSON.stringify(object))
+          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+        }
+        else{
+          
+          localStorage.clear()
+        }
+        return
+      }
        else if(this.filteredItems == ''){
          if(!completed){
            t.completed = false
@@ -388,33 +469,20 @@ export class ConvertingComponent implements OnInit {
        this.appservice.movementPost(link, newData).subscribe(data=>{
          this.appservice.getConverting().subscribe(orders=>{
            this.newDataSource.data = orders;
+           this.filteredSource.data = orders;
            this.task.subtasks = orders;
            this.clearTasks();
            this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
          })
        })
      }
-
-    //  updateMultiple(){
-    //   let data = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-    //     let dialog = this.appservice.dialog.open(ConvertDialogComponent, {
-    //       data: {data, sw: 4}
-    //     })
-  
-    //     dialog.afterClosed().subscribe(data=>{
-    //       this.appservice.getPlannerOrders().subscribe(orders=>{
-    //         this.newDataSource.data = orders;
-    //         this.task.subtasks = orders;
-    //         this.clearTasks();
-    //       })
-    //     })
-    //   }
  
      clearTasks(){
        this.temporaryData.length = 0;
        localStorage.clear()
        this.allComplete = false
        this.task.subtasks!.forEach(t=>{t.completed = false})
+       this.ngOnInit()
      }
 
 }
