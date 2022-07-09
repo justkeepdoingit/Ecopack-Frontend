@@ -25,6 +25,8 @@ import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 import { FgComponent } from './front-page/fg/fg.component';
 import { FgDialogComponent } from './front-page/fg/fg-dialog/fg-dialog.component';
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
+import { DataTablesModule } from "angular-datatables";
+
 @NgModule({
   declarations: [
     CanvasJSChart,
@@ -50,7 +52,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    DesignmoduleModule
+    DesignmoduleModule,
+    DataTablesModule
   ],
   entryComponents: [UserDialogComponent, PlannerDialogComponent, LineupDialogComponent, FgDialogComponent],
   providers: [CookieService, DatePipe],
