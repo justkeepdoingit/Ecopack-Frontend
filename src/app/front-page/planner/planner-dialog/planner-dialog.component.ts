@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject} from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppService } from 'src/app/app.service';
 import { orderList } from 'src/app/models/orderList.model';
@@ -15,11 +15,11 @@ export class PlannerDialogComponent implements OnInit {
   private dialogRef: MatDialogRef<PlannerDialogComponent>, private datepipe: DatePipe
   ) {
     this.orderListInfo = orderList
-    
+    console.log(orderList);
    }
    orderListInfo: orderList[] = [];
 
-  dateComment = new FormGroup({})
+  dateComment = new UntypedFormGroup({})
   
   minDate = new Date()
   newDate = new Date();

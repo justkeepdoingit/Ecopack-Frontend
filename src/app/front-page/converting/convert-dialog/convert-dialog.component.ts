@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject} from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppService } from 'src/app/app.service';
 import { orderList } from 'src/app/models/orderList.model';
@@ -25,10 +25,10 @@ export class ConvertDialogComponent implements OnInit {
   rejectList: rejectList;
   multiList: orderList[] = [];
 
-  convertOrders = new FormGroup({})
-  qtyEdit = new FormGroup({})
-  cpof = new FormGroup({})
-  muliOrders = new FormGroup({})
+  convertOrders = new UntypedFormGroup({})
+  qtyEdit = new UntypedFormGroup({})
+  cpof = new UntypedFormGroup({})
+  muliOrders = new UntypedFormGroup({})
 
   sw: number = 0;
 

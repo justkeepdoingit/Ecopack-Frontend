@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ElementRef, Injectable } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { userModel } from './models/usermodels.model';
@@ -15,7 +15,7 @@ import { rejectList } from './models/rejectList.model';
 })
 export class AppService {
 
-  constructor(public http: HttpClient, public formBuilder: FormBuilder, public snackbar: MatSnackBar, public cookieService: CookieService,
+  constructor(public http: HttpClient, public formBuilder: UntypedFormBuilder, public snackbar: MatSnackBar, public cookieService: CookieService,
       public router: Router, public dialog: MatDialog
     ) { 
   } 

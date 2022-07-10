@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConvertDialogComponent } from './convert-dialog/convert-dialog.component';
 import { orderList, orderTask } from 'src/app/models/orderList.model';
 import { rejectList } from 'src/app/models/rejectList.model';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-converting',
   templateUrl: './converting.component.html',
@@ -21,6 +22,7 @@ export class ConvertingComponent implements OnInit {
     frontpage.classStatus.editOrders = false;
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
+    frontpage.classStatus.fg = false
     frontpage.classStatus.converting = true
     localStorage.clear()
    }
@@ -73,11 +75,16 @@ export class ConvertingComponent implements OnInit {
 
         dialog.afterClosed().subscribe(data=>{
           this.appservice.getConverting().subscribe(orders=>{
-            this.newDataSource.data = orders;
-            this.filteredSource.data = orders;
-            this.columnSearching = false;
-            this.task.subtasks = orders
-            this.clearTasks();
+            if(!this.columnSearching){
+              this.newDataSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTasks();
+            }
+            else{
+              this.filteredSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTask2();
+            }
           });
         })
       }
@@ -92,9 +99,16 @@ export class ConvertingComponent implements OnInit {
 
         dialog.afterClosed().subscribe(data=>{
           this.appservice.getConverting().subscribe(orders=>{
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
+            if(!this.columnSearching){
+              this.newDataSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTasks();
+            }
+            else{
+              this.filteredSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTask2();
+            }
           });
         })
       }
@@ -206,283 +220,369 @@ export class ConvertingComponent implements OnInit {
    }
  
    
-   filteredItems: string = ''
- 
-   columnSearching: boolean = false;
+  filters = new FormControl([]);
 
-   applyFilter(event: Event) {
-       const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
-
-       let columnSearch = filterValue.split(':');
-
-       if(columnSearch.length == 1){
-        this.newDataSource.filter = filterValue.trim().toLowerCase();
-        this.filteredItems = filterValue.trim().toLowerCase()
-        this.columnSearching = false;
-        this.filteredSource.data = [];
-        this.task.subtasks = this.newDataSource.data;
-       }
-
-       else{
-        let filteredData:orderList[] = []
-        let columsearch = columnSearch[1].toLowerCase()
-        this.newDataSource.filter = ""
-        this.columnSearching = true
-
-        this.filteredSource.paginator = this.paginator
-        this.filteredSource.sort = this.matsort
-
-        this.filteredItems = columnSearch[1];
+  selectedValue:string = '';
+  filter: any[] = [
+    {value: 'date', viewValue: 'Date'},
+    {value: 'so', viewValue: 'SO'},
+    {value: 'po', viewValue: 'PO'},
+    {value: 'name', viewValue: 'Name'},
+    {value: 'item', viewValue: 'Item'},
+    {value: 'itemdesc', viewValue: 'Item Description'},
+    {value: 'qty', viewValue: 'Order Qty'},
+    {value: 'deliverydate', viewValue: 'Date Needed'},
+    {value: 'shipqty', viewValue: 'Production Qty'},
+  ];
 
 
-        
-        for(let i = 0;i < this.newDataSource.data.length; i++){
-          if(columnSearch[0].includes("so")){
-            if(this.newDataSource.data[i].so.toString().trim().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          if(columnSearch[0].includes("po")){
-            if(this.newDataSource.data[i].po.toString().trim().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          if(columnSearch[0].includes("name")){
-            if(this.newDataSource.data[i].name.trim().toLowerCase().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          if(columnSearch[0] == "item"){
-            if(this.newDataSource.data[i].item.trim().toLowerCase().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          if(columnSearch[0].includes("desc")){
-            if(this.newDataSource.data[i].itemdesc.trim().toLowerCase().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          if(columnSearch[0].includes("qty")){
-            if(this.newDataSource.data[i].qty.toString().trim().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          if(columnSearch[0].includes("prod")){
-            if(this.newDataSource.data[i].shipqty?.toString().trim().includes(columsearch)){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-        }
-        this.filteredSource.data = filteredData
-        this.task.subtasks = filteredData;
-        }
+  filteredItems: string = ''
 
-        if(!filterValue || !columnSearch[1]){
-          localStorage.removeItem("allItems")
-          this.allComplete = false
-        }
-     }
- 
-   setAll(completed: boolean, data: any) {
-     if (this.task.subtasks == null) {
-       return;
-     }
-     else if(!completed){
-           localStorage.clear()
-     }
-     else if(completed){
-       this.allComplete = completed
-       this.task.subtasks.forEach(t=>{t.completed = false})
-     }
- 
-     let object: orderList[] = []
- 
-     this.task.subtasks.forEach(t => {
-       if(t.id?.toString().includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
-           
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-           this.task.subtasks?.forEach(t=>{t.completed = false})
-         }
-         return
-       }
-       else if(t.po.includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
-           
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-           this.task.subtasks?.forEach(t=>{t.completed = false})
-         }
-         return
-       }
-       else if(t.so.toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
- 
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-           this.task.subtasks?.forEach(t=>{t.completed = false})
-         }
-         return
-       }
-       else if(t.name.toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
- 
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-         }
-         return
-       }
-       else if(t.deliverydate?.includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
- 
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-         }
-         return
-       }
-       else if(t.itemdesc.toString().toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-         }
-         return
-       }
-       else if(t.item.toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
- 
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-         }
-         return
-       }
-       else if(t.date.toString().includes(this.filteredItems) && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-         }
-         return
-       }
-       else if(t.qty.toString() == this.filteredItems && this.filteredItems != ''){
-         t.completed = completed
-         object.push(t)
-         if(t.completed){
-           localStorage.setItem("allItems", JSON.stringify(object))
-           localStorage.setItem("temporaryData", JSON.stringify(object))
-           this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-         }
-         else{
-           
-           localStorage.clear()
-         }
-         return
-       }
-       else if(t.shipqty?.toString() == this.filteredItems && this.filteredItems != ''){
-        t.completed = completed
-        object.push(t)
-        if(t.completed){
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-        }
-        else{
-          
-          localStorage.clear()
-        }
-        return
+  columnSearching: boolean = false;
+  forFilterValue: any[] = []
+  
+  setDatasource(){
+    this.filteredSource.data = this.newDataSource.data
+    this.filteredSource.paginator = this.paginator
+    this.filteredSource.sort = this.matsort
+  }
+
+  forFilters: any[] = []
+  checkChange(data:any){
+    if(data.length > 0){
+      this.forFilters = data;
+      // this.multi = true
+      this.columnSearching = true
+      this.setDatasource();
+      
+      for(let i = 0; i < data.length; i++){
+        this.forFilterValue[i] = '';
       }
-       else if(this.filteredItems == ''){
-         if(!completed){
-           t.completed = false
-           this.allComplete = false;
-           localStorage.clear()
-           
-         }
-         else{
-           this.allComplete = completed
-           t.completed = completed
-           localStorage.setItem("allItems", JSON.stringify(data))
-         }
-       }
-     })
-   }
+      return
+    }
+    // this.multi = false;
+    this.columnSearching = false;
+    this.forFilterValue.length = 0;
+    this.forFilters.length = 0;
+    this.ngOnInit()
+  }
+
+  isOptionDisabled(opt: any): boolean {
+    let filterLenght = 0;
+    if(this.filters.value != null){
+      filterLenght = this.filters.value.length;
+    }
+    return filterLenght >= 5 && !this.filters.value!.find(el => el == opt)
+  }
+
+  clearFilter(){
+    this.columnSearching = false;
+    this.forFilterValue.length = 0;
+    this.forFilters.length = 0;
+    this.filters.setValue([]);
+    this.ngOnInit()
+  }
+
+  applyFilter(event: Event, index:number) {
+    this.forFilterValue.length = this.forFilters.length;
+    const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+
+    if(this.forFilters.length == 0){
+     this.newDataSource.filter = filterValue.trim().toLowerCase();
+     this.filteredItems = filterValue.trim().toLowerCase()
+
+     this.columnSearching = false;
+     this.filteredSource.data = [];
+     
+     this.newDataSource.paginator = this.paginator
+     this.newDataSource.sort = this.matsort
+
+     this.task.subtasks = this.newDataSource.data;
+     this.selectedValue = '';
+    }
+    else{
+      this.forFilterValue[index] = filterValue.toString();
+
+      console.log(this.forFilterValue);
+
+      let filteredData:orderList[] = []
+      this.newDataSource.filter = ""
+      this.columnSearching = true
+
+      this.filteredSource.paginator = this.paginator
+      this.filteredSource.sort = this.matsort
+
+      let obj: orderList;
+      
+      type ObjectKey = keyof typeof obj;
+      const myVar1 = this.forFilters[0] as ObjectKey;
+      const myVar2 = this.forFilters[1] as ObjectKey;
+      const myVar3 = this.forFilters[2] as ObjectKey;
+      const myVar4 = this.forFilters[3] as ObjectKey;
+      const myVar5 = this.forFilters[4] as ObjectKey;
+      try {
+        for(let i = 0;i < this.newDataSource.data.length; i++){
+          if(this.forFilterValue.length == 1){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 2){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 3){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 4){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 5){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().includes(this.forFilterValue[4])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+        }
+      } catch (error) {
+        this.appservice.snackbar.open('The column/s you\'re trying to search is probably empty, please try other filter', 'dismiss', {duration: 2500});
+        for(let i = 0;i < this.newDataSource.data.length; i++){
+          filteredData.push(this.newDataSource.data[i])
+        }
+      }
+      
+
+      this.filteredSource.data = filteredData
+      this.task.subtasks = filteredData;
+
+    }
+    if(!filterValue || this.forFilterValue.length == 0){
+      localStorage.removeItem("allItems")
+      this.allComplete = false
+    }
+  }
  
-     moveToFG(){
+    setAll(completed: boolean, data: any) {
+      if (this.task.subtasks == null) {
+        return;
+      }
+      else if(!completed){
+            localStorage.clear()
+      }
+      else if(completed){
+        this.allComplete = completed
+        this.task.subtasks.forEach(t=>{t.completed = false})
+      }
+  
+      let object: orderList[] = []
+  
+      this.task.subtasks.forEach(t => {
+        if(t.id?.toString().includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+            
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+            this.task.subtasks?.forEach(t=>{t.completed = false})
+          }
+          return
+        }
+        else if(t.po.includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+            
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+            this.task.subtasks?.forEach(t=>{t.completed = false})
+          }
+          return
+        }
+        else if(t.so.toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+  
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+            this.task.subtasks?.forEach(t=>{t.completed = false})
+          }
+          return
+        }
+        else if(t.name.toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+  
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(t.deliverydate?.includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+  
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(t.itemdesc.toString().toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(t.item.toLowerCase().includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+  
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(t.date.toString().includes(this.filteredItems) && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(t.qty.toString() == this.filteredItems && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(t.shipqty?.toString() == this.filteredItems && this.filteredItems != ''){
+          t.completed = completed
+          object.push(t)
+          if(t.completed){
+            localStorage.setItem("allItems", JSON.stringify(object))
+            localStorage.setItem("temporaryData", JSON.stringify(object))
+            this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          }
+          else{
+            
+            localStorage.clear()
+          }
+          return
+        }
+        else if(this.filteredItems == ''){
+          if(!completed){
+            t.completed = false
+            this.allComplete = false;
+            localStorage.clear()
+            
+          }
+          else{
+            this.allComplete = completed
+            t.completed = completed
+            localStorage.setItem("allItems", JSON.stringify(data))
+          }
+        }
+      })
+    }
+ 
+    moveToFG(){
        let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
        let link = `https://ecopack2.herokuapp.com/order-list/fg/`
        this.appservice.movementPost(link, newData).subscribe(data=>{
          this.appservice.getConverting().subscribe(orders=>{
-           this.newDataSource.data = orders;
-           this.filteredSource.data = orders;
-           this.task.subtasks = orders;
-           this.clearTasks();
+          if(!this.columnSearching){
+            this.newDataSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTasks();
+          }
+          else{
+            this.filteredSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTask2();
+          }
            this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
          })
        })
-     }
+    }
  
-     clearTasks(){
+    clearTasks(){
        this.temporaryData.length = 0;
        localStorage.clear()
        this.allComplete = false
        this.task.subtasks!.forEach(t=>{t.completed = false})
        this.ngOnInit()
-     }
+    }
+
+    clearTask2(){
+      localStorage.clear()
+      this.temporaryData.length = 0;
+      this.allComplete = false
+      this.task.subtasks!.forEach(t=>{t.completed = false})
+      this.clearFilter()
+      for(let i = 0; i < this.forFilters.length; i++){
+        this.forFilterValue[i] = '';
+      }
+    }
 
 }

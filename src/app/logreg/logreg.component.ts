@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { LogregService } from './logreg.service';
 import { FormGroupDirective, Validators } from '@angular/forms';
 import { AppService } from '../app.service';
@@ -34,8 +34,8 @@ export class LogregComponent implements OnInit {
   adminCookies: string = '';
   userAccCookies: string = '';
 
-  userLogin = new FormGroup({});
-  userReg = new FormGroup({});
+  userLogin = new UntypedFormGroup({});
+  userReg = new UntypedFormGroup({});
   ngOnInit(): void {
     this.userLogin = this.logreg.formBuilders.group({
       loguser: ['', Validators.required],

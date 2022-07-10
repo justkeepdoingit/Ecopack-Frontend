@@ -26,37 +26,39 @@ import { FgComponent } from './front-page/fg/fg.component';
 import { FgDialogComponent } from './front-page/fg/fg-dialog/fg-dialog.component';
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 import { DataTablesModule } from "angular-datatables";
-
+import { filterPipes } from './componentPipes/filterPipes.pipe';
+import { filterPipes2 } from './componentPipes/filterPipes2.pipe';
 @NgModule({
-  declarations: [
-    CanvasJSChart,
-    AppComponent,
-    LogregComponent,
-    FrontPageComponent,
-    DashboardComponent,
-    pipeUserRights,
-    UserDialogComponent,
-    StatusPageComponent,
-    PlannerComponent,
-    EditOrdersComponent,
-    PlannerDialogComponent,
-    LineupComponent,
-    LineupDialogComponent,
-    ImportOrdersComponent,
-    ConvertingComponent,
-    ConvertDialogComponent,
-    FgComponent,
-    FgDialogComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    DesignmoduleModule,
-    DataTablesModule
-  ],
-  entryComponents: [UserDialogComponent, PlannerDialogComponent, LineupDialogComponent, FgDialogComponent],
-  providers: [CookieService, DatePipe],
-  bootstrap: [AppComponent]
+    declarations: [
+        CanvasJSChart,
+        AppComponent,
+        LogregComponent,
+        FrontPageComponent,
+        DashboardComponent,
+        pipeUserRights,
+        filterPipes,
+        filterPipes2,
+        UserDialogComponent,
+        StatusPageComponent,
+        PlannerComponent,
+        EditOrdersComponent,
+        PlannerDialogComponent,
+        LineupComponent,
+        LineupDialogComponent,
+        ImportOrdersComponent,
+        ConvertingComponent,
+        ConvertDialogComponent,
+        FgComponent,
+        FgDialogComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        DesignmoduleModule,
+        DataTablesModule
+    ],
+    providers: [CookieService, DatePipe],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

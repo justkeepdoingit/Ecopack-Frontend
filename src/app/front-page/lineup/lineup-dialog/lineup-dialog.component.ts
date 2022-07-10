@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject} from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppService } from 'src/app/app.service';
 import { orderList } from 'src/app/models/orderList.model';
@@ -20,7 +20,7 @@ export class LineupDialogComponent implements OnInit {
 
 
   lineupList: orderList;
-  lineupOrders = new FormGroup({})
+  lineupOrders = new UntypedFormGroup({})
   ngOnInit(): void {
     this.lineupOrders = this.appservice.formBuilder.group({
       shipqty: [this.lineupList.shipqty, Validators.required],

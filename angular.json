@@ -113,5 +113,7 @@
       }
     }
   },
-  "defaultProject": "ecopack-frontend"
+  "cli": {
+    "analytics": false
+  }
 }

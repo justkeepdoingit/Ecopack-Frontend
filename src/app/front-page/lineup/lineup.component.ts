@@ -6,6 +6,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { orderList, orderTask } from 'src/app/models/orderList.model';
 import { LineupDialogComponent } from './lineup-dialog/lineup-dialog.component';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-lineup',
   templateUrl: './lineup.component.html',
@@ -22,7 +23,6 @@ export class LineupComponent implements OnInit {
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
-
    }
 
   
@@ -64,18 +64,28 @@ export class LineupComponent implements OnInit {
   radius: number = 25
   unbounded: boolean = false;
 
-  editInfo(data: orderList){
+  editInfo(datas: orderList){
     if(!this.multi){
       let dialog = this.appservice.dialog.open(LineupDialogComponent, {
-        data: data,
+        data: datas,
         // width: '35%',
       })
   
       dialog.afterClosed().subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
-          this.newDataSource.data = orders;
-          this.task.subtasks = orders
-          this.clearTasks();
+          if(orders[0].comment != datas.comment || orders[0].deliverydate != datas.deliverydate){
+            this.appservice.snackbar.open('Order Data Updated!', 'dismiss', {duration:3000})
+          }
+          if(!this.columnSearching){
+            this.newDataSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTasks();
+          }
+          else{
+            this.filteredSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTask2();
+          }
         });
         
       })
@@ -140,87 +150,150 @@ export class LineupComponent implements OnInit {
     return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
   }
 
+  filters = new FormControl([]);
+
+  selectedValue:string = '';
+  filter: any[] = [
+    {value: 'date', viewValue: 'Date'},
+    {value: 'so', viewValue: 'SO'},
+    {value: 'po', viewValue: 'PO'},
+    {value: 'name', viewValue: 'Name'},
+    {value: 'item', viewValue: 'Item'},
+    {value: 'itemdesc', viewValue: 'Item Description'},
+    {value: 'qty', viewValue: 'Order Qty'},
+    {value: 'deliverydate', viewValue: 'Date Needed'},
+    {value: 'shipqty', viewValue: 'Machine Qty'},
+  ];
+
 
   filteredItems: string = ''
 
   columnSearching: boolean = false;
+  forFilterValue: any[] = []
+  
+  setDatasource(){
+    this.filteredSource.data = this.newDataSource.data
+    this.filteredSource.paginator = this.paginator
+    this.filteredSource.sort = this.matsort
+  }
 
-  applyFilter(event: Event) {
+  forFilters: any[] = []
+  checkChange(data:any){
+    if(data.length > 0){
+      this.forFilters = data;
+      // this.multi = true
+      this.columnSearching = true
+      this.setDatasource();
+      
+      for(let i = 0; i < data.length; i++){
+        this.forFilterValue[i] = '';
+      }
+      return
+    }
+    // this.multi = false;
+    this.columnSearching = false;
+    this.forFilterValue.length = 0;
+    this.forFilters.length = 0;
+    this.ngOnInit()
+  }
+
+  isOptionDisabled(opt: any): boolean {
+    let filterLenght = 0;
+    if(this.filters.value != null){
+      filterLenght = this.filters.value.length;
+    }
+    return filterLenght >= 5 && !this.filters.value!.find(el => el == opt)
+  }
+
+  clearFilter(){
+    this.columnSearching = false;
+    this.forFilterValue.length = 0;
+    this.forFilters.length = 0;
+    this.filters.setValue([]);
+    this.ngOnInit()
+  }
+
+  applyFilter(event: Event, index:number) {
+    this.forFilterValue.length = this.forFilters.length;
     const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
 
-    let columnSearch = filterValue.split(':');
-
-    if(columnSearch.length == 1){
+    if(this.forFilters.length == 0){
      this.newDataSource.filter = filterValue.trim().toLowerCase();
      this.filteredItems = filterValue.trim().toLowerCase()
-     
+
      this.columnSearching = false;
      this.filteredSource.data = [];
-
+     
      this.newDataSource.paginator = this.paginator
      this.newDataSource.sort = this.matsort
 
      this.task.subtasks = this.newDataSource.data;
+     this.selectedValue = '';
     }
-
     else{
-     let filteredData:orderList[] = []
-     let columsearch = columnSearch[1].toLowerCase()
-     this.newDataSource.filter = ""
-     this.columnSearching = true
+      this.forFilterValue[index] = filterValue.toString();
 
-     this.filteredSource.paginator = this.paginator
-     this.filteredSource.sort = this.matsort
+      console.log(this.forFilterValue);
 
-     this.filteredItems = columnSearch[1];
+      let filteredData:orderList[] = []
+      this.newDataSource.filter = ""
+      this.columnSearching = true
 
+      this.filteredSource.paginator = this.paginator
+      this.filteredSource.sort = this.matsort
 
-     
-     for(let i = 0;i < this.newDataSource.data.length; i++){
-       if(columnSearch[0].includes("so")){
-         if(this.newDataSource.data[i].so.toString().trim().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-       if(columnSearch[0].includes("po")){
-         if(this.newDataSource.data[i].po.toString().trim().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-       if(columnSearch[0].includes("name")){
-         if(this.newDataSource.data[i].name.trim().toLowerCase().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-       if(columnSearch[0] == "item"){
-         if(this.newDataSource.data[i].item.trim().toLowerCase().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-       if(columnSearch[0].includes("desc")){
-         if(this.newDataSource.data[i].itemdesc.trim().toLowerCase().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-       if(columnSearch[0].includes("qty")){
-         if(this.newDataSource.data[i].qty.toString().trim().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-       if(columnSearch[0].includes("prod")){
-         if(this.newDataSource.data[i].shipqty?.toString().trim().includes(columsearch)){
-           filteredData.push(this.newDataSource.data[i])
-         }
-       }
-     }
-     this.filteredSource.data = filteredData
-     this.task.subtasks = filteredData;
-     }
+      let obj: orderList;
+      
+      type ObjectKey = keyof typeof obj;
+      const myVar1 = this.forFilters[0] as ObjectKey;
+      const myVar2 = this.forFilters[1] as ObjectKey;
+      const myVar3 = this.forFilters[2] as ObjectKey;
+      const myVar4 = this.forFilters[3] as ObjectKey;
+      const myVar5 = this.forFilters[4] as ObjectKey;
+      try {
+        for(let i = 0;i < this.newDataSource.data.length; i++){
+          if(this.forFilterValue.length == 1){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 2){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 3){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 4){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+          else if(this.forFilterValue.length == 5){
+            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().includes(this.forFilterValue[4])){
+              filteredData.push(this.newDataSource.data[i])
+            }
+          }
+        }
+      } catch (error) {
+        this.appservice.snackbar.open('The column/s you\'re trying to search is probably empty, please try other filter', 'dismiss', {duration: 2500});
+        for(let i = 0;i < this.newDataSource.data.length; i++){
+          filteredData.push(this.newDataSource.data[i])
+        }
+      }
+      
 
-     if(!filterValue || !columnSearch[1]){
-       localStorage.removeItem("allItems")
-       this.allComplete = false
-     }
+      this.filteredSource.data = filteredData
+      this.task.subtasks = filteredData;
+
+    }
+    if(!filterValue || this.forFilterValue.length == 0){
+      localStorage.removeItem("allItems")
+      this.allComplete = false
+    }
   }
 
   setAll(completed: boolean, data: any) {
@@ -394,10 +467,16 @@ export class LineupComponent implements OnInit {
       let link = `https://ecopack2.herokuapp.com/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
-          this.newDataSource.data = orders;
-          this.filteredSource.data = orders;
-          this.task.subtasks = orders;
-          this.clearTasks();
+          if(!this.columnSearching){
+            this.newDataSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTasks();
+          }
+          else{
+            this.filteredSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTask2();
+          }
           this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
         })
       })
@@ -408,10 +487,16 @@ export class LineupComponent implements OnInit {
       let link = `https://ecopack2.herokuapp.com/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
-          this.newDataSource.data = orders;
-          this.filteredSource.data = orders;
-          this.task.subtasks = orders;
-          this.clearTasks();
+          if(!this.columnSearching){
+            this.newDataSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTasks();
+          }
+          else{
+            this.filteredSource.data = orders;
+            this.task.subtasks = orders
+            this.clearTask2();
+          }
           this.appservice.snackbar.open("Selected items moved to Converting", "Dismiss", {duration: 2500})
         })
       })
@@ -424,6 +509,17 @@ export class LineupComponent implements OnInit {
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
       this.ngOnInit()
+    }
+
+    clearTask2(){
+      localStorage.clear()
+      this.temporaryData.length = 0;
+      this.allComplete = false
+      this.task.subtasks!.forEach(t=>{t.completed = false})
+      this.clearFilter()
+      for(let i = 0; i < this.forFilters.length; i++){
+        this.forFilterValue[i] = '';
+      }
     }
 
 }
