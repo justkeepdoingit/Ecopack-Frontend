@@ -23,39 +23,39 @@ export class AppService {
   userInfos!: userModel;
 
   getPlannerOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/planners')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/planners')
   }
 
   getLineupOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/lineupOrders')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/lineupOrders')
   }
 
   getConverting(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/convertOrders')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/convertOrders')
   }
 
   getFgOrders(): Observable<orderList[]>{
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/fgOrders')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/fgOrders')
   }
 
   getAllUsers(): Observable<userModel[]>{
-    return this.http.get<userModel[]>('https://ecopack2.herokuapp.com/user-account/getAllUsers')
+    return this.http.get<userModel[]>('http://localhost:3000/user-account/getAllUsers')
   }
 
   getRejects(orderid: any): Observable<rejectList>{
-    return this.http.get<rejectList>(`https://ecopack2.herokuapp.com/order-list/getReject/${orderid}`)
+    return this.http.get<rejectList>(`http://localhost:3000/order-list/getReject/${orderid}`)
   } 
 
   getInfo(id: number): Observable<userModel>{
-    return this.http.get<userModel>(`https://ecopack2.herokuapp.com/user-account/findUser/${id}`, {withCredentials:true})
+    return this.http.get<userModel>(`http://localhost:3000/user-account/findUser/${id}`, {withCredentials:true})
   }
 
   updateReject(data:rejectList, id: any): Observable<rejectList>{
-    return this.http.post<rejectList>(`https://ecopack2.herokuapp.com/order-list/updateReject/${id}`, data);
+    return this.http.post<rejectList>(`http://localhost:3000/order-list/updateReject/${id}`, data);
   }
 
   getOrderStatus(): Observable<any[]>{
-    return this.http.get<any[]>('https://ecopack2.herokuapp.com/order-list/getStatuses');
+    return this.http.get<any[]>('http://localhost:3000/order-list/getStatuses');
   }
   
 
@@ -70,7 +70,7 @@ export class AppService {
     else{
       rights = 2
     }
-    this.http.patch<userModel>(`https://ecopack2.herokuapp.com/user-account/updateUsers/${datas.id}`,{
+    this.http.patch<userModel>(`http://localhost:3000/user-account/updateUsers/${datas.id}`,{
       id: datas.id,
       username: datas.username,
       password: datas.password,
@@ -94,7 +94,7 @@ export class AppService {
 
   logreg(username: string, password: string, status: number){
     if(status == 2){
-      this.http.post<userModel>('https://ecopack2.herokuapp.com/user-account/register',{
+      this.http.post<userModel>('http://localhost:3000/user-account/register',{
         username: username,
         password: password
       }).subscribe(data=>{
@@ -102,7 +102,7 @@ export class AppService {
       })
     }
     else{
-      this.http.post<userModel>('https://ecopack2.herokuapp.com/user-account/login', {
+      this.http.post<userModel>('http://localhost:3000/user-account/login', {
         username: username,
         password: password
       }, {withCredentials:true}).subscribe(data=>{

@@ -3,9 +3,34 @@
       <!-- <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg" alt="" /> -->
       <div class="p-6 flex flex-col justify-start w-full">
         <h2 class="text-secondary-700 text-xl font-medium mb-2">Finished Goods</h2>
-        <mat-form-field style="width: 100%;" appearance="standard">
+        <div *ngIf="columnSearching" [ngClass]="filterClass">
+          <div *ngFor="let filterData of forFilters; let i = index"  class="flex flex-col md:flex-row md:max-w-full">
+            <div class=" flex flex-col justify-start w-full">
+              <mat-form-field *ngIf="columnSearching" style="width: 100%;" appearance="standard">
+                <mat-label>Filter By {{filterData | filterName}}</mat-label>
+                <input matInput (keyup)="applyFilter($event, i)" placeholder="Search" #input>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <mat-form-field *ngIf="!columnSearching" style="width: 100%;" appearance="standard">
           <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+          <input matInput (keyup)="applyFilter($event, 100)" placeholder="Search" #input>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Select Filter By Column</mat-label>
+          <mat-select #matSelect [formControl]="filters" (selectionChange)="checkChange($event.value)" multiple>
+            <mat-select-trigger>
+              {{filters.value?.[0] | filterName}}
+              <span *ngIf="(filters.value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(filters.value?.length || 0) - 1}} {{filters.value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let filter of filter" [disabled]="isOptionDisabled(filter.value)" [value]="filter.value">{{filter.viewValue}}</mat-option>
+          </mat-select>
+          <button (click)="clearFilter()" *ngIf="columnSearching" matSuffix mat-icon-button aria-label="Clear">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
         <div class=" overflow-y-auto relative">
         <div *ngIf="temporaryData.length > 0 && multi">

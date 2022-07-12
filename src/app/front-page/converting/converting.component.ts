@@ -115,48 +115,57 @@ export class ConvertingComponent implements OnInit {
     }
 
     editInfo(data: orderList){
-      console.log(data);
       if(!this.multi){  
-      this.appservice.getRejects(data.id).subscribe(rejects=>{
-        let reject: rejectList;
-        if(rejects){
-          reject = {
-            orderid: rejects.orderid,
-            creasingr: rejects.creasingr,
-            printingr: rejects.printingr,
-            dcr: rejects.dcr,
-            finishr: rejects.finishr,
-            corr: rejects.corr,
-            corl: rejects.corl,
-            comment: rejects.comment
+        this.appservice.getRejects(data.id).subscribe(rejects=>{
+          let reject: rejectList;
+          if(rejects){
+            reject = {
+              orderid: rejects.orderid,
+              creasingr: rejects.creasingr,
+              printingr: rejects.printingr,
+              dcr: rejects.dcr,
+              finishr: rejects.finishr,
+              corr: rejects.corr,
+              corl: rejects.corl,
+              comment: rejects.comment
+            }
           }
-        }
-        else{
-          reject = {
-            orderid: data.id!,
-            creasingr: 0,
-            printingr: 0,
-            dcr: 0,
-            finishr: 0,
-            corr: 0,
-            corl: 0,
-            comment: ''
+          else{
+            reject = {
+              orderid: data.id!,
+              creasingr: 0,
+              printingr: 0,
+              dcr: 0,
+              finishr: 0,
+              corr: 0,
+              corl: 0,
+              comment: ''
+            }
           }
-        }
-        let dialog = this.appservice.dialog.open(ConvertDialogComponent, {
-          data: {data, sw:1, reject},
-        })
-    
-        dialog.afterClosed().subscribe(data=>{
-          this.appservice.getConverting().subscribe(orders=>{
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          });
-        })
-      })
-
-        
+          let dialog = this.appservice.dialog.open(ConvertDialogComponent, {
+            data: {data, sw:1, reject},
+          })
+      
+          dialog.afterClosed().subscribe(data=>{
+            if(data){
+              this.appservice.getConverting().subscribe(orders=>{
+                if(!this.columnSearching){
+                  this.newDataSource.data = orders;
+                  this.task.subtasks = orders
+                  this.clearTasks();
+                }
+                else{
+                  this.filteredSource.data = orders;
+                  this.task.subtasks = orders
+                  this.clearTask2();
+                }
+              });
+            }
+          })
+        }) 
+      }
+      else{
+        this.appservice.snackbar.open('Multiple Selection On', 'dismiss',{duration:2500})
       }
     }
      
@@ -222,6 +231,8 @@ export class ConvertingComponent implements OnInit {
    
   filters = new FormControl([]);
 
+  filterClass: string = '';
+
   selectedValue:string = '';
   filter: any[] = [
     {value: 'date', viewValue: 'Date'},
@@ -254,6 +265,8 @@ export class ConvertingComponent implements OnInit {
       // this.multi = true
       this.columnSearching = true
       this.setDatasource();
+
+      this.filterClass = `justify grid lg:grid-cols-${this.forFilters.length} gap-1`
       
       for(let i = 0; i < data.length; i++){
         this.forFilterValue[i] = '';
@@ -264,6 +277,7 @@ export class ConvertingComponent implements OnInit {
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
+    this.clearFilter()
     this.ngOnInit()
   }
 
@@ -548,7 +562,7 @@ export class ConvertingComponent implements OnInit {
  
     moveToFG(){
        let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-       let link = `https://ecopack2.herokuapp.com/order-list/fg/`
+       let link = `http://localhost:3000/order-list/fg/`
        this.appservice.movementPost(link, newData).subscribe(data=>{
          this.appservice.getConverting().subscribe(orders=>{
           if(!this.columnSearching){

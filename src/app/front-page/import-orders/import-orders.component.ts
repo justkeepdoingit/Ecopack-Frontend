@@ -39,7 +39,7 @@ export class ImportOrdersComponent implements OnInit {
       if(confirm("Upload This File?")){
         let fd = new FormData()
         fd.append("csv", this.selectedFile, this.selectedFile.name)
-        this.appservice.getGeneralData("https://ecopack2.herokuapp.com/order-list/uploads", fd).subscribe(
+        this.appservice.getGeneralData("http://localhost:3000/order-list/uploads", fd).subscribe(
           data=>{
             this.reset = ''
             this.appservice.snackbar.open("If No Data Appeared, Something Went Wrong When Uploading File. Please Check Your CSV", "Okay", {duration: 1000})

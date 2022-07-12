@@ -56,6 +56,8 @@ export class PlannerComponent implements OnInit {
     })
   }
 
+  
+
   multi: boolean = false;
 
   expandedElement: orderList[] = [];
@@ -85,22 +87,26 @@ export class PlannerComponent implements OnInit {
       })
   
       dialog.afterClosed().subscribe(data=>{
-        this.appservice.getPlannerOrders().subscribe(orders=>{
-          if(orders[0].comment != datas.comment || orders[0].deliverydate != datas.deliverydate){
-            this.appservice.snackbar.open('Order Data Updated!', 'dismiss', {duration:3000})
-          }
-          if(!this.columnSearching){
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTask2();
-          }
-        });
+        if(data == 1){
+          this.appservice.getPlannerOrders().subscribe(orders=>{
+            if(!this.columnSearching){
+              this.newDataSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTasks();
+            }
+            else{
+              this.filteredSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTask2();
+            }
+          });
+          this.appservice.snackbar.open('Order Updated!', 'dismiss',{duration:2500})
+        }
+        
       })
+    }
+    else{
+      this.appservice.snackbar.open('Multiple Selection On', 'dismiss',{duration:2500})
     }
   }
 
@@ -173,6 +179,8 @@ export class PlannerComponent implements OnInit {
     this.filteredSource.sort = this.matsort
   }
 
+  filterClass: string = '';
+
   forFilters: any[] = []
   checkChange(data:any){
     if(data.length > 0){
@@ -180,8 +188,9 @@ export class PlannerComponent implements OnInit {
       // this.multi = true
       this.columnSearching = true
       this.setDatasource();
-      
+
       for(let i = 0; i < data.length; i++){
+        this.filterClass = `justify grid lg:grid-cols-${i+1} gap-1`
         this.forFilterValue[i] = '';
       }
       return
@@ -190,6 +199,7 @@ export class PlannerComponent implements OnInit {
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
+    this.clearFilter()
     this.ngOnInit()
   }
 
@@ -210,8 +220,9 @@ export class PlannerComponent implements OnInit {
   }
   
   applyFilter(event: Event, index:number) {
+
     this.forFilterValue.length = this.forFilters.length;
-    const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
 
     if(this.forFilters.length == 0){
      this.newDataSource.filter = filterValue.trim().toLowerCase();
@@ -229,8 +240,6 @@ export class PlannerComponent implements OnInit {
     else{
       this.forFilterValue[index] = filterValue.toString();
 
-      console.log(this.forFilterValue);
-
       let filteredData:orderList[] = []
       this.newDataSource.filter = ""
       this.columnSearching = true
@@ -239,6 +248,7 @@ export class PlannerComponent implements OnInit {
       this.filteredSource.sort = this.matsort
 
       let obj: orderList;
+
       
       type ObjectKey = keyof typeof obj;
       const myVar1 = this.forFilters[0] as ObjectKey;
@@ -248,27 +258,27 @@ export class PlannerComponent implements OnInit {
       const myVar5 = this.forFilters[4] as ObjectKey;
       for(let i = 0;i < this.newDataSource.data.length; i++){
         if(this.forFilterValue.length == 1){
-          if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0])){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0])){
             filteredData.push(this.newDataSource.data[i])
           }
         }
         else if(this.forFilterValue.length == 2){
-          if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1])){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1])){
             filteredData.push(this.newDataSource.data[i])
           }
         }
         else if(this.forFilterValue.length == 3){
-          if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2])){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2])){
             filteredData.push(this.newDataSource.data[i])
           }
         }
         else if(this.forFilterValue.length == 4){
-          if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3])){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3])){
             filteredData.push(this.newDataSource.data[i])
           }
         }
         else if(this.forFilterValue.length == 5){
-          if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().includes(this.forFilterValue[4])){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().toLowerCase().includes(this.forFilterValue[4])){
             filteredData.push(this.newDataSource.data[i])
           }
         }
@@ -475,7 +485,7 @@ export class PlannerComponent implements OnInit {
 
     moveToLineUp(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
+      let link = `http://localhost:3000/order-list/lineup/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getPlannerOrders().subscribe(orders=>{
           if(!this.columnSearching){
@@ -513,3 +523,4 @@ export class PlannerComponent implements OnInit {
       this.clearFilter()
     }
 }
+

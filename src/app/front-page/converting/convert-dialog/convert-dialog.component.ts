@@ -76,14 +76,14 @@ export class ConvertDialogComponent implements OnInit {
   updateReject(data: rejectList){
     this.appservice.updateReject(data, this.convertList.id).subscribe()
     this.appservice.snackbar.open(`PO # ${this.convertList.po} details has been updated`, 'Dismiss', {duration: 2500})
-    this.dialogRef.close()
+    this.dialogRef.close(1)
   }
 
   updateQty(data: orderList){
-    let link = `https://ecopack2.herokuapp.com/order-list/updateOrder/${this.convertList.id}`
+    let link = `http://localhost:3000/order-list/updateOrder/${this.convertList.id}`
     this.appservice.orderPatch(link, data).subscribe()
     this.appservice.snackbar.open(`PO # ${this.convertList.po} details has been updated`, 'Dismiss', {duration: 2500})
-    this.dialogRef.close()
+    this.dialogRef.close(1)
   }
 
   updateStatus(data: orderList){
@@ -97,7 +97,7 @@ export class ConvertDialogComponent implements OnInit {
   //   }
 
   //   this.multiList.forEach(data=>{
-  //     let link = `https://ecopack2.herokuapp.com/order-list/updateOrder/${data.id}`;
+  //     let link = `http://localhost:3000/order-list/updateOrder/${data.id}`;
   //     this.appservice.orderPatch(link, newData).subscribe(datas=>{
   //       this.dialogRef.close(1);
   //     })

@@ -3,12 +3,14 @@
       <!-- <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg" alt="" /> -->
       <div class="p-6 flex flex-col justify-start w-full">
         <h2 class="text-secondary-700 text-xl font-medium mb-2">Converting Orders</h2>
-        <div *ngIf="columnSearching">
-          <div *ngFor="let filterData of forFilters; let i = index">
-            <mat-form-field *ngIf="columnSearching" style="width: 100%;" appearance="standard">
-              <mat-label>Filter By {{filterData | filterName}}</mat-label>
-              <input matInput (keyup)="applyFilter($event, i)" placeholder="Search" #input>
-            </mat-form-field>
+        <div *ngIf="columnSearching" [ngClass]="filterClass">
+          <div *ngFor="let filterData of forFilters; let i = index"  class="flex flex-col md:flex-row md:max-w-full">
+            <div class=" flex flex-col justify-start w-full">
+              <mat-form-field *ngIf="columnSearching" style="width: 100%;" appearance="standard">
+                <mat-label>Filter By {{filterData | filterName2}}</mat-label>
+                <input matInput (keyup)="applyFilter($event, i)" placeholder="Search" #input>
+              </mat-form-field>
+            </div>
           </div>
         </div>
         <mat-form-field *ngIf="!columnSearching" style="width: 100%;" appearance="standard">

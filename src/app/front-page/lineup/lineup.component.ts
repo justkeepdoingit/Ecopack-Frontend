@@ -72,23 +72,24 @@ export class LineupComponent implements OnInit {
       })
   
       dialog.afterClosed().subscribe(data=>{
-        this.appservice.getLineupOrders().subscribe(orders=>{
-          if(orders[0].comment != datas.comment || orders[0].deliverydate != datas.deliverydate){
-            this.appservice.snackbar.open('Order Data Updated!', 'dismiss', {duration:3000})
-          }
-          if(!this.columnSearching){
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTask2();
-          }
-        });
-        
+        if(data){
+          this.appservice.getLineupOrders().subscribe(orders=>{
+            if(!this.columnSearching){
+              this.newDataSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTasks();
+            }
+            else{
+              this.filteredSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTask2();
+            }
+          });
+        }
       })
+    }
+    else{
+      this.appservice.snackbar.open('Multiple Selection On', 'dismiss',{duration:2500})
     }
   }
 
@@ -167,7 +168,7 @@ export class LineupComponent implements OnInit {
 
 
   filteredItems: string = ''
-
+  filterClass: string = '';
   columnSearching: boolean = false;
   forFilterValue: any[] = []
   
@@ -184,6 +185,8 @@ export class LineupComponent implements OnInit {
       // this.multi = true
       this.columnSearching = true
       this.setDatasource();
+
+      this.filterClass = `justify grid lg:grid-cols-${this.forFilters.length} gap-1`
       
       for(let i = 0; i < data.length; i++){
         this.forFilterValue[i] = '';
@@ -194,6 +197,7 @@ export class LineupComponent implements OnInit {
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
+    this.clearFilter()
     this.ngOnInit()
   }
 
@@ -464,7 +468,7 @@ export class LineupComponent implements OnInit {
 
     moveToFG(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/fg/`
+      let link = `http://localhost:3000/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           if(!this.columnSearching){
@@ -484,7 +488,7 @@ export class LineupComponent implements OnInit {
 
     moveToConverting(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/convert/`
+      let link = `http://localhost:3000/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
           if(!this.columnSearching){
