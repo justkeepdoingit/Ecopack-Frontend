@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit {
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
+    frontpage.classStatus.delivery = false
     this.admin = this.appservice.cookieService.get('user_rights')
   }
 
@@ -56,7 +57,7 @@ export class DashboardComponent implements OnInit {
           exportEnabled: true,
           animationDuration: 700,
           title: {
-          text: "Orders Production Process"
+            text: "Orders Production Process"
           },
           subtitles: [{
           text: "Count Per Process"
@@ -64,6 +65,7 @@ export class DashboardComponent implements OnInit {
           data: [{
           type: "doughnut", //change type to column, line, area, doughnut, etc
           indexLabel: "{name}: {y}",
+          legendText: "{name}",
           dataPoints: [
             { name: "Planning", y: data[0].planning },
             { name: "Line Up", y: data[0].lineup },
@@ -85,8 +87,8 @@ export class DashboardComponent implements OnInit {
   }
 
   dashboardAdmins = {
-    adminClass: 'justify grid lg:grid-cols-2 gap-5',
-    nonAdmin: 'justify grid lg:grid-cols-1 gap-5',
+    adminClass: 'justify grid md:grid-cols-2 gap-5',
+    nonAdmin: 'justify grid md:grid-cols-1 gap-5',
     useraccNA: 'flex flex-col md:flex-row md:max-w-full p-4 lg:mx-44 rounded-lg shadow-lg shadow-secondary-400',
     useraccA: 'flex flex-col md:flex-row md:max-w-full p-4 rounded-lg shadow-lg shadow-secondary-400'
   }

@@ -1,33 +1,25 @@
 import { ThemePalette } from "@angular/material/core";
-export interface orderList{
+export interface shippingList{
     id?: number
     date: string
-    po: string
     so: string
+    po: string
     name: string
     item: string
     itemdesc: string
     qty: number
-    lineup: boolean
-    converting: boolean
-    fg: boolean
-    delivery: boolean
-    shipqty: number
     deliverydate: string
-    comment: string
-    c: boolean,
-    p: boolean,
-    o: boolean,
-    f: boolean,
-    shipstatus: string,
+    shipqty: number
+    shipstatus: string
+    deliveryqty: number
     color?: string
     completed?: boolean
     taskName?: string;
 }
 
-export interface orderTask {
+export interface shippingTask {
     taskName: string;
     completed: boolean;
     color: ThemePalette;
-    subtasks?: orderList[];
+    subtasks?: shippingList[];
   }

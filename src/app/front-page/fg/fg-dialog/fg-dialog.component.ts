@@ -52,6 +52,7 @@ export class FgDialogComponent implements OnInit {
 
     this.orderListInfo.forEach(data=>{
       this.appservice.movementPost(link, this.orderListInfo).subscribe()
+      this.dialogRef.close(1);
     }) 
     
     this.appservice.snackbar.open(`PO # ${this.orderList[0].id} was moved for Delivery`, 'Okay', {duration:2500})

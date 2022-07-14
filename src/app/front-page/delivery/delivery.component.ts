@@ -1,53 +1,71 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { AppService } from 'src/app/app.service';
 import { FrontPageComponent } from '../front-page.component';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { orderList, orderTask } from 'src/app/models/orderList.model';
-import { LineupDialogComponent } from './lineup-dialog/lineup-dialog.component';
+import { shippingList, shippingTask } from 'src/app/models/shippingMode.model';
+import { AppService } from 'src/app/app.service';
 import { FormControl } from '@angular/forms';
+import { DeliveryDialogComponent } from './delivery-dialog/delivery-dialog.component';
+import { StatusDialogComponent } from './status-dialog/status-dialog.component';
 @Component({
-  selector: 'app-lineup',
-  templateUrl: './lineup.component.html',
-  styleUrls: ['./lineup.component.scss']
+  selector: 'app-delivery',
+  templateUrl: './delivery.component.html',
+  styleUrls: ['./delivery.component.scss']
 })
-export class LineupComponent implements OnInit {
+export class DeliveryComponent implements OnInit {
 
-  constructor(private appservice: AppService, private frontpage: FrontPageComponent) {
-    frontpage.classStatus.statusPage = false;
-    frontpage.classStatus.dashboard = false;
+  
+  constructor(private frontpage: FrontPageComponent, private appservice: AppService) {
     frontpage.classStatus.planner = false;
-    frontpage.classStatus.editOrders = false;
-    frontpage.classStatus.lineup = true;
+    frontpage.classStatus.dashboard = false;
+    frontpage.classStatus.statusPage = false
+    frontpage.classStatus.editOrders = false;  
+    frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
-    frontpage.classStatus.delivery = false
-   }
+    frontpage.classStatus.delivery = true
+  }
+  filters = new FormControl([]);
 
-  
-  displayedColumns: string[] = ['cb','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'shipqty', 'comment'];
-  newDataSource = new MatTableDataSource<orderList>();
-  filteredSource = new MatTableDataSource<orderList>();
+  selectedValue:string = '';
+  filter: any[] = [
+    {value: 'date', viewValue: 'Date'},
+    {value: 'so', viewValue: 'SO'},
+    {value: 'po', viewValue: 'PO'},
+    {value: 'name', viewValue: 'Name'},
+    {value: 'item', viewValue: 'Item'},
+    {value: 'itemdesc', viewValue: 'Item Description'},
+    {value: 'qty', viewValue: 'Order Qty'},
+    {value: 'deliverydate', viewValue: 'Date Needed'},
+    {value: 'deliveryqty', viewValue: 'Delivery Qty'}
+  ];
+
+  displayedColumns: string[] = ['cb','date','so', 'po', 'name', 'item','itemdesc','qty', 'deliverydate', 'shipqty', 'shipstatus','deliveryqty'];
+  newDataSource = new MatTableDataSource<shippingList>();
+  filteredSource = new MatTableDataSource<shippingList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   ngOnInit(): void {
     localStorage.clear()
-    this.appservice.getLineupOrders().subscribe(data=>{
+    this.appservice.getDeliveryOrders().subscribe(data=>{
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
       this.task.subtasks = data;
+      this.columnSearching = false;
     })
   }
 
+  
+
   multi: boolean = false;
 
-  expandedElement: orderList[] = [];
+  expandedElement: shippingList[] = [];
 
-  task: orderTask = {
+  task: shippingTask = {
     taskName: 'Indeterminate',
     completed: false,
     color: 'warn',
@@ -65,16 +83,15 @@ export class LineupComponent implements OnInit {
   radius: number = 25
   unbounded: boolean = false;
 
-  editInfo(datas: orderList){
+  editInfo(datas: shippingList){
     if(!this.multi){
-      let dialog = this.appservice.dialog.open(LineupDialogComponent, {
-        data: datas,
-        // width: '35%',
+      let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
+        data: [datas]
       })
   
       dialog.afterClosed().subscribe(data=>{
-        if(data){
-          this.appservice.getLineupOrders().subscribe(orders=>{
+        if(data == 1){
+          this.appservice.getDeliveryOrders().subscribe(orders=>{
             if(!this.columnSearching){
               this.newDataSource.data = orders;
               this.task.subtasks = orders
@@ -86,7 +103,9 @@ export class LineupComponent implements OnInit {
               this.clearTask2();
             }
           });
+          this.appservice.snackbar.open('Order Updated!', 'dismiss',{duration:2500})
         }
+        
       })
     }
     else{
@@ -94,9 +113,41 @@ export class LineupComponent implements OnInit {
     }
   }
 
+  editStatus(data: shippingList){
+    if(!this.multi){
+      if(data.shipstatus == 'Queue'){
+        this.appservice.snackbar.open('Order Still On Queue', '', {duration: 800});
+      }
+      else{
+        this.appservice.getShipping(data.id).subscribe(datas=>{
+          let dialog = this.appservice.dialog.open(StatusDialogComponent, {
+            data: datas
+          })
+          dialog.afterClosed().subscribe(dialogData=>{
+            if(dialogData){
+              this.appservice.getDeliveryOrders().subscribe(orders=>{
+                if(!this.columnSearching){
+                  this.newDataSource.data = orders;
+                  this.task.subtasks = orders
+                  this.clearTasks();
+                }
+                else{
+                  this.filteredSource.data = orders;
+                  this.task.subtasks = orders
+                  this.clearTask2();
+                }
+              });
+              this.appservice.snackbar.open('Order Updated!', 'dismiss',{duration:2500})
+            }
+          })
+        })
+      }
+    } 
+  }
+
   allComplete: boolean = false;
-  items: orderList[] = []
-  temporaryData: orderList[] = []
+  items: shippingList[] = []
+  temporaryData: shippingList[] = []
 
   setItems(data: any){
     if(this.allComplete){
@@ -114,7 +165,7 @@ export class LineupComponent implements OnInit {
   updateAllComplete() {
     this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
   }
-  checkboxChecked(checked: boolean, data: orderList){
+  checkboxChecked(checked: boolean, data: shippingList){
     if(checked && !this.allComplete && this.temporaryData == []){
      this.temporaryData.push(data)
      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
@@ -152,24 +203,8 @@ export class LineupComponent implements OnInit {
     return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
   }
 
-  filters = new FormControl([]);
-
-  selectedValue:string = '';
-  filter: any[] = [
-    {value: 'date', viewValue: 'Date'},
-    {value: 'so', viewValue: 'SO'},
-    {value: 'po', viewValue: 'PO'},
-    {value: 'name', viewValue: 'Name'},
-    {value: 'item', viewValue: 'Item'},
-    {value: 'itemdesc', viewValue: 'Item Description'},
-    {value: 'qty', viewValue: 'Order Qty'},
-    {value: 'deliverydate', viewValue: 'Date Needed'},
-    {value: 'shipqty', viewValue: 'Machine Qty'},
-  ];
-
-
   filteredItems: string = ''
-  filterClass: string = '';
+
   columnSearching: boolean = false;
   forFilterValue: any[] = []
   
@@ -178,6 +213,8 @@ export class LineupComponent implements OnInit {
     this.filteredSource.paginator = this.paginator
     this.filteredSource.sort = this.matsort
   }
+
+  filterClass: string = '';
 
   forFilters: any[] = []
   checkChange(data:any){
@@ -188,7 +225,7 @@ export class LineupComponent implements OnInit {
       this.setDatasource();
 
       this.filterClass = `md:grid-cols-${data.length} gap-1`
-      
+
       for(let i = 0; i < data.length; i++){
         this.forFilterValue[i] = '';
       }
@@ -217,10 +254,11 @@ export class LineupComponent implements OnInit {
     this.filters.setValue([]);
     this.ngOnInit()
   }
-
+  
   applyFilter(event: Event, index:number) {
+
     this.forFilterValue.length = this.forFilters.length;
-    const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
 
     if(this.forFilters.length == 0){
      this.newDataSource.filter = filterValue.trim().toLowerCase();
@@ -238,16 +276,15 @@ export class LineupComponent implements OnInit {
     else{
       this.forFilterValue[index] = filterValue.toString();
 
-      console.log(this.forFilterValue);
-
-      let filteredData:orderList[] = []
+      let filteredData:shippingList[] = []
       this.newDataSource.filter = ""
       this.columnSearching = true
 
       this.filteredSource.paginator = this.paginator
       this.filteredSource.sort = this.matsort
 
-      let obj: orderList;
+      let obj: shippingList;
+
       
       type ObjectKey = keyof typeof obj;
       const myVar1 = this.forFilters[0] as ObjectKey;
@@ -255,41 +292,33 @@ export class LineupComponent implements OnInit {
       const myVar3 = this.forFilters[2] as ObjectKey;
       const myVar4 = this.forFilters[3] as ObjectKey;
       const myVar5 = this.forFilters[4] as ObjectKey;
-      try {
-        for(let i = 0;i < this.newDataSource.data.length; i++){
-          if(this.forFilterValue.length == 1){
-            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0])){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if(this.forFilterValue.length == 2){
-            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1])){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if(this.forFilterValue.length == 3){
-            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2])){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if(this.forFilterValue.length == 4){
-            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3])){
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if(this.forFilterValue.length == 5){
-            if(this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().includes(this.forFilterValue[4])){
-              filteredData.push(this.newDataSource.data[i])
-            }
+      for(let i = 0;i < this.newDataSource.data.length; i++){
+        if(this.forFilterValue.length == 1){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0])){
+            filteredData.push(this.newDataSource.data[i])
           }
         }
-      } catch (error) {
-        this.appservice.snackbar.open('The column/s you\'re trying to search is probably empty, please try other filter', 'dismiss', {duration: 2500});
-        for(let i = 0;i < this.newDataSource.data.length; i++){
-          filteredData.push(this.newDataSource.data[i])
+        else if(this.forFilterValue.length == 2){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1])){
+            filteredData.push(this.newDataSource.data[i])
+          }
+        }
+        else if(this.forFilterValue.length == 3){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2])){
+            filteredData.push(this.newDataSource.data[i])
+          }
+        }
+        else if(this.forFilterValue.length == 4){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3])){
+            filteredData.push(this.newDataSource.data[i])
+          }
+        }
+        else if(this.forFilterValue.length == 5){
+          if(this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().toLowerCase().includes(this.forFilterValue[4])){
+            filteredData.push(this.newDataSource.data[i])
+          }
         }
       }
-      
 
       this.filteredSource.data = filteredData
       this.task.subtasks = filteredData;
@@ -313,7 +342,7 @@ export class LineupComponent implements OnInit {
       this.task.subtasks.forEach(t=>{t.completed = false})
     }
 
-    let object: orderList[] = []
+    let object: shippingList[] = []
 
     this.task.subtasks.forEach(t => {
       if(t.id?.toString().includes(this.filteredItems) && this.filteredItems != ''){
@@ -423,7 +452,7 @@ export class LineupComponent implements OnInit {
         }
         return
       }
-      else if(t.date.toString().includes(this.filteredItems) && this.filteredItems != ''){
+      else if(t.date.includes(this.filteredItems) && this.filteredItems != ''){
         t.completed = completed
         object.push(t)
         if(t.completed){
@@ -438,6 +467,20 @@ export class LineupComponent implements OnInit {
         return
       }
       else if(t.qty.toString() == this.filteredItems && this.filteredItems != ''){
+        t.completed = completed
+        object.push(t)
+        if(t.completed){
+          localStorage.setItem("allItems", JSON.stringify(object))
+          localStorage.setItem("temporaryData", JSON.stringify(object))
+          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+        }
+        else{
+          
+          localStorage.clear()
+        }
+        return
+      }
+      else if(t.deliveryqty.toString() == this.filteredItems && this.filteredItems != ''){
         t.completed = completed
         object.push(t)
         if(t.completed){
@@ -467,64 +510,48 @@ export class LineupComponent implements OnInit {
     })
   }
 
-    moveToFG(){
-      let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/fg/`
-      this.appservice.movementPost(link, newData).subscribe(data=>{
-        this.appservice.getLineupOrders().subscribe(orders=>{
-          if(!this.columnSearching){
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTask2();
-          }
-          this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
-        })
+
+  updateMultiple(){
+    let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
+      let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
+        data: newData
+      })
+
+      dialog.afterClosed().subscribe(data=>{
+        if(data){
+          this.appservice.getDeliveryOrders().subscribe(orders=>{
+            if(!this.columnSearching){
+              this.newDataSource.data = orders;
+              this.task.subtasks = orders;
+              this.clearTasks();
+            }
+            else{
+              this.filteredSource.data = orders;
+              this.task.subtasks = orders
+              this.clearTask2();
+            }
+          })
+        }
+        
       })
     }
-
-    moveToConverting(){
-      let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/convert/`
-      this.appservice.movementPost(link, newData).subscribe(data=>{
-        this.appservice.getLineupOrders().subscribe(orders=>{
-          if(!this.columnSearching){
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTask2();
-          }
-          this.appservice.snackbar.open("Selected items moved to Converting", "Dismiss", {duration: 2500})
-        })
-      })
-    }
-
 
     clearTasks(){
       this.temporaryData.length = 0;
       localStorage.clear()
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
-      this.ngOnInit()
     }
 
+    
     clearTask2(){
       localStorage.clear()
       this.temporaryData.length = 0;
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
-      this.clearFilter()
       for(let i = 0; i < this.forFilters.length; i++){
         this.forFilterValue[i] = '';
       }
+      this.clearFilter()
     }
-
 }

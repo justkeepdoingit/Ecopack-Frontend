@@ -23,7 +23,7 @@ export class FgComponent implements OnInit {
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = true
-
+    frontpage.classStatus.delivery = false
   }
   filters = new FormControl([]);
 
@@ -53,7 +53,6 @@ export class FgComponent implements OnInit {
       this.newDataSource.sort = this.matsort
       this.task.subtasks = data;
       this.columnSearching = false;
-      console.log(data);
     })
   }
 
@@ -71,8 +70,8 @@ export class FgComponent implements OnInit {
   };
 
   dashboardAdmins = {
-    adminClass: 'justify grid lg:grid-cols-2 gap-5',
-    nonAdmin: 'justify grid lg:grid-cols-1 gap-5',
+    adminClass: 'justify grid md:grid-cols-2 gap-5',
+    nonAdmin: 'justify grid md:grid-cols-1 gap-5',
     useraccNA: 'flex flex-col overflow-y-auto md:flex-row md:max-w-full p-4 lg:mx-20 my-5 rounded-lg shadow-lg shadow-secondary-400',
     useraccA: 'flex flex-col md:flex-row md:max-w-full p-4 rounded-lg shadow-lg shadow-secondary-400'
   }
@@ -190,7 +189,7 @@ export class FgComponent implements OnInit {
       this.columnSearching = true
       this.setDatasource();
 
-      this.filterClass = `justify grid lg:grid-cols-${this.forFilters.length} gap-1`
+      this.filterClass = `md:grid-cols-${data.length} gap-1`
 
       for(let i = 0; i < data.length; i++){
         this.forFilterValue[i] = '';
@@ -462,16 +461,6 @@ export class FgComponent implements OnInit {
     })
   }
 
-    clearTask2(){
-      localStorage.clear()
-      this.temporaryData.length = 0;
-      this.allComplete = false
-      this.task.subtasks!.forEach(t=>{t.completed = false})
-      for(let i = 0; i < this.forFilters.length; i++){
-        this.forFilterValue[i] = '';
-      }
-      this.clearFilter()
-    }
 
   updateMultiple(){
     let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
@@ -500,7 +489,7 @@ export class FgComponent implements OnInit {
 
     moveToDelivery(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `http://localhost:3000/order-list/delivery/`
+      let link = `https://ecopack2.herokuapp.com/order-list/delivery/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getFgOrders().subscribe(orders=>{
           if(!this.columnSearching){
@@ -524,5 +513,17 @@ export class FgComponent implements OnInit {
       localStorage.clear()
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
+    }
+
+    
+    clearTask2(){
+      localStorage.clear()
+      this.temporaryData.length = 0;
+      this.allComplete = false
+      this.task.subtasks!.forEach(t=>{t.completed = false})
+      for(let i = 0; i < this.forFilters.length; i++){
+        this.forFilterValue[i] = '';
+      }
+      this.clearFilter()
     }
 }

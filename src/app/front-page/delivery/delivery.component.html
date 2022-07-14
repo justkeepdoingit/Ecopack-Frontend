@@ -2,7 +2,7 @@
     <div [ngClass]="dashboardAdmins.useraccNA">
       <!-- <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg" alt="" /> -->
       <div class="p-6 flex flex-col justify-start w-full">
-        <h2 class="text-secondary-700 text-xl font-medium mb-2">Finished Goods</h2>
+        <h2 class="text-secondary-700 text-xl font-medium mb-2">For Delivery</h2>
         <div *ngIf="columnSearching" [ngClass]="filterClass">
           <div *ngFor="let filterData of forFilters; let i = index"  class="flex flex-col md:flex-row md:max-w-full">
             <div class=" flex flex-col justify-start w-full">
@@ -34,8 +34,7 @@
         </mat-form-field>
         <div class=" overflow-y-auto relative">
         <div *ngIf="temporaryData.length > 0 && multi">
-          <button (click)="updateMultiple()" style="margin-left: 0.5rem; margin-right: 0.5rem" mat-stroked-button color="primary">Date and Comment</button>
-          <button (click)="moveToDelivery()" style="margin-left: 0.5rem; margin-right: 0.5rem" mat-stroked-button color="primary">Ready To Ship</button>
+          <button (click)="updateMultiple()" style="margin-left: 0.5rem; margin-right: 0.5rem" mat-stroked-button color="primary">Setup Delivery</button>
         </div>
           <div id="tables" class=" relative overflow-auto">
             <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered" [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort [dataSource]="!columnSearching ? newDataSource : filteredSource">
@@ -107,15 +106,19 @@
               </ng-container> 
 
               <ng-container matColumnDef="shipqty">
-                <mat-header-cell mat-sort-header *matHeaderCellDef>Machine Qty</mat-header-cell>
+                <mat-header-cell mat-sort-header *matHeaderCellDef>Prod Qty</mat-header-cell>
                 <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.shipqty}} </mat-cell>
-              </ng-container> 
-    
+              </ng-container>
 
-              <ng-container matColumnDef="comment">
-                <mat-header-cell mat-sort-header *matHeaderCellDef>Comment</mat-header-cell>
-                <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.comment}} </mat-cell>
-              </ng-container> 
+              <ng-container matColumnDef="shipstatus">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>Status</mat-header-cell>
+                <mat-cell matTooltip="Click To Edit Delivery" matTooltipPosition="above" matTooltipShowDelay="300" (click)="editStatus(element)" *matCellDef="let element"> {{element.shipstatus}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="deliveryqty">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>Deliver Qty</mat-header-cell>
+                <mat-cell matTooltip="Click To Edit Delivery" matTooltipPosition="above" matTooltipShowDelay="300" (click)="editStatus(element)" *matCellDef="let element"> {{element.deliveryqty}} </mat-cell>
+              </ng-container>
             
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

@@ -21,3 +21,37 @@ mat-table{
         min-width: 1000px;
     }
 }
+@media (min-width: 768px) {
+    .md\:grid-cols-5 {
+        display:grid;
+        justify-content: start;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1;
+    }
+    .md\:grid-cols-4 {
+        display:grid;
+        justify-content: start;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1;
+
+    }
+    .md\:grid-cols-3 {
+        display:grid;
+        justify-content: start;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1;
+    }
+    .md\:grid-cols-2 {
+        display:grid;
+        justify-content: start;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1;
+
+    }
+    .md\:grid-cols-1 {
+        display:grid;
+        justify-content: start;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1;
+    }
+}

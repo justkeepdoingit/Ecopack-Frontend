@@ -1,0 +1,65 @@
+<form [formGroup]="dateComment" (ngSubmit)="updateData(dateComment.value)">
+    <mat-dialog-content>
+        <h3 *ngIf="orderListInfo.length == 1" mat-dialog-title>Edit Delivery For Item {{orderListInfo[0].forDelivery_id}}</h3>
+        <h3 *ngIf="orderListInfo.length > 1" mat-dialog-title>Edit/Add Infos</h3>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Delivery Date</mat-label>
+            <input formControlName="deliverydate" [min]='minDate' matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker color="accent"></mat-datepicker>
+        </mat-form-field><br>
+        <mat-form-field appearance="outline">
+            <mat-label>Set Current Delivery Status</mat-label>
+            <mat-select formControlName="deliveryAll">
+              <mat-option value="Partial Delivery">Partial Delivery</mat-option>
+              <mat-option value="Delivery Complete">Delivery Complete</mat-option>
+            </mat-select>
+          </mat-form-field><br>
+        <div class=" overflow-y-auto relative">
+        <div id="tables" class=" relative overflow-auto">
+            <mat-table formArrayName="infodata" matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered" [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort [dataSource]="newDataSource">
+              <ng-container matColumnDef="item">
+                <mat-header-cell  class="ids" mat-sort-header *matHeaderCellDef> Item ID </mat-header-cell>
+                <mat-cell class="ids" *matCellDef="let element"> {{element.forDelivery_itemid}} </mat-cell>
+              </ng-container>
+              
+              <ng-container matColumnDef="qty">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>Qty</mat-header-cell>
+                <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                <mat-form-field appearance="outline">
+                    <mat-label>Entery Qty</mat-label>
+                    <input formControlName="qty" matInput placeholder="Enter Receipt">
+                </mat-form-field>
+                </mat-cell>
+              </ng-container>  
+
+              <ng-container matColumnDef="status">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>Status</mat-header-cell>
+                <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Select Delivery Type</mat-label>
+                    <mat-select formControlName="deliverySelect">
+                      <mat-option value="Partial Delivery">Partial Delivery</mat-option>
+                      <mat-option value="Delivery Complete">Delivery Complete</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>  
+            
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+        <mat-paginator 
+            [pageSize]="5"
+            [pageSizeOptions]="[ 5, 10, 25, 100]"
+            aria-label="Select page">
+        </mat-paginator>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button [disabled]="dateComment.invalid" color="primary">Save</button>
+        <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+    </mat-dialog-actions>
+</form>

@@ -1,0 +1,11 @@
+.mat-form-field-appearance-outline{
+    width: 100%;
+}
+#tables{
+    width: 30rem;
+}
+@media screen and (max-width: 586px) {
+    #tables{
+        min-width: 800px;
+    }
+}

@@ -28,6 +28,9 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 import { DataTablesModule } from "angular-datatables";
 import { filterPipes } from './componentPipes/filterPipes.pipe';
 import { filterPipes2 } from './componentPipes/filterPipes2.pipe';
+import { DeliveryComponent } from './front-page/delivery/delivery.component';
+import { DeliveryDialogComponent } from './front-page/delivery/delivery-dialog/delivery-dialog.component';
+import { StatusDialogComponent } from './front-page/delivery/status-dialog/status-dialog.component';
 @NgModule({
     declarations: [
         CanvasJSChart,
@@ -49,7 +52,10 @@ import { filterPipes2 } from './componentPipes/filterPipes2.pipe';
         ConvertingComponent,
         ConvertDialogComponent,
         FgComponent,
-        FgDialogComponent
+        FgDialogComponent,
+        DeliveryComponent,
+        DeliveryDialogComponent,
+        StatusDialogComponent
     ],
     imports: [
         BrowserModule,

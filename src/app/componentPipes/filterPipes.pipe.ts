@@ -30,6 +30,9 @@ export class filterPipes implements PipeTransform{
         else if(value == 'shipqty'){
             return 'Production Qty'
         }
+        else if(value == 'deliveryqty'){
+            return 'Delivery Qty'
+        } 
         return 'Default'
     }
 }

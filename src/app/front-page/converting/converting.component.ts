@@ -24,6 +24,7 @@ export class ConvertingComponent implements OnInit {
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.fg = false
     frontpage.classStatus.converting = true
+    frontpage.classStatus.delivery = false
     localStorage.clear()
    }
 
@@ -56,8 +57,8 @@ export class ConvertingComponent implements OnInit {
    };
  
    dashboardAdmins = {
-     adminClass: 'justify grid lg:grid-cols-2 gap-5',
-     nonAdmin: 'justify grid lg:grid-cols-1 gap-5',
+     adminClass: 'justify grid md:grid-cols-2 gap-5',
+     nonAdmin: 'justify grid md:grid-cols-1 gap-5',
      useraccNA: 'flex flex-col overflow-y-auto md:flex-row md:max-w-full p-4 lg:mx-20 my-5 rounded-lg shadow-lg shadow-secondary-400',
      useraccA: 'flex flex-col md:flex-row md:max-w-full p-4 rounded-lg shadow-lg shadow-secondary-400'
    }
@@ -266,7 +267,7 @@ export class ConvertingComponent implements OnInit {
       this.columnSearching = true
       this.setDatasource();
 
-      this.filterClass = `justify grid lg:grid-cols-${this.forFilters.length} gap-1`
+      this.filterClass = `md:grid-cols-${data.length} gap-1`
       
       for(let i = 0; i < data.length; i++){
         this.forFilterValue[i] = '';
@@ -562,7 +563,7 @@ export class ConvertingComponent implements OnInit {
  
     moveToFG(){
        let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-       let link = `http://localhost:3000/order-list/fg/`
+       let link = `https://ecopack2.herokuapp.com/order-list/fg/`
        this.appservice.movementPost(link, newData).subscribe(data=>{
          this.appservice.getConverting().subscribe(orders=>{
           if(!this.columnSearching){

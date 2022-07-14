@@ -2,7 +2,7 @@
     <mat-dialog-content>
         <h3 *ngIf="orderListInfo.length == 1" mat-dialog-title>Edit/Add Infos for SO# {{orderListInfo[0].so}}</h3>
         <h3 *ngIf="orderListInfo.length > 1" mat-dialog-title>Edit/Add Infos</h3>
-        <button (click)="moveToDelivery()" style="margin:0.5rem" [mat-dialog-close] mat-dialog-header mat-stroked-button color="primary">Move to Line Up</button>
+        <button (click)="moveToDelivery()" style="margin:0.5rem" [mat-dialog-close] mat-dialog-header mat-stroked-button color="primary">Ready to Ship</button>
         <mat-form-field appearance="outline">
             <mat-label>Date Needed</mat-label>
             <input formControlName="deliverydate" [min]='minDate' matInput [matDatepicker]="picker">

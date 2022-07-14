@@ -51,7 +51,7 @@
                     <a *ngIf="lineup == 'true' || user_rights == '1'" routerLink="Line_Up" [ngClass]="classStatus.lineup ? classStrings.dashboardAcc : classStrings.dashboardInac">Line Up</a>
                     <a *ngIf="converting == 'true' || user_rights == '1'" routerLink="Converting" [ngClass]="classStatus.converting ? classStrings.dashboardAcc : classStrings.dashboardInac">Converting</a>
                     <a *ngIf="fg == 'true' || user_rights == '1'" routerLink="Finished_Goods" [ngClass]="classStatus.fg ? classStrings.dashboardAcc : classStrings.dashboardInac">FG</a>
-                    <a *ngIf="delivery == 'true' || user_rights == '1'" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Delivery</a>
+                    <a *ngIf="delivery == 'true' || user_rights == '1'" routerLink="Delivery" [ngClass]="classStatus.delivery ? classStrings.dashboardAcc : classStrings.dashboardInac">Delivery</a>
                     <a *ngIf="returns == 'true' || user_rights == '1'" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Returns</a>
                     <a (click)="logout()" class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Log Out</a>
                   </div>
@@ -104,7 +104,7 @@
         <a routerLink="Line_Up" *ngIf="lineup == 'true' || user_rights == '1'" [ngClass]="classStatus.lineup ? classStrings.mobileAcc : classStrings.mobileInac">Line Up</a>
         <a routerLink="Converting" *ngIf="converting == 'true' || user_rights == '1'" [ngClass]="classStatus.converting ? classStrings.mobileAcc : classStrings.mobileInac">Converting</a>
         <a routerLink="Finished_Goods" *ngIf="fg == 'true' || user_rights == '1'" [ngClass]="classStatus.fg ? classStrings.mobileAcc : classStrings.mobileInac">FG</a>
-        <a *ngIf="delivery == 'true' || user_rights == '1'" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Delivery</a>
+        <a routerLink="Delivery" *ngIf="delivery == 'true' || user_rights == '1'" [ngClass]="classStatus.delivery ? classStrings.mobileAcc : classStrings.mobileInac">Delivery</a>
         <a *ngIf="returns == 'true' || user_rights == '1'" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Returns</a>
         <a (click)="logout()" class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Logout</a>
       </div>

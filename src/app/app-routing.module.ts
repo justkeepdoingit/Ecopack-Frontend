@@ -10,6 +10,7 @@ import { LineupComponent } from './front-page/lineup/lineup.component';
 import { ImportOrdersComponent } from './front-page/import-orders/import-orders.component';
 import { ConvertingComponent } from './front-page/converting/converting.component';
 import { FgComponent } from './front-page/fg/fg.component';
+import { DeliveryComponent } from './front-page/delivery/delivery.component';
 
 const routes: Routes = [
   {path: 'Login', component: LogregComponent},
@@ -22,6 +23,7 @@ const routes: Routes = [
     {path: 'Import_Orders', component: ImportOrdersComponent},
     {path: 'Converting', component: ConvertingComponent},
     {path: 'Finished_Goods', component: FgComponent},
+    {path: 'Delivery', component: DeliveryComponent},
   ]},
   {path: '', redirectTo:'Login', pathMatch: 'full'},
 ];
