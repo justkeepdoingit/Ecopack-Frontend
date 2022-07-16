@@ -469,39 +469,27 @@ export class LineupComponent implements OnInit {
 
     moveToFG(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/fg/`
+      let link = `http://localhost:3000/order-list/fg/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
-          if(!this.columnSearching){
             this.newDataSource.data = orders;
             this.task.subtasks = orders
             this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
             this.clearTask2();
-          }
-          this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
+            this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", {duration: 2500})
         })
       })
     }
 
     moveToConverting(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/convert/`
+      let link = `http://localhost:3000/order-list/convert/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getLineupOrders().subscribe(orders=>{
-          if(!this.columnSearching){
             this.newDataSource.data = orders;
             this.task.subtasks = orders
             this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
             this.clearTask2();
-          }
           this.appservice.snackbar.open("Selected items moved to Converting", "Dismiss", {duration: 2500})
         })
       })

@@ -8,7 +8,7 @@ import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-
+import { shippingList } from 'src/app/models/shippingMode.model';
 @Component({
   selector: 'app-delivery-dialog',
   templateUrl: './delivery-dialog.component.html',
@@ -16,19 +16,19 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 })
 export class DeliveryDialogComponent implements OnInit, AfterViewInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) private orderList: orderList[], private appservice: AppService,
+  constructor(@Inject(MAT_DIALOG_DATA) private shippingList: shippingList[], private appservice: AppService,
   private dialogRef: MatDialogRef<DeliveryDialogComponent>, private datepipe: DatePipe
   ) {
-    this.orderListInfo = orderList
-    this.newDataSource.data = orderList
+    this.shippingListInfo = shippingList
+    this.newDataSource.data = shippingList
 
 
    }
-   newDataSource = new MatTableDataSource<orderList>();
+   newDataSource = new MatTableDataSource<shippingList>();
    @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
    @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
-   orderListInfo: orderList[] = [];
+   shippingListInfo: shippingList[] = [];
 
    displayedColumns: string[] = ['item','qty','status'];
 
@@ -45,10 +45,10 @@ export class DeliveryDialogComponent implements OnInit, AfterViewInit {
   formGroupRows = this.appservice.formBuilder.array([]);
   
   ngOnInit(): void {
-    this.orderListInfo.forEach((data)=>{
+    this.shippingListInfo.forEach((data)=>{
       const rows = this.appservice.formBuilder.group({
         id: [data.id],
-        qty: ['',Validators.required],
+        qty: [(data.prodqty-data.deliveryqty),Validators.required],
         deliverySelect: ['',Validators.required]
       })
       this.formGroupRows.push(rows)
@@ -70,7 +70,7 @@ export class DeliveryDialogComponent implements OnInit, AfterViewInit {
 
   updateData(edit: any){
     let i = 0;
-    this.orderListInfo.forEach(data=>{
+    this.shippingListInfo.forEach(data=>{
       let newData = {
         deliverydate: edit.deliverydate,
         receipt: edit.receipt,
@@ -80,7 +80,7 @@ export class DeliveryDialogComponent implements OnInit, AfterViewInit {
         itemid: data.item
       }
       i++;
-      let link = `https://ecopack2.herokuapp.com/order-list/updateDelivery`;
+      let link = `http://localhost:3000/order-list/updateDelivery`;
       this.appservice.getGeneralData(link, newData).subscribe(datas=>{
         this.dialogRef.close(1);
       })

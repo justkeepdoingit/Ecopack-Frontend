@@ -47,7 +47,7 @@ export class ConvertDialogComponent implements OnInit {
     }
     else if(this.sw == 2){
       this.qtyEdit = this.appservice.formBuilder.group({
-        shipqty: [this.convertList.shipqty, Validators.required],
+        prodqty: [this.convertList.shipqty, Validators.required],//updating shipqty
         qty: [this.convertList.qty],
         itemdesc: [this.convertList.itemdesc],
         comment: [this.convertList.comment]
@@ -80,7 +80,7 @@ export class ConvertDialogComponent implements OnInit {
   }
 
   updateQty(data: orderList){
-    let link = `https://ecopack2.herokuapp.com/order-list/updateOrder/${this.convertList.id}`
+    let link = `http://localhost:3000/order-list/updateOrder/${this.convertList.id}`
     this.appservice.orderPatch(link, data).subscribe()
     this.appservice.snackbar.open(`PO # ${this.convertList.po} details has been updated`, 'Dismiss', {duration: 2500})
     this.dialogRef.close(1)
@@ -97,7 +97,7 @@ export class ConvertDialogComponent implements OnInit {
   //   }
 
   //   this.multiList.forEach(data=>{
-  //     let link = `https://ecopack2.herokuapp.com/order-list/updateOrder/${data.id}`;
+  //     let link = `http://localhost:3000/order-list/updateOrder/${data.id}`;
   //     this.appservice.orderPatch(link, newData).subscribe(datas=>{
   //       this.dialogRef.close(1);
   //     })

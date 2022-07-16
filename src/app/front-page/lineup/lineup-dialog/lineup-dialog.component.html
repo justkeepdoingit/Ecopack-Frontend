@@ -1,7 +1,7 @@
 <form [formGroup]="lineupOrders" (ngSubmit)="updateData(lineupOrders.value)">
     <mat-dialog-content>
-        <button (click)="orderMoveFG()" [mat-dialog-close] style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem" mat-dialog-header mat-stroked-button color="primary">Move to FG</button>
-        <button (click)="orderMoveCon()" [mat-dialog-close] style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem" mat-dialog-header mat-stroked-button color="primary">Move to Converting</button>
+        <button (click)="orderMoveFG()" style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem" mat-dialog-header mat-stroked-button color="primary">Move to FG</button>
+        <button (click)="orderMoveCon()" style="margin-left: 0.5rem; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem" mat-dialog-header mat-stroked-button color="primary">Move to Converting</button>
         <mat-form-field appearance="outline">
             <mat-label>Machine Qty</mat-label>
             <input formControlName="shipqty" matInput placeholder="Enter Qty">

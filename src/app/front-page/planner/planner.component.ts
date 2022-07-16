@@ -484,20 +484,14 @@ export class PlannerComponent implements OnInit {
 
     moveToLineUp(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
+      let link = `http://localhost:3000/order-list/lineup/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getPlannerOrders().subscribe(orders=>{
-          if(!this.columnSearching){
             this.newDataSource.data = orders;
             this.task.subtasks = orders;
             this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
             this.clearTask2();
-          }
-          this.appservice.snackbar.open("Selected items moved to Line Up", "Dismiss", {duration: 2500})
+            this.appservice.snackbar.open("Selected items moved to Line Up", "Dismiss", {duration: 2500})
         })
       })
     }

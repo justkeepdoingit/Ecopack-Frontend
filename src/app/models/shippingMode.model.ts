@@ -10,6 +10,7 @@ export interface shippingList{
     qty: number
     deliverydate: string
     shipqty: number
+    prodqty: number
     shipstatus: string
     deliveryqty: number
     color?: string

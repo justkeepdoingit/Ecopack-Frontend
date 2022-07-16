@@ -489,19 +489,13 @@ export class FgComponent implements OnInit {
 
     moveToDelivery(){
       let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
-      let link = `https://ecopack2.herokuapp.com/order-list/delivery/`
+      let link = `http://localhost:3000/order-list/delivery/`
       this.appservice.movementPost(link, newData).subscribe(data=>{
         this.appservice.getFgOrders().subscribe(orders=>{
-          if(!this.columnSearching){
             this.newDataSource.data = orders;
             this.task.subtasks = orders;
             this.clearTasks();
-          }
-          else{
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
             this.clearTask2();
-          }
           this.appservice.snackbar.open("Selected items moved to Delivery", "Dismiss", {duration: 2500})
         })
       })
@@ -513,6 +507,7 @@ export class FgComponent implements OnInit {
       localStorage.clear()
       this.allComplete = false
       this.task.subtasks!.forEach(t=>{t.completed = false})
+      this.ngOnInit()
     }
 
     
