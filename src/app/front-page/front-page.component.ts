@@ -1,5 +1,5 @@
 import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import {animate, style, transition, trigger} from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { AppService } from '../app.service';
 import { userModel } from '../models/usermodels.model';
 @Component({
@@ -9,22 +9,22 @@ import { userModel } from '../models/usermodels.model';
   animations: [
     trigger('slideIn', [
       transition('void => *', [
-        style({opacity: 0, transform: 'translateX(30%)'}),
-        animate(200, style({opacity: 1, transform: 'translateX(0)'}))
+        style({ opacity: 0, transform: 'translateX(30%)' }),
+        animate(200, style({ opacity: 1, transform: 'translateX(0)' }))
       ])
     ]),
     trigger('fadeIn', [
       transition('void => *', [
-        style({opacity: 0}),
-        animate(300, style({opacity: 1}))
+        style({ opacity: 0 }),
+        animate(300, style({ opacity: 1 }))
       ])
     ]),
   ]
 })
 export class FrontPageComponent implements OnInit {
 
-  constructor(private appservice: AppService) { 
-    
+  constructor(private appservice: AppService) {
+
   }
 
   ngOnInit(): void {
@@ -40,36 +40,38 @@ export class FrontPageComponent implements OnInit {
     this.import_orders = this.appservice.cookieService.get('import_orders')
     this.useracc = this.appservice.cookieService.get('useracc')
     this.id = this.appservice.cookieService.get('id')
+    this.packing = this.appservice.cookieService.get('packing')
     this.classStatus.dashboard = true;
 
-    if(this.id){
+    if (this.id) {
       this.appservice.getInfo(parseInt(this.id)).subscribe()
-      if(this.useracc == 'true' || this.user_rights == '1'){
+      if (this.useracc == 'true' || this.user_rights == '1') {
         this.appservice.router.navigate(['Ecopack/Dashboard'])
       }
-      else if(this.appservice.cookieService.get('user_rights') != '1'){
-        if(this.appservice.cookieService.get('useracc') != 'true'){
+      else if (this.appservice.cookieService.get('user_rights') != '1') {
+        if (this.appservice.cookieService.get('useracc') != 'true') {
           this.appservice.router.navigate(['Ecopack'])
         }
       }
     }
-    else{
+    else {
       this.appservice.router.navigate([''])
-    }  
+    }
 
   }
-    id: string = '';
-    user_rights: string = '';
-    planner: string = '';
-    converting: string = '';
-    delivery: string = '';
-    edit_orders: string = '';
-    lineup: string = '';
-    fg: string = '';
-    returns: string = '';
-    status_page: string = '';
-    import_orders: string = '';
-    useracc: string = '';
+  id: string = '';
+  user_rights: string = '';
+  planner: string = '';
+  converting: string = '';
+  delivery: string = '';
+  edit_orders: string = '';
+  lineup: string = '';
+  fg: string = '';
+  returns: string = '';
+  status_page: string = '';
+  import_orders: string = '';
+  useracc: string = '';
+  packing: string = '';
 
   classStrings = {
     dashboardInac: 'bg-gray-900 block hover:bg-primary-700 hover:text-secondary-50 cursor-pointer transition-all text-white px-3 py-2 rounded-md text-sm font-semibold',
@@ -85,64 +87,65 @@ export class FrontPageComponent implements OnInit {
     lineup: false,
     importOrders: false,
     converting: false,
-    fg:false,
+    fg: false,
     delivery: false,
-  }   
+    packing: false
+  }
 
   menuCheck: boolean = false;
-  openMenu(){
+  openMenu() {
     const menuButton = document.getElementById('menuB');
-    if(!this.menuCheck){
+    if (!this.menuCheck) {
       menuButton!.style.display = 'block';
       this.menuCheck = true
     }
-    else{
+    else {
       menuButton!.style.display = 'none';
       this.menuCheck = false
     }
   }
   dropdownCheck: boolean = false;
-  showDropdown(){
-      const dropdown = document.getElementById('showDropdown')
-      if(!this.dropdownCheck){
-        dropdown!.style.display = 'block'
-        this.dropdownCheck = true
-      }
-      else{
-        dropdown!.style.display = 'none'
-        this.dropdownCheck = false
-      }
+  showDropdown() {
+    const dropdown = document.getElementById('showDropdown')
+    if (!this.dropdownCheck) {
+      dropdown!.style.display = 'block'
+      this.dropdownCheck = true
+    }
+    else {
+      dropdown!.style.display = 'none'
+      this.dropdownCheck = false
+    }
   }
 
 
-  logout(){
-          this.appservice.cookieService.delete('id', '/')
-          this.appservice.cookieService.delete('user_rights', '/')
-          this.appservice.cookieService.delete('planner', '/')
-          this.appservice.cookieService.delete('converting', '/')
-          this.appservice.cookieService.delete('delivery', '/')
-          this.appservice.cookieService.delete('edit_orders','/')
-          this.appservice.cookieService.delete('lineup','/')
-          this.appservice.cookieService.delete('fg', '/')
-          this.appservice.cookieService.delete('returns', '/')
-          this.appservice.cookieService.delete('status_page', '/')
-          this.appservice.cookieService.delete('useracc','/')
-          this.appservice.cookieService.delete('import_orders', '/')
-          
-          //
-          this.appservice.cookieService.delete('id', '/Ecopack')
-          this.appservice.cookieService.delete('user_rights', '/Ecopack')
-          this.appservice.cookieService.delete('planner', '/Ecopack')
-          this.appservice.cookieService.delete('converting', '/Ecopack')
-          this.appservice.cookieService.delete('delivery', '/Ecopack')
-          this.appservice.cookieService.delete('edit_orders','/Ecopack')
-          this.appservice.cookieService.delete('lineup','/Ecopack')
-          this.appservice.cookieService.delete('fg', '/Ecopack')
-          this.appservice.cookieService.delete('returns', '/Ecopack')
-          this.appservice.cookieService.delete('status_page', '/Ecopack')
-          this.appservice.cookieService.delete('useracc','/Ecopack')
-          this.appservice.cookieService.delete('import_orders', '/Ecopack')
-          this.appservice.router.navigate([''])
-          this.appservice.http.get('http://localhost:3000/user-account/logout',{withCredentials:true}).subscribe()
+  logout() {
+    this.appservice.cookieService.delete('id', '/')
+    this.appservice.cookieService.delete('user_rights', '/')
+    this.appservice.cookieService.delete('planner', '/')
+    this.appservice.cookieService.delete('converting', '/')
+    this.appservice.cookieService.delete('delivery', '/')
+    this.appservice.cookieService.delete('edit_orders', '/')
+    this.appservice.cookieService.delete('lineup', '/')
+    this.appservice.cookieService.delete('fg', '/')
+    this.appservice.cookieService.delete('returns', '/')
+    this.appservice.cookieService.delete('status_page', '/')
+    this.appservice.cookieService.delete('useracc', '/')
+    this.appservice.cookieService.delete('import_orders', '/')
+
+    //
+    this.appservice.cookieService.delete('id', '/Ecopack')
+    this.appservice.cookieService.delete('user_rights', '/Ecopack')
+    this.appservice.cookieService.delete('planner', '/Ecopack')
+    this.appservice.cookieService.delete('converting', '/Ecopack')
+    this.appservice.cookieService.delete('delivery', '/Ecopack')
+    this.appservice.cookieService.delete('edit_orders', '/Ecopack')
+    this.appservice.cookieService.delete('lineup', '/Ecopack')
+    this.appservice.cookieService.delete('fg', '/Ecopack')
+    this.appservice.cookieService.delete('returns', '/Ecopack')
+    this.appservice.cookieService.delete('status_page', '/Ecopack')
+    this.appservice.cookieService.delete('useracc', '/Ecopack')
+    this.appservice.cookieService.delete('import_orders', '/Ecopack')
+    this.appservice.router.navigate([''])
+    this.appservice.http.get('http://localhost:3000/user-account/logout', { withCredentials: true }).subscribe()
   }
 }

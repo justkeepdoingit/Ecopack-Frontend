@@ -14,6 +14,7 @@ export interface userModel{
     returns: boolean
     status_page: boolean
     import_orders: boolean
+    packing: boolean
     useracc: boolean
     contact: string
     email: string

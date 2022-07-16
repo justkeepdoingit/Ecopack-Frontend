@@ -24,8 +24,8 @@ export class ConvertingComponent implements OnInit {
     frontpage.classStatus.importOrders = false
     frontpage.classStatus.fg = false
     frontpage.classStatus.converting = true
+    frontpage.classStatus.packing = false
     frontpage.classStatus.delivery = false
-    localStorage.clear()
   }
 
   displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'shipqty', 'deliverydate', 'status', 'comment'];
@@ -46,8 +46,6 @@ export class ConvertingComponent implements OnInit {
   }
 
   multi: boolean = false;
-
-
 
   task: orderTask = {
     taskName: 'Indeterminate',
@@ -75,18 +73,7 @@ export class ConvertingComponent implements OnInit {
       })
 
       dialog.afterClosed().subscribe(data => {
-        this.appservice.getConverting().subscribe(orders => {
-          if (!this.columnSearching) {
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          }
-          else {
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTask2();
-          }
-        });
+        this.clearTasks();
       })
     }
   }
@@ -99,18 +86,7 @@ export class ConvertingComponent implements OnInit {
       })
 
       dialog.afterClosed().subscribe(data => {
-        this.appservice.getConverting().subscribe(orders => {
-          if (!this.columnSearching) {
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-          }
-          else {
-            this.filteredSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTask2();
-          }
-        });
+        this.clearTasks();
       })
     }
   }
@@ -149,18 +125,7 @@ export class ConvertingComponent implements OnInit {
 
         dialog.afterClosed().subscribe(data => {
           if (data) {
-            this.appservice.getConverting().subscribe(orders => {
-              if (!this.columnSearching) {
-                this.newDataSource.data = orders;
-                this.task.subtasks = orders
-                this.clearTasks();
-              }
-              else {
-                this.filteredSource.data = orders;
-                this.task.subtasks = orders
-                this.clearTask2();
-              }
-            });
+            this.clearTasks()
           }
         })
       })
@@ -173,7 +138,7 @@ export class ConvertingComponent implements OnInit {
 
   allComplete: boolean = false;
   items: orderList[] = []
-  temporaryData: orderList[] = []
+  temporaryData: any[] = []
 
   setItems(data: any) {
     if (this.allComplete) {
@@ -181,44 +146,25 @@ export class ConvertingComponent implements OnInit {
       this.temporaryData = []
     }
     else {
-      this.items = data
-      localStorage.setItem("temporaryData", JSON.stringify(data))
-      this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+      this.temporaryData = [...data]
     }
   }
-
   //Checkbox logics
   updateAllComplete() {
     this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
   }
-  checkboxChecked(checked: boolean, data: orderList) {
-    if (checked && !this.allComplete && this.temporaryData == []) {
-      this.temporaryData.push(data)
-      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-      this.temporaryData = JSON.parse(localStorage.getItem("temporaryData") || '{}')
-    }
-    else if (this.allComplete) {
-      this.temporaryData.push(data)
-      localStorage.removeItem("temporaryData")
-      localStorage.setItem("allItems", JSON.stringify(this.temporaryData))
-      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-      this.temporaryData = JSON.parse(localStorage.getItem("temporaryData") || '{}')
-    }
-    else if (!checked && !this.allComplete) {
-      localStorage.removeItem("allItems")
-      let localItem = JSON.parse(localStorage.getItem("temporaryData")!)
-      for (let i = 0; i < localItem.length; i++) {
-        if (data.id == localItem[i].id) {
+
+  checkboxChecked(checked: boolean, data: any) {
+    if (!checked) {
+      for (let i = 0; i < this.temporaryData.length; i++) {
+        if (data.id == this.temporaryData[i].id) {
           this.temporaryData.splice(i, 1)
-          localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-          break
+          break;
         }
       }
     }
     else {
       this.temporaryData.push(data)
-      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-      this.temporaryData = JSON.parse(localStorage.getItem("temporaryData") || '{}')
     }
   }
 
@@ -376,7 +322,7 @@ export class ConvertingComponent implements OnInit {
 
     }
     if (!filterValue || this.forFilterValue.length == 0) {
-      localStorage.removeItem("allItems")
+      this.temporaryData = []
       this.allComplete = false
     }
   }
@@ -386,28 +332,25 @@ export class ConvertingComponent implements OnInit {
       return;
     }
     else if (!completed) {
-      localStorage.clear()
+      this.clearTasks();
+      this.clearTasks()
     }
     else if (completed) {
       this.allComplete = completed
-      this.task.subtasks.forEach(t => { t.completed = false })
+      this.task.subtasks.forEach(t => { t.completed = true })
     }
 
     let object: orderList[] = []
 
-    this.task.subtasks.forEach(t => {
+    this.task.subtasks!.forEach(t => {
       if (t.id?.toString().includes(this.filteredItems) && this.filteredItems != '') {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -416,14 +359,10 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -432,14 +371,10 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -448,14 +383,11 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -463,14 +395,11 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -478,13 +407,11 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -492,28 +419,23 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
-      else if (t.date.toString().includes(this.filteredItems) && this.filteredItems != '') {
+      else if (t.date.includes(this.filteredItems) && this.filteredItems != '') {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -521,41 +443,11 @@ export class ConvertingComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
-        }
-        return
-      }
-      else if (t.shipqty?.toString() == this.filteredItems && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-        }
-        else {
-
-          localStorage.clear()
-        }
-        return
-      }
-      else if (t.prodqty?.toString() == this.filteredItems && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-        }
-        else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -563,49 +455,35 @@ export class ConvertingComponent implements OnInit {
         if (!completed) {
           t.completed = false
           this.allComplete = false;
-          localStorage.clear()
-
+          this.temporaryData = [];
         }
         else {
           this.allComplete = completed
           t.completed = completed
-          localStorage.setItem("allItems", JSON.stringify(data))
         }
       }
     })
   }
 
   moveToFG() {
-    let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
+    let newData = this.temporaryData
     let link = `http://localhost:3000/order-list/fg/`
     this.appservice.movementPost(link, newData).subscribe(data => {
-      this.appservice.getConverting().subscribe(orders => {
-        this.newDataSource.data = orders;
-        this.task.subtasks = orders
-        this.clearTasks();
-        this.clearTask2();
-        this.appservice.snackbar.open("Selected items moved to Finished Good", "Dismiss", { duration: 2500 })
-      })
+      this.clearTasks();
+      this.clearTasks();
+      this.appservice.snackbar.open('Selected Items Moved To Finished Goods', 'Dismiss', { duration: 2500 })
     })
   }
 
   clearTasks() {
     this.temporaryData.length = 0;
-    localStorage.clear()
     this.allComplete = false
     this.task.subtasks!.forEach(t => { t.completed = false })
     this.ngOnInit()
-  }
-
-  clearTask2() {
-    localStorage.clear()
-    this.temporaryData.length = 0;
-    this.allComplete = false
-    this.task.subtasks!.forEach(t => { t.completed = false })
-    this.clearFilter()
     for (let i = 0; i < this.forFilters.length; i++) {
       this.forFilterValue[i] = '';
     }
+    this.clearFilter()
   }
 
 }

@@ -1,0 +1,9 @@
+<form [formGroup]="testGroup">
+    <mat-form-field style="width: 100%;" appearance="outline">
+        <mat-label>To Do</mat-label>
+        <input matInput formControlName="todo" placeholder="Search" #input>
+    </mat-form-field>
+    <button mat-stroked-button (click)="setData(testGroup.value)" color="primary">Add</button>
+    <button mat-stroked-button (click)="removeData(testGroup.value)" color="primary">Remove</button>
+    <button mat-stroked-button (click)="getData()" color="primary">Show</button>
+</form>

@@ -37,7 +37,8 @@ export class UserDialogComponent implements OnInit {
       returns: [this.userAddInfo.returns],
       status_page: [this.userAddInfo.status_page],
       useracc: [this.userAddInfo.useracc],
-      import_orders: [this.userAddInfo.import_orders]
+      import_orders: [this.userAddInfo.import_orders],
+      packing: [this.userAddInfo.packing],
     })
   }
 

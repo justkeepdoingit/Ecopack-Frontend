@@ -8,14 +8,18 @@ import { FrontPageComponent } from '../front-page.component';
 })
 export class EditOrdersComponent implements OnInit {
 
-  constructor(private frontpage:FrontPageComponent) {
+  constructor(private frontpage: FrontPageComponent) {
     frontpage.classStatus.planner = false;
     frontpage.classStatus.dashboard = false;
-    frontpage.classStatus.statusPage = false;
+    frontpage.classStatus.statusPage = false
     frontpage.classStatus.editOrders = true;
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = false
-   }
+    frontpage.classStatus.converting = false
+    frontpage.classStatus.fg = false
+    frontpage.classStatus.delivery = false
+    frontpage.classStatus.packing = false
+  }
 
   ngOnInit(): void {
   }

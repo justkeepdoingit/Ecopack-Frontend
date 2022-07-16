@@ -26,6 +26,7 @@ export class DeliveryComponent implements OnInit {
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
     frontpage.classStatus.delivery = true
+    frontpage.classStatus.packing = false
   }
   filters = new FormControl([]);
 
@@ -49,7 +50,6 @@ export class DeliveryComponent implements OnInit {
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   ngOnInit(): void {
-    localStorage.clear()
     this.appservice.getDeliveryOrders().subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
@@ -91,14 +91,7 @@ export class DeliveryComponent implements OnInit {
 
       dialog.afterClosed().subscribe(data => {
         if (data == 1) {
-          for (let i = 0; i < 2; i++) {
-            this.appservice.getDeliveryOrders().subscribe(orders => {
-              this.newDataSource.data = orders;
-              this.task.subtasks = orders
-              this.clearTasks();
-              this.clearTask2();
-            });
-          }
+          this.clearTasks();
           this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
         }
 
@@ -121,12 +114,8 @@ export class DeliveryComponent implements OnInit {
           })
           dialog.afterClosed().subscribe(dialogData => {
             if (dialogData) {
-              this.appservice.getDeliveryOrders().subscribe(orders => {
-                this.newDataSource.data = orders;
-                this.task.subtasks = orders
-                this.clearTasks();
-                this.clearTask2();
-              });
+              this.clearTasks();
+              this.clearTasks();
               this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
             }
           })
@@ -137,7 +126,7 @@ export class DeliveryComponent implements OnInit {
 
   allComplete: boolean = false;
   items: shippingList[] = []
-  temporaryData: shippingList[] = []
+  temporaryData: any[] = []
 
   setItems(data: any) {
     if (this.allComplete) {
@@ -145,44 +134,25 @@ export class DeliveryComponent implements OnInit {
       this.temporaryData = []
     }
     else {
-      this.items = data
-      localStorage.setItem("temporaryData", JSON.stringify(data))
-      this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+      this.temporaryData = [...data]
     }
   }
-
   //Checkbox logics
   updateAllComplete() {
     this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
   }
-  checkboxChecked(checked: boolean, data: shippingList) {
-    if (checked && !this.allComplete && this.temporaryData == []) {
-      this.temporaryData.push(data)
-      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-      this.temporaryData = JSON.parse(localStorage.getItem("temporaryData") || '{}')
-    }
-    else if (this.allComplete) {
-      this.temporaryData.push(data)
-      localStorage.removeItem("temporaryData")
-      localStorage.setItem("allItems", JSON.stringify(this.temporaryData))
-      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-      this.temporaryData = JSON.parse(localStorage.getItem("temporaryData") || '{}')
-    }
-    else if (!checked && !this.allComplete) {
-      localStorage.removeItem("allItems")
-      let localItem = JSON.parse(localStorage.getItem("temporaryData")!)
-      for (let i = 0; i < localItem.length; i++) {
-        if (data.id == localItem[i].id) {
+
+  checkboxChecked(checked: boolean, data: any) {
+    if (!checked) {
+      for (let i = 0; i < this.temporaryData.length; i++) {
+        if (data.id == this.temporaryData[i].id) {
           this.temporaryData.splice(i, 1)
-          localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-          break
+          break;
         }
       }
     }
     else {
       this.temporaryData.push(data)
-      localStorage.setItem("temporaryData", JSON.stringify(this.temporaryData))
-      this.temporaryData = JSON.parse(localStorage.getItem("temporaryData") || '{}')
     }
   }
 
@@ -315,7 +285,7 @@ export class DeliveryComponent implements OnInit {
 
     }
     if (!filterValue || this.forFilterValue.length == 0) {
-      localStorage.removeItem("allItems")
+      this.temporaryData = []
       this.allComplete = false
     }
   }
@@ -325,28 +295,25 @@ export class DeliveryComponent implements OnInit {
       return;
     }
     else if (!completed) {
-      localStorage.clear()
+      this.clearTasks();
+      this.clearTasks()
     }
     else if (completed) {
       this.allComplete = completed
-      this.task.subtasks.forEach(t => { t.completed = false })
+      this.task.subtasks.forEach(t => { t.completed = true })
     }
 
     let object: shippingList[] = []
 
-    this.task.subtasks.forEach(t => {
+    this.task.subtasks!.forEach(t => {
       if (t.id?.toString().includes(this.filteredItems) && this.filteredItems != '') {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -355,14 +322,10 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -371,14 +334,10 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -387,14 +346,11 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -402,14 +358,11 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -417,13 +370,11 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -431,14 +382,11 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -446,13 +394,11 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -460,41 +406,11 @@ export class DeliveryComponent implements OnInit {
         t.completed = completed
         object.push(t)
         if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
+          this.temporaryData = object;
         }
         else {
-
-          localStorage.clear()
-        }
-        return
-      }
-      else if (t.prodqty?.toString() == this.filteredItems && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-        }
-        else {
-
-          localStorage.clear()
-        }
-        return
-      }
-      else if (t.deliveryqty.toString() == this.filteredItems && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          localStorage.setItem("allItems", JSON.stringify(object))
-          localStorage.setItem("temporaryData", JSON.stringify(object))
-          this.temporaryData = JSON.parse(localStorage.getItem('temporaryData') || '{}')
-        }
-        else {
-
-          localStorage.clear()
+          this.temporaryData = [];
+          this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
       }
@@ -502,13 +418,11 @@ export class DeliveryComponent implements OnInit {
         if (!completed) {
           t.completed = false
           this.allComplete = false;
-          localStorage.clear()
-
+          this.temporaryData = [];
         }
         else {
           this.allComplete = completed
           t.completed = completed
-          localStorage.setItem("allItems", JSON.stringify(data))
         }
       }
     })
@@ -516,36 +430,25 @@ export class DeliveryComponent implements OnInit {
 
 
   updateMultiple() {
-    let newData = JSON.parse(localStorage.getItem('temporaryData') || "{}")
+    let newData = this.temporaryData
     let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
       data: newData
     })
 
     dialog.afterClosed().subscribe(data => {
       if (data) {
-        this.appservice.getDeliveryOrders().subscribe(orders => {
-          this.newDataSource.data = orders;
-          this.task.subtasks = orders;
-          this.clearTasks();
-          this.clearTask2();
-        })
+        this.clearTasks();
+        this.clearTasks();
+        this.appservice.snackbar.open('Setup Delivery Success', 'Dismiss', { duration: 2500 })
       }
     })
   }
 
   clearTasks() {
     this.temporaryData.length = 0;
-    localStorage.clear()
     this.allComplete = false
     this.task.subtasks!.forEach(t => { t.completed = false })
-  }
-
-
-  clearTask2() {
-    localStorage.clear()
-    this.temporaryData.length = 0;
-    this.allComplete = false
-    this.task.subtasks!.forEach(t => { t.completed = false })
+    this.ngOnInit()
     for (let i = 0; i < this.forFilters.length; i++) {
       this.forFilterValue[i] = '';
     }

@@ -1,0 +1,94 @@
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { FrontPageComponent } from '../front-page.component';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { packingModel } from 'src/app/models/packingModel.mode';
+import { AppService } from 'src/app/app.service';
+import { PackingDialogComponent } from './packing-dialog/packing-dialog.component';
+import { FormControl } from '@angular/forms';
+
+@Component({
+  selector: 'app-packing',
+  templateUrl: './packing.component.html',
+  styleUrls: ['./packing.component.scss']
+})
+export class PackingComponent implements OnInit {
+
+
+  constructor(private frontpage: FrontPageComponent, private appservice: AppService) {
+    frontpage.classStatus.planner = false;
+    frontpage.classStatus.dashboard = false;
+    frontpage.classStatus.statusPage = false
+    frontpage.classStatus.editOrders = false;
+    frontpage.classStatus.lineup = false;
+    frontpage.classStatus.importOrders = false
+    frontpage.classStatus.converting = false
+    frontpage.classStatus.fg = false
+    frontpage.classStatus.delivery = false
+    frontpage.classStatus.packing = true
+  }
+  filters = new FormControl([]);
+
+  selectedValue: string = '';
+  filter: any[] = [
+    { value: 'date', viewValue: 'Date' },
+    { value: 'so', viewValue: 'SO' },
+    { value: 'po', viewValue: 'PO' },
+    { value: 'name', viewValue: 'Name' },
+    { value: 'item', viewValue: 'Item' },
+    { value: 'itemdesc', viewValue: 'Item Description' },
+    { value: 'qty', viewValue: 'Order Qty' },
+    { value: 'deliverydate', viewValue: 'Date Needed' }
+  ];
+
+  displayedColumns: string[] = ['date', 'name', 'truck', 'capacity', 'total', 'percent', 'print'];
+  newDataSource = new MatTableDataSource<packingModel>();
+  @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
+  @ViewChild(MatSort) matsort: MatSort = new MatSort()
+
+  ngOnInit(): void {
+    localStorage.clear()
+    this.appservice.getPacking().subscribe(data => {
+      this.newDataSource.data = data;
+      this.newDataSource.paginator = this.paginator
+      this.newDataSource.sort = this.matsort
+    })
+  }
+  dashboardAdmins = {
+    adminClass: 'justify grid md:grid-cols-2 gap-5',
+    nonAdmin: 'justify grid md:grid-cols-1 gap-5',
+    useraccNA: 'flex flex-col overflow-y-auto md:flex-row md:max-w-full p-4 lg:mx-20 my-5 rounded-lg shadow-lg shadow-secondary-400',
+    useraccA: 'flex flex-col md:flex-row md:max-w-full p-4 rounded-lg shadow-lg shadow-secondary-400'
+  }
+
+  centered: boolean = false;
+  radius: number = 25
+  unbounded: boolean = false;
+
+  multi: boolean = false;
+
+
+  editInfo(data: any) {
+    let dialog = this.appservice.dialog.open(PackingDialogComponent, {
+      data: data
+    })
+
+    dialog.afterClosed().subscribe(data => {
+      if (data == 1) {
+        this.appservice.getPacking().subscribe(orders => {
+          this.newDataSource.data = orders;
+        });
+        this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+      }
+    })
+  }
+
+  newPl() {
+    this.appservice.dialog.open(PackingDialogComponent)
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.newDataSource.filter = filterValue.trim().toLowerCase();
+  }
+}

@@ -11,21 +11,25 @@ import { ImportOrdersComponent } from './front-page/import-orders/import-orders.
 import { ConvertingComponent } from './front-page/converting/converting.component';
 import { FgComponent } from './front-page/fg/fg.component';
 import { DeliveryComponent } from './front-page/delivery/delivery.component';
+import { PackingComponent } from './front-page/packing/packing.component';
 
 const routes: Routes = [
-  {path: 'Login', component: LogregComponent},
-  {path: 'Ecopack', component: FrontPageComponent, children: [
-    {path: 'Dashboard', component: DashboardComponent},
-    {path: 'Status_Page', component: StatusPageComponent},
-    {path: 'Planner', component: PlannerComponent},
-    {path: 'Edit_Orders', component: EditOrdersComponent},
-    {path: 'Line_Up', component: LineupComponent},
-    {path: 'Import_Orders', component: ImportOrdersComponent},
-    {path: 'Converting', component: ConvertingComponent},
-    {path: 'Finished_Goods', component: FgComponent},
-    {path: 'Delivery', component: DeliveryComponent},
-  ]},
-  {path: '', redirectTo:'Login', pathMatch: 'full'},
+  { path: 'Login', component: LogregComponent },
+  {
+    path: 'Ecopack', component: FrontPageComponent, children: [
+      { path: 'Dashboard', component: DashboardComponent },
+      { path: 'Status_Page', component: StatusPageComponent },
+      { path: 'Planner', component: PlannerComponent },
+      { path: 'Edit_Orders', component: EditOrdersComponent },
+      { path: 'Line_Up', component: LineupComponent },
+      { path: 'Import_Orders', component: ImportOrdersComponent },
+      { path: 'Converting', component: ConvertingComponent },
+      { path: 'Finished_Goods', component: FgComponent },
+      { path: 'Delivery', component: DeliveryComponent },
+      { path: 'Packing', component: PackingComponent },
+    ]
+  },
+  { path: '', redirectTo: 'Login', pathMatch: 'full' },
 ];
 
 @NgModule({

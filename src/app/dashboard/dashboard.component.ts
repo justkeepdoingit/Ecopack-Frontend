@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { FrontPageComponent } from '../front-page/front-page.component';
 import { userModel } from '../models/usermodels.model';
@@ -15,7 +15,7 @@ import { UserDialogComponent } from './user-dialog/user-dialog.component';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private frontpage: FrontPageComponent, private appservice: AppService, private dialog: MatDialog) { 
+  constructor(private frontpage: FrontPageComponent, private appservice: AppService, private dialog: MatDialog) {
     frontpage.classStatus.dashboard = true;
     frontpage.classStatus.statusPage = false;
     frontpage.classStatus.planner = false;
@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
     frontpage.classStatus.delivery = false
+    frontpage.classStatus.packing = false
     this.admin = this.appservice.cookieService.get('user_rights')
   }
 
@@ -33,7 +34,7 @@ export class DashboardComponent implements OnInit {
   admin: string = '';
   centered: boolean = false;
   radius: number = 25;
-  displayedColumns: string[] = ['id','username','user_rights'];
+  displayedColumns: string[] = ['id', 'username', 'user_rights'];
   newDataSource = new MatTableDataSource<userModel>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
@@ -41,16 +42,16 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.appservice.getAllUsers().subscribe(data=>{
+    this.appservice.getAllUsers().subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
     })
 
 
-    if(this.admin == '1'){
+    if (this.admin == '1') {
 
-      this.appservice.getOrderStatus().subscribe(data=>{
+      this.appservice.getOrderStatus().subscribe(data => {
         this.chartOptions = {
           animationEnabled: true,
           theme: "white",
@@ -60,24 +61,24 @@ export class DashboardComponent implements OnInit {
             text: "Orders Production Process"
           },
           subtitles: [{
-          text: "Count Per Process"
+            text: "Count Per Process"
           }],
           data: [{
-          type: "doughnut", //change type to column, line, area, doughnut, etc
-          indexLabel: "{name}: {y}",
-          legendText: "{name}",
-          dataPoints: [
-            { name: "Planning", y: data[0].planning },
-            { name: "Line Up", y: data[0].lineup },
-            { name: "Converting", y: data[0].convert },
-            { name: "Finished Goods", y: data[0].fg },
-            { name: "Delivery", y: data[0].delivery }
-          ]
+            type: "doughnut", //change type to column, line, area, doughnut, etc
+            indexLabel: "{name}: {y}",
+            legendText: "{name}",
+            dataPoints: [
+              { name: "Planning", y: data[0].planning },
+              { name: "Line Up", y: data[0].lineup },
+              { name: "Converting", y: data[0].convert },
+              { name: "Finished Goods", y: data[0].fg },
+              { name: "Delivery", y: data[0].delivery }
+            ]
           }]
         }
       });
 
-      
+
     }
   }
 
@@ -92,16 +93,16 @@ export class DashboardComponent implements OnInit {
     useraccNA: 'flex flex-col md:flex-row md:max-w-full p-4 lg:mx-44 rounded-lg shadow-lg shadow-secondary-400',
     useraccA: 'flex flex-col md:flex-row md:max-w-full p-4 rounded-lg shadow-lg shadow-secondary-400'
   }
-  
 
-  getInfos(data: userModel){
+
+  getInfos(data: userModel) {
     let dialogOpen = this.dialog.open(UserDialogComponent, {
       data: data
     })
-    dialogOpen.afterClosed().subscribe(data=>{
-      if(data){
-        this.appservice.snackbar.open("User Info Saved", "Dismiss",{duration:1500})
-        this.appservice.getAllUsers().subscribe(data=>{
+    dialogOpen.afterClosed().subscribe(data => {
+      if (data) {
+        this.appservice.snackbar.open("User Info Saved", "Dismiss", { duration: 1500 })
+        this.appservice.getAllUsers().subscribe(data => {
           this.newDataSource.data = data;
           this.newDataSource.paginator = this.paginator
           this.newDataSource.sort = this.matsort

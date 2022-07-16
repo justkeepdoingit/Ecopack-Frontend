@@ -12,75 +12,80 @@ import { MatDialog } from '@angular/material/dialog';
 import { rejectList } from './models/rejectList.model';
 import { deliveryModel } from './models/deliveryModel.mode';
 import { shippingList } from './models/shippingMode.model';
+import { packingModel } from './models/packingModel.mode';
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
 
   constructor(public http: HttpClient, public formBuilder: UntypedFormBuilder, public snackbar: MatSnackBar, public cookieService: CookieService,
-      public router: Router, public dialog: MatDialog
-    ) { 
-  } 
+    public router: Router, public dialog: MatDialog
+  ) {
+  }
 
   userInfos!: userModel;
 
-  getPlannerOrders(): Observable<orderList[]>{
+  getPlannerOrders(): Observable<orderList[]> {
     return this.http.get<orderList[]>('http://localhost:3000/order-list/planners')
   }
 
-  getLineupOrders(): Observable<orderList[]>{
+  getLineupOrders(): Observable<orderList[]> {
     return this.http.get<orderList[]>('http://localhost:3000/order-list/lineupOrders')
   }
 
-  getConverting(): Observable<orderList[]>{
+  getConverting(): Observable<orderList[]> {
     return this.http.get<orderList[]>('http://localhost:3000/order-list/convertOrders')
   }
 
-  getFgOrders(): Observable<orderList[]>{
+  getFgOrders(): Observable<orderList[]> {
     return this.http.get<orderList[]>('http://localhost:3000/order-list/fgOrders')
   }
 
-  getDeliveryOrders(): Observable<shippingList[]>{
+  getDeliveryOrders(): Observable<shippingList[]> {
     return this.http.get<shippingList[]>('http://localhost:3000/order-list/deliveryOrders')
   }
 
-  getAllUsers(): Observable<userModel[]>{
+  getPacking(): Observable<packingModel[]> {
+    return this.http.get<packingModel[]>('http://localhost:3000/packing-list')
+  }
+
+  getAllUsers(): Observable<userModel[]> {
     return this.http.get<userModel[]>('http://localhost:3000/user-account/getAllUsers')
   }
 
-  getRejects(orderid: any): Observable<rejectList>{
+  getRejects(orderid: any): Observable<rejectList> {
     return this.http.get<rejectList>(`http://localhost:3000/order-list/getReject/${orderid}`)
-  } 
-
-  getInfo(id: number): Observable<userModel>{
-    return this.http.get<userModel>(`http://localhost:3000/user-account/findUser/${id}`, {withCredentials:true})
   }
 
-  getShipping(id: number | undefined): Observable<deliveryModel[]>{
+  getInfo(id: number): Observable<userModel> {
+    return this.http.get<userModel>(`http://localhost:3000/user-account/findUser/${id}`, { withCredentials: true })
+  }
+
+  getShipping(id: number | undefined): Observable<deliveryModel[]> {
     return this.http.get<deliveryModel[]>(`http://localhost:3000/order-list/getShipping/${id}`)
   }
 
-  updateReject(data:rejectList, id: any): Observable<rejectList>{
+  updateReject(data: rejectList, id: any): Observable<rejectList> {
     return this.http.post<rejectList>(`http://localhost:3000/order-list/updateReject/${id}`, data);
   }
 
-  getOrderStatus(): Observable<any[]>{
+  getOrderStatus(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:3000/order-list/getStatuses');
   }
-  
 
-  updateUsers(datas: userModel){
+
+  updateUsers(datas: userModel) {
     let rights: number;
-    if(datas.username != "admin" && datas.planner && datas.converting && datas.delivery && datas.edit_orders && datas.lineup && datas.fg && datas.returns && datas.status_page && datas.import_orders && datas.useracc){
+    if (datas.username != "admin" && datas.planner && datas.converting && datas.delivery && datas.edit_orders && datas.lineup && datas.fg && datas.returns && datas.status_page && datas.import_orders && datas.useracc && datas.packing) {
       rights = 1
     }
-    else if(datas.username == "admin"){
+    else if (datas.username == "admin") {
       rights = 1;
     }
-    else{
+    else {
       rights = 2
     }
-    this.http.patch<userModel>(`http://localhost:3000/user-account/updateUsers/${datas.id}`,{
+    this.http.patch<userModel>(`http://localhost:3000/user-account/updateUsers/${datas.id}`, {
       id: datas.id,
       username: datas.username,
       password: datas.password,
@@ -96,30 +101,31 @@ export class AppService {
       returns: datas.returns,
       status_page: datas.status_page,
       import_orders: datas.import_orders,
+      packing: datas.packing,
       useracc: datas.useracc,
       contact: datas.contact,
       email: datas.email
     }).subscribe()
   }
 
-  logreg(username: string, password: string, status: number){
-    if(status == 2){
-      this.http.post<userModel>('http://localhost:3000/user-account/register',{
+  logreg(username: string, password: string, status: number) {
+    if (status == 2) {
+      this.http.post<userModel>('http://localhost:3000/user-account/register', {
         username: username,
         password: password
-      }).subscribe(data=>{
-        this.snackbar.open("Account registed! Please Log in your account.", "dismiss", {duration: 2500})
+      }).subscribe(data => {
+        this.snackbar.open("Account registed! Please Log in your account.", "dismiss", { duration: 2500 })
       })
     }
-    else{
+    else {
       this.http.post<userModel>('http://localhost:3000/user-account/login', {
         username: username,
         password: password
-      }, {withCredentials:true}).subscribe(data=>{
-        if(!data){
-          this.snackbar.open('Incorrect Username or Password', '', {duration: 1000})
+      }, { withCredentials: true }).subscribe(data => {
+        if (!data) {
+          this.snackbar.open('Incorrect Username or Password', '', { duration: 1000 })
         }
-        else if(data){
+        else if (data) {
           this.cookieService.set('id', data.id.toString())
           this.cookieService.set('user_rights', data.user_rights.toString())
           this.cookieService.set('planner', data.planner.toString())
@@ -132,33 +138,33 @@ export class AppService {
           this.cookieService.set('status_page', data.status_page.toString())
           this.cookieService.set('useracc', data.useracc.toString())
           this.cookieService.set('import_orders', data.import_orders.toString())
-          if(data.user_rights == 1 || data.useracc){
+          if (data.user_rights == 1 || data.useracc) {
             this.router.navigate(['/Ecopack/Dashboard']);
-            this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', {duration:3000})
+            this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', { duration: 3000 })
             this.userInfos = data
           }
-          else{
+          else {
             this.router.navigate(['/Ecopack']);
-            this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', {duration:3000})
+            this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', { duration: 3000 })
             this.userInfos = data
           }
         }
-        
+
       })
     }
   }
 
-  orderPatch(link: string, data: any): Observable<any>{
+  orderPatch(link: string, data: any): Observable<any> {
     return this.http.patch<any>(link, data);
   }
 
-  movementPost(link: string, data: orderList[]): Observable<orderList[]>{
+  movementPost(link: string, data: orderList[]): Observable<orderList[]> {
     return this.http.post<orderList[]>(link, data)
     // return data;
   }
 
-  getGeneralData(http: string, data:any): Observable<any[]>{
+  getGeneralData(http: string, data: any): Observable<any[]> {
     return this.http.post<any[]>(http, data)
   }
-  
+
 }

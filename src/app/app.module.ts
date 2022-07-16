@@ -31,6 +31,8 @@ import { filterPipes2 } from './componentPipes/filterPipes2.pipe';
 import { DeliveryComponent } from './front-page/delivery/delivery.component';
 import { DeliveryDialogComponent } from './front-page/delivery/delivery-dialog/delivery-dialog.component';
 import { StatusDialogComponent } from './front-page/delivery/status-dialog/status-dialog.component';
+import { PackingComponent } from './front-page/packing/packing.component';
+import { PackingDialogComponent } from './front-page/packing/packing-dialog/packing-dialog.component';
 @NgModule({
     declarations: [
         CanvasJSChart,
@@ -55,7 +57,9 @@ import { StatusDialogComponent } from './front-page/delivery/status-dialog/statu
         FgDialogComponent,
         DeliveryComponent,
         DeliveryDialogComponent,
-        StatusDialogComponent
+        StatusDialogComponent,
+        PackingComponent,
+        PackingDialogComponent
     ],
     imports: [
         BrowserModule,

@@ -18,6 +18,7 @@ export class StatusPageComponent implements OnInit {
     frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
     frontpage.classStatus.delivery = false
+    frontpage.classStatus.packing = false
   }
 
   ngOnInit(): void {
