@@ -14,7 +14,10 @@
                             <button mat-stroked-button color="primary" (click)="newPl()">New</button>
                         </div>
                         <div class="flex flex-col justify-start w-full">
-                            <button *ngIf="multi" mat-stroked-button color="warn">Delete</button>
+                            <button (click)="addTruck()" mat-raised-button color="accent">Add New Truck</button>
+                        </div>
+                        <div class="flex flex-col justify-start w-full">
+                            <button (click)="editVolume()" mat-raised-button color="primary">Edit Item Volume</button>
                         </div>
                     </div>
                 </div>
@@ -37,7 +40,8 @@
 
                         <ng-container matColumnDef="truck">
                             <mat-header-cell mat-sort-header *matHeaderCellDef> Truck# </mat-header-cell>
-                            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.truck}}
+                            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{(element.truck |
+                                truckName) | async}}
                             </mat-cell>
                         </ng-container>
 
@@ -55,14 +59,16 @@
 
                         <ng-container matColumnDef="percent">
                             <mat-header-cell mat-sort-header *matHeaderCellDef> % Full </mat-header-cell>
-                            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.percent}}
+                            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.percent}}%
                             </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="print">
                             <mat-header-cell mat-sort-header *matHeaderCellDef> </mat-header-cell>
-                            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> <button
-                                    mat-stroked-button>Print</button>
+                            <mat-cell *matCellDef="let element">
+                                <button *ngIf="!multi" mat-stroked-button>Print</button>
+                                <button (click)="deleteRow(element)" *ngIf="multi" mat-stroked-button
+                                    color="warn">Delete</button>
                             </mat-cell>
                         </ng-container>
 
@@ -74,11 +80,10 @@
 
             <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
             </mat-paginator>
-            <button mat-stroked-button color="primary" (click)="!multi ? multi = true : multi = false"
-                *ngIf="multi">Single Row Selection</button>
-            <button mat-raised-button color="primary" (click)=" multi ? multi=false : multi=true"
-                *ngIf="!multi">Multiple
-                Row Selection</button>
+            <button mat-stroked-button color="warn" (click)="!multi ? multi = true : multi = false"
+                *ngIf="multi">Cancel</button>
+            <button mat-stroked-button color="primary" (click)=" multi ? multi=false : multi=true" *ngIf="!multi">
+                Delete Row</button>
         </div>
     </div>
 </div>

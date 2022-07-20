@@ -7,6 +7,9 @@ import { packingModel } from 'src/app/models/packingModel.mode';
 import { AppService } from 'src/app/app.service';
 import { PackingDialogComponent } from './packing-dialog/packing-dialog.component';
 import { FormControl } from '@angular/forms';
+import { TruckDialogComponent } from './truck-dialog/truck-dialog.component';
+import { VolumeDialogComponent } from './volume-dialog/volume-dialog.component';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-packing',
@@ -48,7 +51,6 @@ export class PackingComponent implements OnInit {
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   ngOnInit(): void {
-    localStorage.clear()
     this.appservice.getPacking().subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
@@ -69,26 +71,77 @@ export class PackingComponent implements OnInit {
   multi: boolean = false;
 
 
-  editInfo(data: any) {
-    let dialog = this.appservice.dialog.open(PackingDialogComponent, {
-      data: data
-    })
+  editInfo(data: packingModel) {
+    this.appservice.getTruckInfo(data).subscribe(item => {
+      let dialog = this.appservice.dialog.open(EditDialogComponent, {
+        data: {
+          pld: item,
+          pl: data
+        }
+      })
+      dialog.afterClosed().subscribe(data => {
+        if (data) {
+          this.appservice.snackbar.open('List Updated!', 'Dismiss', { duration: 2500 })
+        }
+      })
+    });
+  }
+
+  addTruck() {
+    let dialog = this.appservice.dialog.open(TruckDialogComponent)
 
     dialog.afterClosed().subscribe(data => {
       if (data == 1) {
         this.appservice.getPacking().subscribe(orders => {
           this.newDataSource.data = orders;
         });
-        this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+        this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
+      }
+    })
+  }
+
+  editVolume() {
+    let dialog = this.appservice.dialog.open(VolumeDialogComponent)
+
+    dialog.afterClosed().subscribe(data => {
+      if (data == 1) {
+        this.appservice.getPacking().subscribe(orders => {
+          this.newDataSource.data = orders;
+        });
+        this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
       }
     })
   }
 
   newPl() {
-    this.appservice.dialog.open(PackingDialogComponent)
+    let pl = this.appservice.dialog.open(PackingDialogComponent)
+    pl.afterClosed().subscribe(data => {
+      if (data) {
+        this.appservice.snackbar.open('Selection Saved!', 'Dismiss', { duration: 2500 })
+        this.clearTask()
+        this.clearTask()
+      }
+    })
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.newDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  deleteRow(data: packingModel) {
+    if (confirm(`Delete This Row?`)) {
+      this.appservice.deletePacking(data).subscribe(data => {
+        this.clearTask()
+        this.clearTask()
+      });
+    }
+  }
+
+  clearTask() {
+    this.appservice.getPacking().subscribe(data => {
+      this.newDataSource.data = data;
+      this.newDataSource.paginator = this.paginator
+      this.newDataSource.sort = this.matsort
+    })
   }
 }

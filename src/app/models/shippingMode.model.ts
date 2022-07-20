@@ -1,5 +1,5 @@
 import { ThemePalette } from "@angular/material/core";
-export interface shippingList{
+export interface shippingList {
     id?: number
     date: string
     so: string
@@ -23,4 +23,4 @@ export interface shippingTask {
     completed: boolean;
     color: ThemePalette;
     subtasks?: shippingList[];
-  }
+}

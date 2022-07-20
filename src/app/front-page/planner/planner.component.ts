@@ -78,7 +78,10 @@ export class PlannerComponent implements OnInit {
   radius: number = 25
   unbounded: boolean = false;
 
+  querying: boolean = false;
+
   editInfo(datas: orderList) {
+    this.querying = true
     if (!this.multi) {
       let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
         data: [datas]
@@ -86,19 +89,17 @@ export class PlannerComponent implements OnInit {
 
       dialog.afterClosed().subscribe(data => {
         if (data == 1) {
-          this.appservice.getPlannerOrders().subscribe(orders => {
-            this.newDataSource.data = orders;
-            this.task.subtasks = orders
-            this.clearTasks();
-            this.clearTasks();
-          });
-          this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+          this.clearTasks();
+          this.clearTasks();
+          this.querying = false
+          this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
+          return
         }
-
+        this.querying = false;
       })
     }
     else {
-      this.appservice.snackbar.open('Multiple Selection On', 'dismiss', { duration: 2500 })
+      this.appservice.snackbar.open('Multiple Selection On', 'Dismiss', { duration: 2500 })
     }
   }
 
@@ -404,6 +405,7 @@ export class PlannerComponent implements OnInit {
   }
 
   updateMultiple() {
+    this.querying = true
     let newData = this.temporaryData
     let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
       data: newData
@@ -411,26 +413,26 @@ export class PlannerComponent implements OnInit {
 
 
     dialog.afterClosed().subscribe(data => {
-      this.appservice.getPlannerOrders().subscribe(orders => {
-        this.newDataSource.data = orders;
-        this.task.subtasks = orders;
+      if (data) {
+        this.querying = false
         this.clearTasks();
         this.clearTasks();
-      })
+        this.appservice.snackbar.open('Data Updated!', 'Dismiss', { duration: 2500 })
+        return
+      }
+      this.querying = false;
     })
   }
 
   moveToLineUp() {
+    this.querying = true;
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/lineup/`
+    let link = `../api/order-list/lineup/`
     this.appservice.movementPost(link, newData).subscribe(data => {
-      this.appservice.getPlannerOrders().subscribe(orders => {
-        this.newDataSource.data = orders;
-        this.task.subtasks = orders;
-        this.clearTasks();
-        this.clearTasks();
-        this.appservice.snackbar.open("Selected items moved to Line Up", "Dismiss", { duration: 2500 })
-      })
+      this.clearTasks();
+      this.clearTasks();
+      this.querying = false
+      this.appservice.snackbar.open("Selected items moved to Line Up", "Dismiss", { duration: 2500 })
     })
   }
 

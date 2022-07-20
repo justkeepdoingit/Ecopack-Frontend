@@ -5,4 +5,5 @@ export interface packingModel {
     capacity: number,
     total: number,
     percent: number,
+    date: string,
 }

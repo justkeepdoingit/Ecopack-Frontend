@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject} from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppService } from 'src/app/app.service';
@@ -13,15 +13,15 @@ import { DatePipe } from '@angular/common';
 export class FgDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private orderList: orderList[], private appservice: AppService,
-  private dialogRef: MatDialogRef<FgDialogComponent>, private datepipe: DatePipe
+    private dialogRef: MatDialogRef<FgDialogComponent>, private datepipe: DatePipe
   ) {
     this.orderListInfo = orderList
-    
-   }
-   orderListInfo: orderList[] = [];
+
+  }
+  orderListInfo: orderList[] = [];
 
   dateComment = new UntypedFormGroup({})
-  
+
   minDate = new Date()
   newDate = new Date();
   DateTime = this.newDate.setDate(this.newDate.getDate() + 2)
@@ -33,28 +33,28 @@ export class FgDialogComponent implements OnInit {
   }
 
 
-  updateData(edit: orderList){
+  updateData(edit: orderList) {
     let newData = {
       deliverydate: this.datepipe.transform(edit.deliverydate, 'yyyy-MM-dd'),
       comment: edit.comment
     }
 
-    this.orderListInfo.forEach(data=>{
-      let link = `http://localhost:3000/order-list/updateOrder/${data.id}`;
-      this.appservice.orderPatch(link, newData).subscribe(datas=>{
+    this.orderListInfo.forEach(data => {
+      let link = `../../api/order-list/updateOrder/${data.id}`;
+      this.appservice.orderPatch(link, newData).subscribe(datas => {
         this.dialogRef.close(1);
       })
-    })    
+    })
   }
 
-  moveToDelivery(){
-    let link = `http://localhost:3000/order-list/delivery/`
+  moveToDelivery() {
+    let link = `../../api/order-list/delivery/`
 
-    this.orderListInfo.forEach(data=>{
+    this.orderListInfo.forEach(data => {
       this.appservice.movementPost(link, this.orderListInfo).subscribe()
       this.dialogRef.close(1);
-    }) 
-    
-    this.appservice.snackbar.open(`PO # ${this.orderList[0].id} was moved for Delivery`, 'Okay', {duration:2500})
+    })
+
+    this.appservice.snackbar.open(`PO # ${this.orderList[0].id} was moved for Delivery`, 'Okay', { duration: 2500 })
   }
 }

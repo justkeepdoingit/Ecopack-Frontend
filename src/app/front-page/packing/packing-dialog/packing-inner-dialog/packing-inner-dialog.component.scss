@@ -1,0 +1,43 @@
+mat-table {
+    .ids {
+        max-width: 40px;
+        min-width: 40px;
+    }
+
+    .cb {
+        max-width: 50px;
+        min-width: 50px;
+    }
+
+    .po {
+        max-width: 50px;
+        min-width: 50px;
+    }
+
+    .so {
+        max-width: 50px;
+        min-width: 50px;
+    }
+}
+
+.red {
+    color: red
+}
+
+.yellow {
+    color: yellow
+}
+
+.green {
+    color: green
+}
+
+@media screen and (max-width: 586px) {
+    mat-table {
+        min-width: 1000px;
+    }
+}
+
+.mat-form-field-appearance-outline {
+    width: 100%;
+}

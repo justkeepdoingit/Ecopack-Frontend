@@ -64,8 +64,10 @@ export class ConvertingComponent implements OnInit {
   centered: boolean = false;
   radius: number = 25
   unbounded: boolean = false;
+  querying: boolean = false;
 
   editStatus(data: orderList) {
+    this.querying = true
     if (!this.multi) {
       let dialog = this.appservice.dialog.open(ConvertDialogComponent, {
         data: { data, sw: 3 },
@@ -74,11 +76,13 @@ export class ConvertingComponent implements OnInit {
 
       dialog.afterClosed().subscribe(data => {
         this.clearTasks();
+        this.querying = false;
       })
     }
   }
 
   editQty(data: orderList) {
+    this.querying = true
     if (!this.multi) {
       let dialog = this.appservice.dialog.open(ConvertDialogComponent, {
         data: { data, sw: 2 },
@@ -87,11 +91,13 @@ export class ConvertingComponent implements OnInit {
 
       dialog.afterClosed().subscribe(data => {
         this.clearTasks();
+        this.querying = false
       })
     }
   }
 
   editInfo(data: orderList) {
+    this.querying = true;
     if (!this.multi) {
       this.appservice.getRejects(data.id).subscribe(rejects => {
         let reject: rejectList;
@@ -126,7 +132,10 @@ export class ConvertingComponent implements OnInit {
         dialog.afterClosed().subscribe(data => {
           if (data) {
             this.clearTasks()
+            this.querying = false;
+            return
           }
+          this.querying = false;
         })
       })
     }
@@ -466,11 +475,13 @@ export class ConvertingComponent implements OnInit {
   }
 
   moveToFG() {
+    this.querying = true
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/fg/`
+    let link = `../api/order-list/fg/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();
+      this.querying = false;
       this.appservice.snackbar.open('Selected Items Moved To Finished Goods', 'Dismiss', { duration: 2500 })
     })
   }

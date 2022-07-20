@@ -41,79 +41,81 @@
           <button (click)="moveToFG(); matSelect.value = null; !columnSearching"
             style="margin-left: 0.5rem; margin-right: 0.5rem" mat-stroked-button color="primary">Move To FG</button>
         </div>
-        <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered" [matRippleRadius]="radius"
-          class=" text-secondary-700 font-medium cursor-pointer" #table matSort
-          [dataSource]="!columnSearching ? newDataSource : filteredSource">
-          <ng-container matColumnDef="cb">
-            <mat-header-cell class="cb" *matHeaderCellDef>
-              <mat-checkbox *ngIf="multi" [checked]="allComplete" [color]="task.color"
-                (click)="setItems(task.subtasks);" [indeterminate]="someComplete()"
-                (change)="setAll($event.checked, task.subtasks)">
-              </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell class="cb" *matCellDef="let subtask">
-              <mat-checkbox *ngIf="multi" [(ngModel)]="subtask.completed" [ngModelOptions]="{standalone: true}"
-                [color]="subtask.color" (change)="checkboxChecked($event.checked, subtask)"
-                (ngModelChange)="updateAllComplete()">
-              </mat-checkbox>
-            </mat-cell>
-          </ng-container>
+        <div id="tables" class=" relative overflow-auto">
+          <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
+            [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort
+            [dataSource]="!columnSearching ? newDataSource : filteredSource">
+            <ng-container matColumnDef="cb">
+              <mat-header-cell class="cb" *matHeaderCellDef>
+                <mat-checkbox *ngIf="multi" [checked]="allComplete" [color]="task.color"
+                  (click)="setItems(task.subtasks);" [indeterminate]="someComplete()"
+                  (change)="setAll($event.checked, task.subtasks)">
+                </mat-checkbox>
+              </mat-header-cell>
+              <mat-cell class="cb" *matCellDef="let subtask">
+                <mat-checkbox *ngIf="multi" [(ngModel)]="subtask.completed" [ngModelOptions]="{standalone: true}"
+                  [color]="subtask.color" (change)="checkboxChecked($event.checked, subtask)"
+                  (ngModelChange)="updateAllComplete()">
+                </mat-checkbox>
+              </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="date">
-            <mat-header-cell mat-sort-header *matHeaderCellDef> Date </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.date}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="date">
+              <mat-header-cell mat-sort-header *matHeaderCellDef> Date </mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.date}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="so">
-            <mat-header-cell class="so" class="so" mat-sort-header *matHeaderCellDef> SO# </mat-header-cell>
-            <mat-cell class="so" (click)="editInfo(element)" class="so" *matCellDef="let element"> {{element.so}}
-            </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="so">
+              <mat-header-cell class="so" class="so" mat-sort-header *matHeaderCellDef> SO# </mat-header-cell>
+              <mat-cell class="so" (click)="editInfo(element)" class="so" *matCellDef="let element"> {{element.so}}
+              </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="po">
-            <mat-header-cell class="po" mat-sort-header *matHeaderCellDef> PO# </mat-header-cell>
-            <mat-cell class="po" (click)="editInfo(element)" *matCellDef="let element"> {{element.po}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="po">
+              <mat-header-cell class="po" mat-sort-header *matHeaderCellDef> PO# </mat-header-cell>
+              <mat-cell class="po" (click)="editInfo(element)" *matCellDef="let element"> {{element.po}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="name">
-            <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.name}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="name">
+              <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="item">
-            <mat-header-cell mat-sort-header *matHeaderCellDef> Item </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.item}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="item">
+              <mat-header-cell mat-sort-header *matHeaderCellDef> Item </mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.item}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="itemdesc">
-            <mat-header-cell mat-sort-header *matHeaderCellDef> Item Desc </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.itemdesc}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="itemdesc">
+              <mat-header-cell mat-sort-header *matHeaderCellDef> Item Desc </mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.itemdesc}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="qty">
-            <mat-header-cell mat-sort-header *matHeaderCellDef> Order Qty </mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.qty}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="qty">
+              <mat-header-cell mat-sort-header *matHeaderCellDef> Order Qty </mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.qty}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="deliverydate">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>Date Needed</mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.deliverydate}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="deliverydate">
+              <mat-header-cell mat-sort-header *matHeaderCellDef>Date Needed</mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.deliverydate}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="shipqty">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>Machine Qty</mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.shipqty}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="shipqty">
+              <mat-header-cell mat-sort-header *matHeaderCellDef>Machine Qty</mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.shipqty}} </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="comment">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>Comment</mat-header-cell>
-            <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.comment}} </mat-cell>
-          </ng-container>
+            <ng-container matColumnDef="comment">
+              <mat-header-cell mat-sort-header *matHeaderCellDef>Comment</mat-header-cell>
+              <mat-cell (click)="editInfo(element)" *matCellDef="let element"> {{element.comment}} </mat-cell>
+            </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-        </mat-table>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+          <mat-progress-bar *ngIf="querying" mode="query"></mat-progress-bar>
+        </div>
       </div>
 
       <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">

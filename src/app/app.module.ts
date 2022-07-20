@@ -33,6 +33,11 @@ import { DeliveryDialogComponent } from './front-page/delivery/delivery-dialog/d
 import { StatusDialogComponent } from './front-page/delivery/status-dialog/status-dialog.component';
 import { PackingComponent } from './front-page/packing/packing.component';
 import { PackingDialogComponent } from './front-page/packing/packing-dialog/packing-dialog.component';
+import { TruckDialogComponent } from './front-page/packing/truck-dialog/truck-dialog.component';
+import { VolumeDialogComponent } from './front-page/packing/volume-dialog/volume-dialog.component';
+import { PackingInnerDialogComponent } from './front-page/packing/packing-dialog/packing-inner-dialog/packing-inner-dialog.component';
+import { truckPipe } from './componentPipes/truckPipes.pipe';
+import { EditDialogComponent } from './front-page/packing/edit-dialog/edit-dialog.component';
 @NgModule({
     declarations: [
         CanvasJSChart,
@@ -43,6 +48,7 @@ import { PackingDialogComponent } from './front-page/packing/packing-dialog/pack
         pipeUserRights,
         filterPipes,
         filterPipes2,
+        truckPipe,
         UserDialogComponent,
         StatusPageComponent,
         PlannerComponent,
@@ -59,7 +65,11 @@ import { PackingDialogComponent } from './front-page/packing/packing-dialog/pack
         DeliveryDialogComponent,
         StatusDialogComponent,
         PackingComponent,
-        PackingDialogComponent
+        PackingDialogComponent,
+        TruckDialogComponent,
+        VolumeDialogComponent,
+        PackingInnerDialogComponent,
+        EditDialogComponent
     ],
     imports: [
         BrowserModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject} from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppService } from 'src/app/app.service';
@@ -13,7 +13,7 @@ import { DatePipe } from '@angular/common';
 export class LineupDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private orderList: orderList, private appservice: AppService,
-  private dialogRef: MatDialogRef<LineupDialogComponent>, private datepipe: DatePipe) { 
+    private dialogRef: MatDialogRef<LineupDialogComponent>, private datepipe: DatePipe) {
     this.lineupList = orderList
   }
 
@@ -30,25 +30,25 @@ export class LineupDialogComponent implements OnInit {
     })
   }
 
-  updateData(data: orderList){
-    let link = `http://localhost:3000/order-list/updateOrder/${this.lineupList.id}`
+  updateData(data: orderList) {
+    let link = `../../api/order-list/updateOrder/${this.lineupList.id}`
     this.appservice.orderPatch(link, data).subscribe()
-    this.appservice.snackbar.open(`PO # ${this.lineupList.po} details has been updated`, 'Dismiss', {duration: 2500})
+    this.appservice.snackbar.open(`PO # ${this.lineupList.po} details has been updated`, 'Dismiss', { duration: 2500 })
     this.dialogRef.close(1)
   }
 
-  orderMoveFG(){
-    let link = `http://localhost:3000/order-list/fg/`
+  orderMoveFG() {
+    let link = `../../api/order-list/fg/`
     let newData: orderList[] = [this.lineupList];
     this.appservice.movementPost(link, newData).subscribe()
-    this.appservice.snackbar.open(`PO # ${this.lineupList.id} was moved to Finished Goods`, 'Okay', {duration:2500})
+    this.appservice.snackbar.open(`PO # ${this.lineupList.id} was moved to Finished Goods`, 'Okay', { duration: 2500 })
     this.dialogRef.close(1)
   }
-  orderMoveCon(){
-    let link = `http://localhost:3000/order-list/convert/`
+  orderMoveCon() {
+    let link = `../../api/order-list/convert/`
     let newData: orderList[] = [this.lineupList];
     this.appservice.movementPost(link, newData).subscribe()
-    this.appservice.snackbar.open(`PO # ${this.lineupList.id} was moved to Converting`, 'Okay', {duration:2500})
+    this.appservice.snackbar.open(`PO # ${this.lineupList.id} was moved to Converting`, 'Okay', { duration: 2500 })
     this.dialogRef.close(1)
   }
 

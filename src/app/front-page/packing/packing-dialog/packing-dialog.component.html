@@ -1,9 +1,157 @@
-<form [formGroup]="testGroup">
-    <mat-form-field style="width: 100%;" appearance="outline">
-        <mat-label>To Do</mat-label>
-        <input matInput formControlName="todo" placeholder="Search" #input>
-    </mat-form-field>
-    <button mat-stroked-button (click)="setData(testGroup.value)" color="primary">Add</button>
-    <button mat-stroked-button (click)="removeData(testGroup.value)" color="primary">Remove</button>
-    <button mat-stroked-button (click)="getData()" color="primary">Show</button>
-</form>
+<h2 mat-dialog-title>Select Items To Deliver</h2>
+<mat-dialog-content>
+    <div class="overflow-y-auto relative">
+        <div class="justify grid md:grid-cols-1 gap-2">
+            <div class="flex flex-col md:flex-row md:max-w-full gap-2">
+                <div class="p-6 flex flex-col justify-start w-full">
+                    <h2 class="text-secondary-700 text-xl font-medium mb-2">For Delivery</h2>
+                    <div *ngIf="columnSearching" [ngClass]="filterClass">
+                        <div *ngFor="let filterData of forFilters; let i = index"
+                            class="flex flex-col md:flex-row md:max-w-full">
+                            <div class=" flex flex-col justify-start w-full">
+                                <mat-form-field *ngIf="columnSearching" style="width: 100%;" appearance="standard">
+                                    <mat-label>Filter By {{filterData | filterName}}</mat-label>
+                                    <input matInput (keyup)="applyFilter($event, i)" placeholder="Search" #input>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-form-field *ngIf="!columnSearching" style="width: 100%;" appearance="standard">
+                        <mat-label>Filter</mat-label>
+                        <input matInput (keyup)="applyFilter($event, 100)" placeholder="Search" #input>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select Filter By Column</mat-label>
+                        <mat-select #matSelect [formControl]="filters" (selectionChange)="checkChange($event.value)"
+                            multiple>
+                            <mat-select-trigger>
+                                {{filters.value?.[0] | filterName}}
+                                <span *ngIf="(filters.value?.length || 0) > 1" class="example-additional-selection">
+                                    (+{{(filters.value?.length || 0) - 1}} {{filters.value?.length === 2 ? 'other' :
+                                    'others'}})
+                                </span>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let filter of filter" [disabled]="isOptionDisabled(filter.value)"
+                                [value]="filter.value">
+                                {{filter.viewValue}}</mat-option>
+                        </mat-select>
+                        <button (click)="clearFilter()" *ngIf="columnSearching" matSuffix mat-icon-button
+                            aria-label="Clear">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <div class="justify grid grid-cols-1 gap-2">
+                        <button (click)="deliverItems()" mat-stroked-button color="primary"
+                            *ngIf="temporaryData.length > 0">Move To
+                            Deliver</button>
+                        <div id="tables" class=" relative overflow-auto">
+                            <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
+                                [matRippleRadius]="radius" class="text-secondary-700 font-medium cursor-pointer" #table
+                                matSort [dataSource]="!columnSearching ? newDataSource : filteredSource">
+                                <ng-container matColumnDef="cb">
+                                    <mat-header-cell class="cb" *matHeaderCellDef>
+                                        <mat-checkbox *ngIf="multi" [checked]="allComplete" [color]="task.color"
+                                            (click)="setItems(task.subtasks);" [indeterminate]="someComplete()"
+                                            (change)="setAll($event.checked, task.subtasks)">
+                                        </mat-checkbox>
+                                    </mat-header-cell>
+                                    <mat-cell class="cb" *matCellDef="let subtask">
+                                        <mat-checkbox *ngIf="multi" [(ngModel)]="subtask.completed"
+                                            [ngModelOptions]="{standalone: true}" [color]="subtask.color"
+                                            (change)="checkboxChecked($event.checked, subtask)"
+                                            (ngModelChange)="updateAllComplete()">
+                                        </mat-checkbox>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="date">
+                                    <mat-header-cell class="dates" mat-sort-header *matHeaderCellDef> Date
+                                    </mat-header-cell>
+                                    <mat-cell class="dates" *matCellDef="let element">
+                                        {{datepipe.transform(element.date, 'yyyy-MM-dd')}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="so">
+                                    <mat-header-cell class="so" mat-sort-header *matHeaderCellDef> SO#
+                                    </mat-header-cell>
+                                    <mat-cell class="so" class="so" *matCellDef="let element">
+                                        {{element.so}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="po">
+                                    <mat-header-cell class="po" mat-sort-header *matHeaderCellDef> PO#
+                                    </mat-header-cell>
+                                    <mat-cell class="po" *matCellDef="let element">
+                                        {{element.po}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="name">
+                                    <mat-header-cell class="names" mat-sort-header *matHeaderCellDef> Name
+                                    </mat-header-cell>
+                                    <mat-cell class="names" *matCellDef="let element">
+                                        {{element.name}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="item">
+                                    <mat-header-cell class="items" mat-sort-header *matHeaderCellDef> Item
+                                    </mat-header-cell>
+                                    <mat-cell class="items" *matCellDef="let element">
+                                        {{element.item}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="itemdesc">
+                                    <mat-header-cell class="itemdesc" mat-sort-header *matHeaderCellDef> Item Desc
+                                    </mat-header-cell>
+                                    <mat-cell class="itemdesc" *matCellDef="let element">
+                                        {{element.itemdesc}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="qty">
+                                    <mat-header-cell mat-sort-header *matHeaderCellDef> Order Qty </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.qty}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="pendingqty">
+                                    <mat-header-cell mat-sort-header *matHeaderCellDef>Estimated Qty
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{element.pendingqty}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="volume">
+                                    <mat-header-cell mat-sort-header *matHeaderCellDef>Volume</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{(element.volume)}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="volumet">
+                                    <mat-header-cell mat-sort-header *matHeaderCellDef>Total Volume
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{(element.pendingqty*element.volume).toLocaleString()}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                            </mat-table>
+                        </div>
+                    </div>
+                    <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button [matDialogClose] color="warn">Close</button>
+</mat-dialog-actions>

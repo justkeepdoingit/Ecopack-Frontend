@@ -1,0 +1,98 @@
+<h3 mat-dialog-title>Add Trucks</h3>
+<mat-dialog-content>
+    <div class="overflow-y-auto relative">
+        <div class="justify grid md:grid-cols-6 gap-2">
+            <form [formGroup]="truckInfo" (ngSubmit)="addTruck(truckInfo.value, formDirective)" #formDirective='ngForm'>
+                <div class="flex flex-col md:flex-row md:max-w-full gap-2">
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Truck Name</mat-label>
+                            <input formControlName="name" placeholder="Enter Truck Name" matInput #input>
+                        </mat-form-field>
+                    </div>
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Truck Plate</mat-label>
+                            <input formControlName="plate" placeholder="Enter Plate Number" matInput #input>
+                        </mat-form-field>
+                    </div>
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Description</mat-label>
+                            <input formControlName="desc" placeholder="Enter Description" matInput #input>
+                        </mat-form-field>
+                    </div>
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Ban</mat-label>
+                            <mat-select formControlName="ban" appearance="outline">
+                                <mat-option value="Yes">Yes</mat-option>
+                                <mat-option value="No">No</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Capacity</mat-label>
+                            <input formControlName="capacity" matInput placeholder="Enter Capacity" #input>
+                        </mat-form-field>
+                    </div>
+                    <div class=" flex flex-col justify-start w-full md:p-4">
+                        <button [disabled]="truckInfo.invalid" mat-raised-button color="accent">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="justify grid grid-cols-1 gap-2">
+            <div id="tables" class="overflow-auto">
+                <mat-form-field style="width: 100%;" appearance="standard">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+                </mat-form-field>
+                <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
+                    [matRippleRadius]="radius"
+                    class="h-56 relative overflow-y-auto text-secondary-700 font-medium cursor-pointer" #table matSort
+                    [dataSource]="newDatasource">
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Truck Name </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.name}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="plate">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Truck Plate </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.plate}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="desc">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Description </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.desc}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ban">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Truck Ban </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.ban}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="capacity">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Capacity </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.capacity}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+        </div>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="warn" [mat-dialog-close]>Close</button>
+</mat-dialog-actions>

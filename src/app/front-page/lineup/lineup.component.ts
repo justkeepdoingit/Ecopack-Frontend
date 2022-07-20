@@ -64,8 +64,10 @@ export class LineupComponent implements OnInit {
   centered: boolean = false;
   radius: number = 25
   unbounded: boolean = false;
+  querying: boolean = false;
 
   editInfo(datas: orderList) {
+    this.querying = true
     if (!this.multi) {
       let dialog = this.appservice.dialog.open(LineupDialogComponent, {
         data: datas,
@@ -75,7 +77,10 @@ export class LineupComponent implements OnInit {
       dialog.afterClosed().subscribe(data => {
         if (data) {
           this.clearTasks();
+          this.querying = false
+          return
         }
+        this.querying = false;
       })
     }
     else {
@@ -407,21 +412,25 @@ export class LineupComponent implements OnInit {
   }
 
   moveToFG() {
+    this.querying = true;
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/fg/`
+    let link = `../api/order-list/fg/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();
+      this.querying = false
       this.appservice.snackbar.open('Selected Items Moved To Finished Goods', 'Dismiss', { duration: 2500 })
     })
   }
 
   moveToConverting() {
+    this.querying = true
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/convert/`
+    let link = `../api/order-list/convert/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();
+      this.querying = false
       this.appservice.snackbar.open('Selected Items Moved To Converting', 'Dismiss', { duration: 2500 })
     })
   }

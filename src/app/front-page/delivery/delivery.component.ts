@@ -82,14 +82,18 @@ export class DeliveryComponent implements OnInit {
   centered: boolean = false;
   radius: number = 25
   unbounded: boolean = false;
+  querying: boolean = false;
+
 
   editInfo(datas: shippingList) {
+    this.querying = true;
     if (!this.multi) {
       let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
         data: [datas]
       })
 
       dialog.afterClosed().subscribe(data => {
+        this.querying = false;
         if (data == 1) {
           this.clearTasks();
           this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
@@ -108,16 +112,20 @@ export class DeliveryComponent implements OnInit {
         this.appservice.snackbar.open('Order Still On Queue', '', { duration: 800 });
       }
       else {
+        this.querying = true;
         this.appservice.getShipping(data.id).subscribe(datas => {
           let dialog = this.appservice.dialog.open(StatusDialogComponent, {
             data: datas
           })
           dialog.afterClosed().subscribe(dialogData => {
+            this.querying = false;
             if (dialogData) {
               this.clearTasks();
               this.clearTasks();
               this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+              return
             }
+            this.querying = false;
           })
         })
       }
@@ -430,6 +438,7 @@ export class DeliveryComponent implements OnInit {
 
 
   updateMultiple() {
+    this.querying = true;
     let newData = this.temporaryData
     let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
       data: newData
@@ -437,10 +446,13 @@ export class DeliveryComponent implements OnInit {
 
     dialog.afterClosed().subscribe(data => {
       if (data) {
+        this.querying = true
         this.clearTasks();
         this.clearTasks();
         this.appservice.snackbar.open('Setup Delivery Success', 'Dismiss', { duration: 2500 })
+        return
       }
+      this.querying = false
     })
   }
 

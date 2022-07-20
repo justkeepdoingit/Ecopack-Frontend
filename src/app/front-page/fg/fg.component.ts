@@ -80,8 +80,10 @@ export class FgComponent implements OnInit {
   centered: boolean = false;
   radius: number = 25
   unbounded: boolean = false;
+  querying: boolean = false;
 
   editInfo(datas: orderList) {
+    this.querying = true
     if (!this.multi) {
       let dialog = this.appservice.dialog.open(FgDialogComponent, {
         data: [datas]
@@ -91,8 +93,11 @@ export class FgComponent implements OnInit {
         if (data == 1) {
           this.clearTasks();
           this.clearTasks();
+          this.querying = false
           this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+          return
         }
+        this.querying = false;
 
       })
     }
@@ -407,6 +412,7 @@ export class FgComponent implements OnInit {
 
 
   updateMultiple() {
+    this.querying = true;
     let newData = this.temporaryData
     let dialog = this.appservice.dialog.open(FgDialogComponent, {
       data: newData
@@ -416,16 +422,20 @@ export class FgComponent implements OnInit {
       if (data) {
         this.clearTasks();
         this.clearTasks();
+        this.querying = false
+        this.appservice.snackbar.open('Data Updated!', 'Dismiss', { duration: 2500 })
       }
     })
   }
 
   moveToDelivery() {
+    this.querying = true
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/delivery/`
+    let link = `../api/order-list/delivery/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();
+      this.querying = false
       this.appservice.snackbar.open('Selected Items Moved To Delivery', 'Dismiss', { duration: 2500 })
     })
   }

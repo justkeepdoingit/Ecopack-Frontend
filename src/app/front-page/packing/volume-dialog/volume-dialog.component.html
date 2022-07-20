@@ -1,0 +1,57 @@
+<h3 mat-dialog-title>Add Trucks</h3>
+<mat-dialog-content>
+    <div class="overflow-y-auto relative">
+        <div class="justify grid md:grid-cols-1 gap-2">
+            <form [formGroup]="volumeData" #formDirective='ngForm'>
+                <div class="flex flex-col md:flex-row md:max-w-full gap-2">
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Item</mat-label>
+                            <input formControlName="itemid" readonly matInput #input>
+                        </mat-form-field>
+                    </div>
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Volume</mat-label>
+                            <input formControlName="volume" placeholder="Enter Value" matInput #input>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="justify grid grid-cols-1 gap-2">
+            <div id="tables" class="overflow-auto">
+                <mat-form-field style="width: 100%;" appearance="standard">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+                </mat-form-field>
+                <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
+                    [matRippleRadius]="radius" class="text-secondary-700 font-medium cursor-pointer" #table matSort
+                    [dataSource]="newDataSource">
+
+                    <ng-container matColumnDef="itemid">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Item </mat-header-cell>
+                        <mat-cell (click)="updateData(element)" *matCellDef="let element"> {{element.itemid}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="volume">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef> Volume </mat-header-cell>
+                        <mat-cell (click)="updateData(element)" *matCellDef="let element"> {{element.volume}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+        </div>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="warn" [mat-dialog-close]>Close</button>
+    <button mat-raised-button [disabled]="volumeData.invalid"
+        (click)="editVolume(volumeData.value, formDirective)">Save</button>
+</mat-dialog-actions>
