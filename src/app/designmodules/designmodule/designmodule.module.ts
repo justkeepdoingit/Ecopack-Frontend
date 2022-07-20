@@ -18,7 +18,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
-// import { NgxPrintModule} from 'ngx-print';
+import { NgxPrintModule } from 'ngx-print';
 // import { QRCodeModule } from 'angularx-qrcode';
 // import { ZXingScannerModule } from '@zxing/ngx-scanner'
 import { MatDividerModule } from '@angular/material/divider';
@@ -51,7 +51,7 @@ const modules = [
   FormsModule,
   MatGridListModule,
   MatRippleModule,
-  // NgxPrintModule,
+  NgxPrintModule,
   // QRCodeModule,
   // ZXingScannerModule,
   MatDividerModule,

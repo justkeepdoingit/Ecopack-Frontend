@@ -59,7 +59,7 @@ export class FgComponent implements OnInit {
 
 
 
-  multi: boolean = false;
+  multi: boolean = true;
 
   expandedElement: orderList[] = [];
 
@@ -83,27 +83,27 @@ export class FgComponent implements OnInit {
   querying: boolean = false;
 
   editInfo(datas: orderList) {
-    this.querying = true
-    if (!this.multi) {
-      let dialog = this.appservice.dialog.open(FgDialogComponent, {
-        data: [datas]
-      })
+    // this.querying = true
+    // if (!this.multi) {
+    //   let dialog = this.appservice.dialog.open(FgDialogComponent, {
+    //     data: [datas]
+    //   })
 
-      dialog.afterClosed().subscribe(data => {
-        if (data == 1) {
-          this.clearTasks();
-          this.clearTasks();
-          this.querying = false
-          this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
-          return
-        }
-        this.querying = false;
+    //   dialog.afterClosed().subscribe(data => {
+    //     if (data == 1) {
+    //       this.clearTasks();
+    //       this.clearTasks();
+    //       this.querying = false
+    //       this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+    //       return
+    //     }
+    //     this.querying = false;
 
-      })
-    }
-    else {
-      this.appservice.snackbar.open('Multiple Selection On', 'dismiss', { duration: 2500 })
-    }
+    //   })
+    // }
+    // else {
+    //   this.appservice.snackbar.open('Multiple Selection On', 'dismiss', { duration: 2500 })
+    // }
   }
 
   allComplete: boolean = false;
@@ -422,16 +422,16 @@ export class FgComponent implements OnInit {
       if (data) {
         this.clearTasks();
         this.clearTasks();
-        this.querying = false
         this.appservice.snackbar.open('Data Updated!', 'Dismiss', { duration: 2500 })
       }
+      this.querying = false
     })
   }
 
   moveToDelivery() {
     this.querying = true
     let newData = this.temporaryData
-    let link = `../api/order-list/delivery/`
+    let link = `http://localhost:3000/order-list/delivery/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();

@@ -16,9 +16,9 @@
                         <div class="flex flex-col justify-start w-full">
                             <button (click)="addTruck()" mat-raised-button color="accent">Add New Truck</button>
                         </div>
-                        <div class="flex flex-col justify-start w-full">
+                        <!-- <div class="flex flex-col justify-start w-full">
                             <button (click)="editVolume()" mat-raised-button color="primary">Edit Item Volume</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div id="tables" class=" relative overflow-auto">
@@ -66,7 +66,7 @@
                         <ng-container matColumnDef="print">
                             <mat-header-cell mat-sort-header *matHeaderCellDef> </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                <button *ngIf="!multi" mat-stroked-button>Print</button>
+                                <button (click)="print(element)" *ngIf="!multi" mat-stroked-button>Print</button>
                                 <button (click)="deleteRow(element)" *ngIf="multi" mat-stroked-button
                                     color="warn">Delete</button>
                             </mat-cell>

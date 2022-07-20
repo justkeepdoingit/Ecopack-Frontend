@@ -73,6 +73,34 @@ export class PackingDialogComponent implements OnInit {
     this.filteredTrucks = filter;
   }
 
+  enableEdit = false;
+  enableEditIndex = null;
+  editValue = '';
+
+  editVolume(data: any) {
+    this.editValue = data.volume;
+    this.enableEdit = true;
+    this.enableEditIndex = data;
+  }
+  saveVolume(data: any) {
+    this.enableEdit = false;
+    this.enableEditIndex = null;
+
+    let updateData = {
+      itemid: data.item,
+      volume: this.editValue
+    }
+
+    this.appservice.updateVolume(updateData).subscribe(() => {
+      this.appservice.getPicking().subscribe(data => {
+        this.newDataSource.data = data;
+        this.newDataSource.paginator = this.paginator
+        this.newDataSource.sort = this.matsort
+      })
+      this.appservice.snackbar.open('Data Updated', 'Dismiss', { duration: 2500 })
+    })
+  }
+
   truckSelect(datas: any) {
     let trucks = this.truckInfos.filter(data => {
       return data.id == datas;

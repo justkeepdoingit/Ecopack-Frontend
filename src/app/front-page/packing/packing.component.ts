@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { TruckDialogComponent } from './truck-dialog/truck-dialog.component';
 import { VolumeDialogComponent } from './volume-dialog/volume-dialog.component';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { PrintDialogComponent } from './print-dialog/print-dialog.component';
 
 @Component({
   selector: 'app-packing',
@@ -82,9 +83,22 @@ export class PackingComponent implements OnInit {
       dialog.afterClosed().subscribe(data => {
         if (data) {
           this.appservice.snackbar.open('List Updated!', 'Dismiss', { duration: 2500 })
+          this.clearTask()
+          this.clearTask()
         }
       })
     });
+  }
+
+  print(data: packingModel) {
+    this.appservice.getTruckInfo(data).subscribe(item => {
+      let dialog = this.appservice.dialog.open(PrintDialogComponent, {
+        data: {
+          pld: item,
+          pl: data
+        }
+      })
+    })
   }
 
   addTruck() {

@@ -1,7 +1,7 @@
 <form [formGroup]="dateComment" (ngSubmit)="updateData(dateComment.value)">
   <mat-dialog-content>
     <h3 *ngIf="shippingListInfo.length == 1" mat-dialog-title>Setup Delivery For SO #{{shippingListInfo[0].so}}</h3>
-    <h3 *ngIf="shippingListInfo.length > 1" mat-dialog-title>Edit/Add Infos</h3>
+    <h3 *ngIf="shippingListInfo.length > 1" mat-dialog-title>Setup Delivery</h3>
 
     <mat-form-field appearance="outline">
       <mat-label>Delivery Date</mat-label>

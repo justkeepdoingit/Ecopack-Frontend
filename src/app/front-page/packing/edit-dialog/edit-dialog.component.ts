@@ -43,6 +43,7 @@ export class EditDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.packingGroup = this.appservice.formBuilder.group({
+      id: [this.packing.pl.id],
       date: [this.packing.pl.date, Validators.required],
       truck: [this.packing.pl.truck, Validators.required],
       capacity: [this.packing.pl.capacity],
@@ -109,14 +110,18 @@ export class EditDialogComponent implements OnInit {
   }
 
 
-  saveData(data: any) {
+  editData(data: any) {
+    let total = data.total.toString()
+    let percent = data.percent.toString()
+
     let truckInfo = {
+      id: data.id,
       name: '',
       truck: data.truck,
       date: this.datepipe.transform(data.date, 'yyyy-MM-dd'),
       capacity: data.capacity,
-      total: data.total,
-      percent: data.percent
+      total: total.replace(',', ''),
+      percent: percent.replace(',', '')
     }
     let delivery: any[] = [];
 
@@ -124,12 +129,12 @@ export class EditDialogComponent implements OnInit {
       truckInfo.name.includes(item.name) ? '' : truckInfo.name += item.name + '/'
 
       let truckDetails = {
-        orderid: item.id,
+        plid: item.id,
         qtydeliver: item.qtydeliver
       }
       delivery.push(truckDetails);
     })
-    this.appservice.savePacking(truckInfo, delivery).subscribe(() => {
+    this.appservice.editPacking(truckInfo, delivery).subscribe(() => {
       this.dialogRef.close(1)
     })
   }

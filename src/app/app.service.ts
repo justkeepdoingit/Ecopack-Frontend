@@ -28,95 +28,104 @@ export class AppService {
   userInfos!: userModel;
 
   getPlannerOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('api/order-list/planners')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/planners')
   }
 
   saveTruck(data: truckModel): Observable<truckModel> {
-    return this.http.post<truckModel>('api/packing-list/saveTruck', data)
+    return this.http.post<truckModel>('http://localhost:3000/packing-list/saveTruck', data)
   }
 
   getTrucks(): Observable<truckModel[]> {
-    return this.http.get<truckModel[]>('api/packing-list/getTrucks')
+    return this.http.get<truckModel[]>('http://localhost:3000/packing-list/getTrucks')
   }
 
   getTruckInfo(data: packingModel): Observable<any> {
-    return this.http.get<any>(`api/packing-list/findTruckInfo/${data.id}`)
+    return this.http.get<any>(`http://localhost:3000/packing-list/findTruckInfo/${data.id}`)
   }
 
   get1Truck(data: any): Observable<truckModel> {
-    return this.http.get<truckModel>(`api/packing-list/findTruck/${data}`)
+    return this.http.get<truckModel>(`http://localhost:3000/packing-list/findTruck/${data}`)
   }
 
   getVolume(): Observable<itemModel[]> {
-    return this.http.get<itemModel[]>('api/order-list/getVolume')
+    return this.http.get<itemModel[]>('http://localhost:3000/order-list/getVolume')
   }
 
   getLineupOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('api/order-list/lineupOrders')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/lineupOrders')
   }
 
   getConverting(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('api/order-list/convertOrders')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/convertOrders')
   }
 
   getFgOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('api/order-list/fgOrders')
+    return this.http.get<orderList[]>('http://localhost:3000/order-list/fgOrders')
   }
 
   getDeliveryOrders(): Observable<shippingList[]> {
-    return this.http.get<shippingList[]>('api/order-list/deliveryOrders')
+    return this.http.get<shippingList[]>('http://localhost:3000/order-list/deliveryOrders')
   }
 
   getPacking(): Observable<packingModel[]> {
-    return this.http.get<packingModel[]>('api/packing-list')
+    return this.http.get<packingModel[]>('http://localhost:3000/packing-list')
   }
 
   getAllUsers(): Observable<userModel[]> {
-    return this.http.get<userModel[]>('api/user-account/getAllUsers')
+    return this.http.get<userModel[]>('http://localhost:3000/user-account/getAllUsers')
   }
 
   getRejects(orderid: any): Observable<rejectList> {
-    return this.http.get<rejectList>(`api/order-list/getReject/${orderid}`)
+    return this.http.get<rejectList>(`http://localhost:3000/order-list/getReject/${orderid}`)
   }
 
   deletePacking(data: packingModel): Observable<any> {
-    return this.http.delete<any>(`api/packing-list/deletePacking/${data.id}`)
+    return this.http.delete<any>(`http://localhost:3000/packing-list/deletePacking/${data.id}`)
   }
 
   getInfo(id: number): Observable<userModel> {
-    return this.http.get<userModel>(`api/user-account/findUser/${id}`, { withCredentials: true })
+    return this.http.get<userModel>(`http://localhost:3000/user-account/findUser/${id}`, { withCredentials: true })
   }
 
   getShipping(id: number | undefined): Observable<deliveryModel[]> {
-    return this.http.get<deliveryModel[]>(`api/order-list/getShipping/${id}`)
+    return this.http.get<deliveryModel[]>(`http://localhost:3000/order-list/getShipping/${id}`)
   }
 
   updateReject(data: rejectList, id: any): Observable<rejectList> {
-    return this.http.post<rejectList>(`api/order-list/updateReject/${id}`, data);
+    return this.http.post<rejectList>(`http://localhost:3000/order-list/updateReject/${id}`, data);
   }
 
   getOrderStatus(): Observable<any[]> {
-    return this.http.get<any[]>('api/order-list/getStatuses');
+    return this.http.get<any[]>('http://localhost:3000/order-list/getStatuses');
   }
 
   getPicking(): Observable<pickingModel[]> {
-    return this.http.get<pickingModel[]>('api/order-list/getPicking');
+    return this.http.get<pickingModel[]>('http://localhost:3000/order-list/getPicking');
   }
 
   savePacking(data: any, list: any[]): Observable<any> {
-    return this.http.post<any[]>('api/packing-list/savePacking', {
+    return this.http.post<any[]>('http://localhost:3000/packing-list/savePacking', {
+      data, list
+    })
+  }
+
+  editPacking(data: any, list: any[]): Observable<any> {
+    return this.http.post<any[]>('http://localhost:3000/packing-list/editPacking', {
       data, list
     })
   }
 
   updatePending(data: any): Observable<any> {
-    return this.http.post<any>('api/order-list/updatePending', data)
+    return this.http.post<any>('http://localhost:3000/order-list/updatePending', data)
   }
 
-  updateVolume(data: itemModel): Observable<itemModel[]> {
-    return this.http.post<itemModel[]>(`api/order-list/updateVolume/${data.id}`, data);
-  }
+  // updateVolume(data: itemModel): Observable<itemModel[]> {
+  //   return this.http.post<itemModel[]>(`http://localhost:3000/order-list/updateVolume/${data.id}`, data);
+  // }
 
+  updateVolume(data: any): Observable<any[]> {
+    return this.http.post<any[]>(`http://localhost:3000/order-list/updateVolume`, data);
+  }
 
   updateUsers(datas: userModel) {
     let rights: number;
@@ -129,7 +138,7 @@ export class AppService {
     else {
       rights = 2
     }
-    this.http.patch<userModel>(`api/user-account/updateUsers/${datas.id}`, {
+    this.http.patch<userModel>(`http://localhost:3000/user-account/updateUsers/${datas.id}`, {
       id: datas.id,
       username: datas.username,
       password: datas.password,
@@ -154,7 +163,7 @@ export class AppService {
 
   logreg(username: string, password: string, status: number) {
     if (status == 2) {
-      this.http.post<userModel>('api/user-account/register', {
+      this.http.post<userModel>('http://localhost:3000/user-account/register', {
         username: username,
         password: password
       }).subscribe(data => {
@@ -162,7 +171,7 @@ export class AppService {
       })
     }
     else {
-      this.http.post<userModel>('api/user-account/login', {
+      this.http.post<userModel>('http://localhost:3000/user-account/login', {
         username: username,
         password: password
       }, { withCredentials: true }).subscribe(data => {

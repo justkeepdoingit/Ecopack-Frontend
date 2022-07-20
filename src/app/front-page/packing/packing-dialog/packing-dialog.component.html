@@ -128,7 +128,13 @@
 
                                 <ng-container matColumnDef="volume">
                                     <mat-header-cell mat-sort-header *matHeaderCellDef>Volume</mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{(element.volume)}}
+                                    <mat-cell matTooltip="Click To Edit" (click)="editVolume(element)"
+                                        *matCellDef="let element">
+                                        <span *ngIf="enableEditIndex != element">{{(element.volume)}}</span>
+                                        <span style="color: red" *ngIf="enableEditIndex == element">
+                                            <input [(ngModel)]="editValue" class=" w-full" matInput
+                                                placeholder="Enter New Value" #input>
+                                        </span>
                                     </mat-cell>
                                 </ng-container>
 
@@ -136,7 +142,13 @@
                                     <mat-header-cell mat-sort-header *matHeaderCellDef>Total Volume
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let element">
-                                        {{(element.pendingqty*element.volume).toLocaleString()}}
+                                        <span *ngIf="!enableEdit && enableEditIndex != element">
+                                            {{(element.pendingqty*element.volume).toLocaleString()}}
+                                        </span>
+                                        <span *ngIf="enableEdit && enableEditIndex == element">
+                                            <button (click)="saveVolume(element)" mat-stroked-button
+                                                color="primary">Save</button>
+                                        </span>
                                     </mat-cell>
                                 </ng-container>
 

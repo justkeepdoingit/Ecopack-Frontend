@@ -58,7 +58,7 @@ export class PlannerComponent implements OnInit {
 
 
 
-  multi: boolean = false;
+  multi: boolean = true;
 
   task: orderTask = {
     taskName: 'Indeterminate',
@@ -81,26 +81,26 @@ export class PlannerComponent implements OnInit {
   querying: boolean = false;
 
   editInfo(datas: orderList) {
-    this.querying = true
-    if (!this.multi) {
-      let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
-        data: [datas]
-      })
+    // this.querying = true
+    // if (!this.multi) {
+    //   let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
+    //     data: [datas]
+    //   })
 
-      dialog.afterClosed().subscribe(data => {
-        if (data == 1) {
-          this.clearTasks();
-          this.clearTasks();
-          this.querying = false
-          this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
-          return
-        }
-        this.querying = false;
-      })
-    }
-    else {
-      this.appservice.snackbar.open('Multiple Selection On', 'Dismiss', { duration: 2500 })
-    }
+    //   dialog.afterClosed().subscribe(data => {
+    //     if (data == 1) {
+    //       this.clearTasks();
+    //       this.clearTasks();
+    //       this.querying = false
+    //       this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
+    //       return
+    //     }
+    //     this.querying = false;
+    //   })
+    // }
+    // else {
+    //   this.appservice.snackbar.open('Multiple Selection On', 'Dismiss', { duration: 2500 })
+    // }
   }
 
   allComplete: boolean = false;
@@ -110,7 +110,7 @@ export class PlannerComponent implements OnInit {
   setItems(data: any) {
     if (this.allComplete) {
       this.items = []
-      this.temporaryData = []
+      this.temporaryData.length = 0
     }
     else {
       this.temporaryData = [...data]
@@ -261,7 +261,7 @@ export class PlannerComponent implements OnInit {
 
     }
     if (!filterValue || this.forFilterValue.length == 0) {
-      this.temporaryData = []
+      this.temporaryData.length = 0
       this.allComplete = false
     }
   }
@@ -289,7 +289,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -301,7 +301,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -313,7 +313,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -325,7 +325,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -337,7 +337,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -349,7 +349,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -361,7 +361,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -373,7 +373,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -385,7 +385,7 @@ export class PlannerComponent implements OnInit {
           this.temporaryData = object;
         }
         else {
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
           this.task.subtasks?.forEach(t => { t.completed = false })
         }
         return
@@ -394,7 +394,7 @@ export class PlannerComponent implements OnInit {
         if (!completed) {
           t.completed = false
           this.allComplete = false;
-          this.temporaryData = [];
+          this.temporaryData.length = 0;
         }
         else {
           this.allComplete = completed
@@ -427,7 +427,7 @@ export class PlannerComponent implements OnInit {
   moveToLineUp() {
     this.querying = true;
     let newData = this.temporaryData
-    let link = `../api/order-list/lineup/`
+    let link = `http://localhost:3000/order-list/lineup/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();

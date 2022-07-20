@@ -477,7 +477,7 @@ export class ConvertingComponent implements OnInit {
   moveToFG() {
     this.querying = true
     let newData = this.temporaryData
-    let link = `../api/order-list/fg/`
+    let link = `http://localhost:3000/order-list/fg/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();

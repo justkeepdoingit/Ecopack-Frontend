@@ -61,7 +61,7 @@ export class DeliveryComponent implements OnInit {
 
 
 
-  multi: boolean = false;
+  multi: boolean = true;
 
   expandedElement: shippingList[] = [];
 
@@ -86,49 +86,29 @@ export class DeliveryComponent implements OnInit {
 
 
   editInfo(datas: shippingList) {
-    this.querying = true;
-    if (!this.multi) {
-      let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
-        data: [datas]
-      })
-
-      dialog.afterClosed().subscribe(data => {
-        this.querying = false;
-        if (data == 1) {
-          this.clearTasks();
-          this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
-        }
-
-      })
-    }
-    else {
-      this.appservice.snackbar.open('Multiple Selection On', 'dismiss', { duration: 2500 })
-    }
   }
 
   editStatus(data: shippingList) {
-    if (!this.multi) {
-      if (data.shipstatus == 'Queue') {
-        this.appservice.snackbar.open('Order Still On Queue', '', { duration: 800 });
-      }
-      else {
-        this.querying = true;
-        this.appservice.getShipping(data.id).subscribe(datas => {
-          let dialog = this.appservice.dialog.open(StatusDialogComponent, {
-            data: datas
-          })
-          dialog.afterClosed().subscribe(dialogData => {
-            this.querying = false;
-            if (dialogData) {
-              this.clearTasks();
-              this.clearTasks();
-              this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
-              return
-            }
-            this.querying = false;
-          })
+    if (data.shipstatus == 'Queue') {
+      this.appservice.snackbar.open('Order Still On Queue', '', { duration: 800 });
+    }
+    else {
+      this.querying = true;
+      this.appservice.getShipping(data.id).subscribe(datas => {
+        let dialog = this.appservice.dialog.open(StatusDialogComponent, {
+          data: datas
         })
-      }
+        dialog.afterClosed().subscribe(dialogData => {
+          this.querying = false;
+          if (dialogData) {
+            this.clearTasks();
+            this.clearTasks();
+            this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
+            return
+          }
+          this.querying = false;
+        })
+      })
     }
   }
 

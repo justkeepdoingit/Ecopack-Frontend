@@ -78,7 +78,7 @@ export class StatusDialogComponent implements OnInit {
         itemid: data.forDelivery_itemid
       }
       i++;
-      let link = `../../api/order-list/updateShipping`;
+      let link = `http://localhost:3000/order-list/updateShipping`;
       this.appservice.getGeneralData(link, newData).subscribe(datas => {
         this.dialogRef.close(1);
       })

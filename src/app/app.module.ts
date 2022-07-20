@@ -38,6 +38,7 @@ import { VolumeDialogComponent } from './front-page/packing/volume-dialog/volume
 import { PackingInnerDialogComponent } from './front-page/packing/packing-dialog/packing-inner-dialog/packing-inner-dialog.component';
 import { truckPipe } from './componentPipes/truckPipes.pipe';
 import { EditDialogComponent } from './front-page/packing/edit-dialog/edit-dialog.component';
+import { PrintDialogComponent } from './front-page/packing/print-dialog/print-dialog.component';
 @NgModule({
     declarations: [
         CanvasJSChart,
@@ -69,7 +70,8 @@ import { EditDialogComponent } from './front-page/packing/edit-dialog/edit-dialo
         TruckDialogComponent,
         VolumeDialogComponent,
         PackingInnerDialogComponent,
-        EditDialogComponent
+        EditDialogComponent,
+        PrintDialogComponent
     ],
     imports: [
         BrowserModule,
