@@ -55,61 +55,61 @@
                     [matRippleCentered]="centered" [matRippleRadius]="radius"
                     class=" text-secondary-700 font-medium cursor-pointer" #table matSort [dataSource]="newDataSource">
                     <ng-container matColumnDef="date">
-                        <mat-header-cell class="dates" *matHeaderCellDef> Date
+                        <mat-header-cell class="dates text-primary-900" *matHeaderCellDef> Date
                         </mat-header-cell>
-                        <mat-cell class="dates" *matCellDef="let element">
+                        <mat-cell class="dates text-primary-900" *matCellDef="let element">
                             {{datepipe.transform(element.date, 'yyyy-MM-dd')}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="so">
-                        <mat-header-cell class="so" *matHeaderCellDef> SO#
+                        <mat-header-cell class="so text-secondary-900" *matHeaderCellDef> SO#
                         </mat-header-cell>
-                        <mat-cell class="so" class="so" *matCellDef="let element">
+                        <mat-cell class="so text-secondary-900" *matCellDef="let element">
                             {{element.so}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="po">
-                        <mat-header-cell class="po" *matHeaderCellDef> PO#
+                        <mat-header-cell class="po text-primary-900" *matHeaderCellDef> PO#
                         </mat-header-cell>
-                        <mat-cell class="po" *matCellDef="let element">
+                        <mat-cell class="po text-primary-900" *matCellDef="let element">
                             {{element.po}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
-                        <mat-header-cell class="names" *matHeaderCellDef> Name
+                        <mat-header-cell class="names text-secondary-900" *matHeaderCellDef> Name
                         </mat-header-cell>
-                        <mat-cell class="names" *matCellDef="let element">
+                        <mat-cell class="names text-secondary-900" *matCellDef="let element">
                             {{element.name}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="item">
-                        <mat-header-cell class="items" *matHeaderCellDef> Item
+                        <mat-header-cell class="items text-primary-900" *matHeaderCellDef> Item
                         </mat-header-cell>
-                        <mat-cell class="items" *matCellDef="let element">
+                        <mat-cell class="items text-primary-900" *matCellDef="let element">
                             {{element.item}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="itemdesc">
-                        <mat-header-cell class="itemdesc" *matHeaderCellDef> Item Desc
+                        <mat-header-cell class="itemdesc text-secondary-900" *matHeaderCellDef> Item Desc
                         </mat-header-cell>
-                        <mat-cell class="itemdesc" *matCellDef="let element">
+                        <mat-cell class="itemdesc text-secondary-900" *matCellDef="let element">
                             {{element.itemdesc}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="qty">
-                        <mat-header-cell *matHeaderCellDef> Order Qty </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.qty}}
+                        <mat-header-cell class="text-primary-900" *matHeaderCellDef> Order Qty </mat-header-cell>
+                        <mat-cell class="text-primary-900" *matCellDef="let element"> {{element.qty}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="pendingqty">
-                        <mat-header-cell *matHeaderCellDef>Estimated Qty</mat-header-cell>
+                        <mat-header-cell class=" text-secondary-900" *matHeaderCellDef>Estimated Qty</mat-header-cell>
                         <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
                             <mat-form-field class=" text-center" appearance="outline">
                                 <mat-label>Entery Qty</mat-label>
@@ -120,15 +120,15 @@
                     </ng-container>
 
                     <ng-container matColumnDef="volume">
-                        <mat-header-cell *matHeaderCellDef>Volume</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{(element.volume)}}
+                        <mat-header-cell class="text-primary-900" *matHeaderCellDef>Volume</mat-header-cell>
+                        <mat-cell class="text-primary-900" *matCellDef="let element"> {{(element.volume)}}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="volumet">
-                        <mat-header-cell *matHeaderCellDef>Total Volume
+                        <mat-header-cell class=" text-secondary-900" *matHeaderCellDef>Total Volume
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let element; let i = index">
+                        <mat-cell class=" text-secondary-900" *matCellDef="let element; let i = index">
                             {{(getValue(i)*element.volume).toLocaleString()}}
                         </mat-cell>
                     </ng-container>

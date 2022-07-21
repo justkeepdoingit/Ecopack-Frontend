@@ -427,7 +427,7 @@ export class PlannerComponent implements OnInit {
   moveToLineUp() {
     this.querying = true;
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/lineup/`
+    let link = `https://ecopack2.herokuapp.com/order-list/lineup/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();

@@ -106,7 +106,6 @@ export class DeliveryComponent implements OnInit {
             this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
             return
           }
-          this.querying = false;
         })
       })
     }

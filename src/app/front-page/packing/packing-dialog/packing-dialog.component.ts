@@ -3,7 +3,7 @@ import { FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { DatePipe } from '@angular/common';
-import { packingModel } from 'src/app/models/packingModel.mode';
+import { packingModel } from 'src/app/models/packingModel.model';
 import { truckModel, truckSelect } from 'src/app/models/truckModel.model';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,7 +25,7 @@ export class PackingDialogComponent implements OnInit {
   minDate = new Date()
 
   refreshData() {
-    this.appservice.getPicking().subscribe(data => {
+    this.appservice.getPicking(1).subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
@@ -92,7 +92,7 @@ export class PackingDialogComponent implements OnInit {
     }
 
     this.appservice.updateVolume(updateData).subscribe(() => {
-      this.appservice.getPicking().subscribe(data => {
+      this.appservice.getPicking(1).subscribe(data => {
         this.newDataSource.data = data;
         this.newDataSource.paginator = this.paginator
         this.newDataSource.sort = this.matsort
@@ -164,6 +164,7 @@ export class PackingDialogComponent implements OnInit {
   radius: number = 25
   unbounded: boolean = false;
   querying: boolean = false;
+  bypass: boolean = false;
 
   allComplete: boolean = false;
   items: pickingModel[] = []
@@ -196,7 +197,6 @@ export class PackingDialogComponent implements OnInit {
     else {
       this.temporaryData.push(data)
     }
-    console.log(this.temporaryData.length)
   }
 
   someComplete(): boolean {
@@ -336,8 +336,8 @@ export class PackingDialogComponent implements OnInit {
       return;
     }
     else if (!completed) {
-      this.clearTasks();
-      this.clearTasks()
+      this.temporaryData.length = 0;
+      this.task.subtasks!.forEach(t => { t.completed = false })
     }
     else if (completed) {
       this.allComplete = completed
@@ -454,6 +454,25 @@ export class PackingDialogComponent implements OnInit {
           t.completed = completed
         }
       }
+    })
+  }
+
+
+  bypassList(sw: number) {
+    this.bypass = this.bypass ? false : true;
+    this.temporaryData.length = 0;
+    for (let i = 0; i < this.forFilters.length; i++) {
+      this.forFilterValue[i] = '';
+    }
+    this.task.subtasks!.forEach(t => { t.completed = false })
+
+    this.appservice.getPicking(sw).subscribe(data => {
+      console.log(data);
+      this.newDataSource.data = data;
+      this.newDataSource.paginator = this.paginator
+      this.newDataSource.sort = this.matsort
+      this.task.subtasks = data;
+      this.columnSearching = false;
     })
   }
 

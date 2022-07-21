@@ -414,7 +414,7 @@ export class LineupComponent implements OnInit {
   moveToFG() {
     this.querying = true;
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/fg/`
+    let link = `https://ecopack2.herokuapp.com/order-list/fg/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();
@@ -426,7 +426,7 @@ export class LineupComponent implements OnInit {
   moveToConverting() {
     this.querying = true
     let newData = this.temporaryData
-    let link = `http://localhost:3000/order-list/convert/`
+    let link = `https://ecopack2.herokuapp.com/order-list/convert/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();

@@ -3,7 +3,7 @@ import { FormGroup, FormGroupDirective, UntypedFormGroup, Validators } from '@an
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppService } from 'src/app/app.service';
 import { DatePipe } from '@angular/common';
-import { packingModel } from 'src/app/models/packingModel.mode';
+import { packingModel } from 'src/app/models/packingModel.model';
 import { truckModel } from 'src/app/models/truckModel.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';

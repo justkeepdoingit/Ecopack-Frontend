@@ -40,7 +40,7 @@ export class FgDialogComponent implements OnInit {
     }
 
     this.orderListInfo.forEach(data => {
-      let link = `http://localhost:3000/order-list/updateOrder/${data.id}`;
+      let link = `https://ecopack2.herokuapp.com/order-list/updateOrder/${data.id}`;
       this.appservice.orderPatch(link, newData).subscribe(datas => {
         this.dialogRef.close(1);
       })
@@ -48,7 +48,7 @@ export class FgDialogComponent implements OnInit {
   }
 
   moveToDelivery() {
-    let link = `http://localhost:3000/order-list/delivery/`
+    let link = `https://ecopack2.herokuapp.com/order-list/delivery/`
 
     this.orderListInfo.forEach(data => {
       this.appservice.movementPost(link, this.orderListInfo).subscribe()

@@ -3,7 +3,7 @@ import { FrontPageComponent } from '../front-page.component';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { packingModel } from 'src/app/models/packingModel.mode';
+import { packingModel } from 'src/app/models/packingModel.model';
 import { AppService } from 'src/app/app.service';
 import { PackingDialogComponent } from './packing-dialog/packing-dialog.component';
 import { FormControl } from '@angular/forms';
@@ -11,6 +11,7 @@ import { TruckDialogComponent } from './truck-dialog/truck-dialog.component';
 import { VolumeDialogComponent } from './volume-dialog/volume-dialog.component';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { PrintDialogComponent } from './print-dialog/print-dialog.component';
+import { PrintdrDialogComponent } from './printdr-dialog/printdr-dialog.component';
 
 @Component({
   selector: 'app-packing',
@@ -70,7 +71,7 @@ export class PackingComponent implements OnInit {
   unbounded: boolean = false;
 
   multi: boolean = false;
-
+  dr: boolean = false;
 
   editInfo(data: packingModel) {
     this.appservice.getTruckInfo(data).subscribe(item => {
@@ -149,6 +150,20 @@ export class PackingComponent implements OnInit {
         this.clearTask()
       });
     }
+  }
+
+  printDr(data: any) {
+    this.appservice.getShippingPl(data.id).subscribe(data => {
+      let dialog = this.appservice.dialog.open(PrintdrDialogComponent, {
+        data: data
+      })
+
+      dialog.afterClosed().subscribe(data => {
+        if (data) {
+          this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
+        }
+      })
+    })
   }
 
   clearTask() {

@@ -41,6 +41,20 @@ export class EditDialogComponent implements OnInit {
   formGroupRows = this.appservice.formBuilder.array([]);
   packingGroup = new UntypedFormGroup({})
 
+
+
+  changeColor(c: number) {
+    if (c < 60) {
+      this.styles = 'red'
+    }
+    else if (c > 61 && c < 80) {
+      this.styles = 'yellow'
+    }
+    else {
+      this.styles = 'green'
+    }
+  }
+
   ngOnInit(): void {
     this.packingGroup = this.appservice.formBuilder.group({
       id: [this.packing.pl.id],
@@ -71,6 +85,8 @@ export class EditDialogComponent implements OnInit {
       })
       this.formGroupRows.push(rows)
     })
+    let c = this.packingGroup.controls['percent'].value;
+    this.changeColor(c);
   }
 
   getValue(data: any) {
@@ -89,15 +105,7 @@ export class EditDialogComponent implements OnInit {
     let a = this.packingGroup.controls['capacity'].value;
     let c = (volumes / a) * 100;
 
-    if (c < 60) {
-      this.styles = 'red'
-    }
-    else if (c > 61 && c < 80) {
-      this.styles = 'yellow'
-    }
-    else {
-      this.styles = 'green'
-    }
+    this.changeColor(c);
     this.packingGroup.patchValue({
       total: volumes.toLocaleString(),
       percent: c.toLocaleString()
@@ -162,8 +170,16 @@ export class EditDialogComponent implements OnInit {
       return data.id == datas;
     })
 
+    let a = trucks[0].capacity;
+    let b = this.packingGroup.controls['total'].value;
+    let c = (b / a) * 100;
+
+    this.changeColor(c);
+
+
     this.packingGroup.patchValue({
-      capacity: trucks[0].capacity
+      capacity: trucks[0].capacity,
+      percent: c.toLocaleString()
     })
   }
 

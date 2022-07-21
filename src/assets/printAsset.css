@@ -1,0 +1,67 @@
+@page {
+    size: A4;
+    margin: 0;
+    orientation: portait;
+}
+
+@media print {
+    #printData {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #divData {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+        min-width: 100%;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto
+    }
+
+
+    th {
+        border: 1px solid black;
+        font-size: 12px;
+        line-height: 1.25rem;
+        font-weight: 500;
+        --tw-text-opacity: 1;
+        color: rgb(15 23 42 / var(--tw-text-opacity));
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        text-align: left;
+    }
+
+
+    td {
+        border: 1px solid black;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        --tw-text-opacity: 1;
+        color: rgb(15 23 42 / var(--tw-text-opacity));
+        font-size: 12px;
+        line-height: 1.25rem;
+        font-weight: 500;
+    }
+
+    #listing {
+        --tw-text-opacity: 1;
+        color: rgb(15 23 42 / var(--tw-text-opacity));
+        font-size: 31px;
+        line-height: 1.25rem;
+        font-weight: 500;
+    }
+
+    #prints {
+        display: block;
+    }
+}

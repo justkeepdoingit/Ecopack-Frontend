@@ -66,7 +66,12 @@
                         <ng-container matColumnDef="print">
                             <mat-header-cell mat-sort-header *matHeaderCellDef> </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                <button (click)="print(element)" *ngIf="!multi" mat-stroked-button>Print</button>
+                                <span *ngIf="!multi">
+                                    <button *ngIf="!dr" (click)="print(element)" mat-stroked-button>Print List</button>
+                                    <button *ngIf="dr" mat-flat-button color="primary" (click)="printDr(element)">Print
+                                        DR</button>
+                                </span>
+
                                 <button (click)="deleteRow(element)" *ngIf="multi" mat-stroked-button
                                     color="warn">Delete</button>
                             </mat-cell>
@@ -82,8 +87,22 @@
             </mat-paginator>
             <button mat-stroked-button color="warn" (click)="!multi ? multi = true : multi = false"
                 *ngIf="multi">Cancel</button>
-            <button mat-stroked-button color="primary" (click)=" multi ? multi=false : multi=true" *ngIf="!multi">
-                Delete Row</button>
+            <div class="justify grid md:grid-cols-1 gap-5">
+                <div class="flex flex-col overflow-y-auto md:flex-row md:max-w-full gap-2">
+                    <div class="flex flex-col justify-start w-full">
+                        <button mat-stroked-button color="primary" (click)=" multi ? multi=false : multi=true"
+                            *ngIf="!multi">
+                            Delete Row</button>
+                    </div>
+                    <div class="flex flex-col justify-start w-full">
+                        <button mat-stroked-button color="primary" (click)=" dr ? dr=false : dr=true"
+                            *ngIf="!multi && !dr">
+                            Print DR</button>
+                        <button mat-flat-button color="primary" (click)=" dr ? dr=false : dr=true" *ngIf="!multi && dr">
+                            Print List</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

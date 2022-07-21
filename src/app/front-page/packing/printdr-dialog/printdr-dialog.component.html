@@ -1,0 +1,160 @@
+<form [formGroup]="dateComment" (ngSubmit)="updateData(dateComment.value)">
+    <mat-dialog-content>
+        <h3 mat-dialog-title>DR PRINTING/EDITING</h3>
+
+        <div id="printData" class="flex flex-col">
+            <div id="prints" class="overflow-x-auto hidden">
+                <div id="divData" class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                    <h2 id="listing">DR PRINT</h2>
+
+                    <table class=" w-full">
+                        <thead class="border-b">
+                            <tr>
+                                <th scope="col" class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
+                                    DR#
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    SO#
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    PO #
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Customer Name
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Item
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Item Description
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Qty
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of orderListInfo; let i = index">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.receipt}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.so}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.po}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.name}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.item}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {{data.itemdesc}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {{data.qtyship.toLocaleString()}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {{data.shipstatus}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <mat-form-field appearance="outline">
+            <mat-label>Delivery Date</mat-label>
+            <input formControlName="deliverydate" [min]='minDate' matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker color="accent"></mat-datepicker>
+        </mat-form-field>
+        <div class=" overflow-y-auto relative">
+            <div id="tables" class=" relative overflow-auto">
+                <mat-table formArrayName="infodata" matRipple [matRippleUnbounded]="unbounded"
+                    [matRippleCentered]="centered" [matRippleRadius]="radius"
+                    class=" text-secondary-700 font-medium cursor-pointer" #table matSort [dataSource]="newDataSource">
+
+                    <ng-container matColumnDef="receipt">
+                        <mat-header-cell class=" text-primary-900" mat-sort-header *matHeaderCellDef> DR#
+                        </mat-header-cell>
+                        <mat-cell class=" text-primary-900" *matCellDef="let element"> {{element.receipt}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="so">
+                        <mat-header-cell mat-sort-header class="so text-secondary-900" *matHeaderCellDef> SO#
+                        </mat-header-cell>
+                        <mat-cell class="so text-secondary-900" *matCellDef="let element"> {{element.so}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="po">
+                        <mat-header-cell mat-sort-header class="po  text-primary-900" *matHeaderCellDef> PO#
+                        </mat-header-cell>
+                        <mat-cell class="po  text-primary-900" *matCellDef="let element"> {{element.po}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef> Name
+                        </mat-header-cell>
+                        <mat-cell class=" text-secondary-900" *matCellDef="let element"> {{element.name}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="item">
+                        <mat-header-cell class=" text-primary-900" mat-sort-header *matHeaderCellDef> Item ID
+                        </mat-header-cell>
+                        <mat-cell class=" text-primary-900" *matCellDef="let element"> {{element.item}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="itemdesc">
+                        <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef> Item Desc
+                        </mat-header-cell>
+                        <mat-cell class=" text-secondary-900" *matCellDef="let element"> {{element.itemdesc}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="qtyship">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef>Qty</mat-header-cell>
+                        <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Entery Qty</mat-label>
+                                <input formControlName="qty" matInput placeholder="Enter Qty">
+                            </mat-form-field>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="shipstatus">
+                        <mat-header-cell mat-sort-header *matHeaderCellDef>Status</mat-header-cell>
+                        <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select Delivery Type</mat-label>
+                                <mat-select formControlName="deliverySelect">
+                                    <mat-option value="Partial Delivery">Partial Delivery</mat-option>
+                                    <mat-option value="Delivery Complete">Delivery Complete</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+        </div>
+        <!-- <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+        </mat-paginator> -->
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button type="button" color="accent" *ngIf="!noDr" printTitle="Pack Listing"
+            printSectionId="printData" styleSheetFile="../../../assets/printAsset.css" ngxPrint>Print</button>
+        <button *ngIf="!noDr" mat-stroked-button [disabled]="dateComment.invalid" color="primary">Save</button>
+        <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+    </mat-dialog-actions>
+</form>
