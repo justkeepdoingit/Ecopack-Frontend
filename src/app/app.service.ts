@@ -14,7 +14,7 @@ import { shippingList } from './models/shippingMode.model';
 import { packingModel } from './models/packingModel.model';
 import { truckModel } from './models/truckModel.model';
 import { itemModel } from './models/itemMode.model';
-import { pickingModel } from './models/pickingModel.model';
+import { pickingModel, pickingModel2 } from './models/pickingModel.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -35,12 +35,24 @@ export class AppService {
     return this.http.post<truckModel>('https://ecopack2.herokuapp.com/packing-list/saveTruck', data)
   }
 
+  savePld(data: any): Observable<any> {
+    return this.http.post<any>('https://ecopack2.herokuapp.com/packing-list/savePld', data)
+  }
+
+  deletePld(data: any): Observable<any> {
+    return this.http.delete<any>(`https://ecopack2.herokuapp.com/packing-list/deletePld/${data}`)
+  }
+
   getTrucks(): Observable<truckModel[]> {
     return this.http.get<truckModel[]>('https://ecopack2.herokuapp.com/packing-list/getTrucks')
   }
 
   getTruckInfo(data: packingModel): Observable<any> {
     return this.http.get<any>(`https://ecopack2.herokuapp.com/packing-list/findTruckInfo/${data.id}`)
+  }
+
+  getTruckInfo2(data: any): Observable<any> {
+    return this.http.get<any>(`https://ecopack2.herokuapp.com/packing-list/findTruckInfo/${data}`)
   }
 
   get1Truck(data: any): Observable<truckModel> {
@@ -97,6 +109,10 @@ export class AppService {
 
   updateReject(data: rejectList, id: any): Observable<rejectList> {
     return this.http.post<rejectList>(`https://ecopack2.herokuapp.com/order-list/updateReject/${id}`, data);
+  }
+
+  updatePrio(data: any, id: number): Observable<pickingModel2[]> {
+    return this.http.patch<pickingModel2[]>(`https://ecopack2.herokuapp.com/packing-list/updatePrio/${id}`, data)
   }
 
   getOrderStatus(): Observable<any[]> {

@@ -1,8 +1,8 @@
 <h3 mat-dialog-title>Print List</h3>
 <mat-dialog-content>
 
-    <div id="printData" *ngIf="temporaryData.length > 0" class="flex flex-col">
-        <div class="overflow-x-auto">
+    <div id="printData" class="flex flex-col">
+        <div id="prints" class="overflow-x-auto hidden">
             <div id="divData" class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                 <h2 id="listing" class=" hidden">Load Plan</h2>
 
@@ -90,14 +90,15 @@
                 [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort
                 [dataSource]="newDataSource">
 
-                <ng-container matColumnDef="cb">
-                    <mat-header-cell class="cb" *matHeaderCellDef>
-                        Order Priority
+                <ng-container matColumnDef="prio">
+                    <mat-header-cell mat-sort-header class="dates text-primary-900" *matHeaderCellDef> #
                     </mat-header-cell>
-                    <mat-cell class="cb" *matCellDef="let subtask">
-                        <mat-checkbox [(ngModel)]="subtask.completed" [ngModelOptions]="{standalone: true}"
-                            [color]="subtask.color" (change)="checkboxChecked($event.checked, subtask)">
-                        </mat-checkbox>
+                    <mat-cell class="dates text-primary-900" *matCellDef="let element" (click)="editPrio(element)">
+                        <span class="text-primary-900" *ngIf="enableEditIndex != element">{{(element.prio)}}</span>
+                        <span style="color: red" *ngIf="enableEditIndex == element">
+                            <input [(ngModel)]="editValue" class=" w-full" matInput placeholder="Enter New Value"
+                                #input>
+                        </span>
                     </mat-cell>
                 </ng-container>
 
@@ -134,18 +135,12 @@
                 </ng-container>
 
                 <ng-container matColumnDef="item">
-                    <mat-header-cell mat-sort-header class="items text-primary-900" *matHeaderCellDef> Item
+                    <mat-header-cell [ngStyle]="{'min-width':'150px'}" mat-sort-header class="items text-primary-900"
+                        *matHeaderCellDef> Item
                     </mat-header-cell>
-                    <mat-cell class="items text-primary-900" *matCellDef="let element">
+                    <mat-cell [ngStyle]="{'min-width':'150px'}" class="items text-primary-900"
+                        *matCellDef="let element">
                         {{element.item}}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="itemdesc">
-                    <mat-header-cell mat-sort-header class="itemdesc text-secondary-900" *matHeaderCellDef> Item Desc
-                    </mat-header-cell>
-                    <mat-cell class="itemdesc text-secondary-900" *matCellDef="let element">
-                        {{element.itemdesc}}
                     </mat-cell>
                 </ng-container>
 
@@ -174,7 +169,13 @@
                     <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef>Total Volume
                     </mat-header-cell>
                     <mat-cell class=" text-secondary-900" *matCellDef="let element; let i = index">
-                        {{(element.qtydeliver*element.volume).toLocaleString()}}
+                        <span *ngIf="enableEdit && enableEditIndex == element">
+                            <button (click)="saveDR(element)" mat-stroked-button color="primary">Save</button>
+                        </span>
+                        <span class="text-secondary-900" *ngIf="!enableEdit && enableEditIndex != element">
+                            {{(element.qtydeliver*element.volume).toLocaleString()}}
+                        </span>
+
                     </mat-cell>
                 </ng-container>
 

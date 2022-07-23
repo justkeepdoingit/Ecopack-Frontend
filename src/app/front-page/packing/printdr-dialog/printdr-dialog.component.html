@@ -52,7 +52,7 @@
                                     {{data.itemdesc}}
                                 </td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                    {{data.qtyship.toLocaleString()}}
+                                    {{toString(data.qtyship)}}
                                 </td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">
                                     {{data.shipstatus}}
@@ -81,7 +81,12 @@
                     <ng-container matColumnDef="receipt">
                         <mat-header-cell class=" text-primary-900" mat-sort-header *matHeaderCellDef> DR#
                         </mat-header-cell>
-                        <mat-cell class=" text-primary-900" *matCellDef="let element"> {{element.receipt}}
+                        <mat-cell class=" text-primary-900" [formGroupName]="i"
+                            *matCellDef="let element; let i = index">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Receipt</mat-label>
+                                <input formControlName="receipt" matInput placeholder="Enter Qty">
+                            </mat-form-field>
                         </mat-cell>
                     </ng-container>
 
@@ -154,7 +159,7 @@
     <mat-dialog-actions align="end">
         <button mat-raised-button type="button" color="accent" *ngIf="!noDr" printTitle="Pack Listing"
             printSectionId="printData" styleSheetFile="../../../assets/printAsset.css" ngxPrint>Print</button>
-        <button *ngIf="!noDr" mat-stroked-button [disabled]="dateComment.invalid" color="primary">Save</button>
+        <button mat-stroked-button [disabled]="dateComment.invalid" color="primary">Save</button>
         <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
     </mat-dialog-actions>
 </form>

@@ -48,8 +48,12 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
       if (data.receipt == null) {
         this.noDr = true
       }
+
+      console.log(data);
       const rows = this.appservice.formBuilder.group({
         id: [data.id],
+        pl: [data.pl],
+        receipt: [data.receipt],
         orderid: [data.orderid],
         itemid: [data.item],
         qty: [data.qtyship, Validators.required],
@@ -75,18 +79,27 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
     edit.infodata.forEach((data: any) => {
       let newData = {
         id: edit.infodata[i].id,
+        pl: edit.infodata[i].pl,
+        receipt: edit.infodata[i].receipt,
         deliverydate: edit.deliverydate,
         shipstatus: edit.infodata[i].deliverySelect,
-        orderid: edit.infodata[i].id,
+        orderid: edit.infodata[i].orderid,
         qtyship: edit.infodata[i].qty,
         itemid: edit.infodata[i].itemid
       }
-      let link = `https://ecopack2.herokuapp.com/order-list/updateShippingPl`;
+      let link = `http://localhost:3000/order-list/updateShippingPl`;
       this.appservice.getGeneralData(link, newData).subscribe(datas => {
         this.dialogRef.close(1);
       })
       i++;
     })
+  }
+
+  toString(data: any) {
+    if (data) {
+      return data.toLocaleString()
+    }
+    return null
   }
 
 }

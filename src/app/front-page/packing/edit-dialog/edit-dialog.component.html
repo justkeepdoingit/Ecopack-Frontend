@@ -1,5 +1,5 @@
 <form [formGroup]="packingGroup" (ngSubmit)="editData(packingGroup.value)">
-    <h3 mat-dialog-title>For Delivery</h3>
+    <h3 mat-dialog-title>For Delivery Edit</h3>
     <mat-dialog-content>
         <div class="justify grid md:grid-cols-5 gap-2">
             <div class="flex flex-col md:flex-row md:max-w-full gap-2">
@@ -129,7 +129,13 @@
                         <mat-header-cell class="text-secondary-900" *matHeaderCellDef>Total Volume
                         </mat-header-cell>
                         <mat-cell class="text-secondary-900" *matCellDef="let element; let i = index">
-                            {{(getValue(i)*element.volume).toLocaleString()}}
+                            <span *ngIf="!deleting">
+                                {{(getValue(i)*element.volume).toLocaleString()}}
+                            </span>
+                            <span *ngIf="deleting">
+                                <button type="button" (click)="deletePld(element)" mat-stroked-button
+                                    color="warn">Delete</button>
+                            </span>
                         </mat-cell>
                     </ng-container>
 
@@ -142,7 +148,10 @@
         </mat-paginator> -->
     </mat-dialog-content>
     <mat-dialog-actions align="end">
+        <button mat-raised-button type="button" (click)="addList(packingGroup.value)" color="primary">Add</button>
+        <button mat-raised-button (click)="deleting ? deleting=false: deleting=true" type="button"
+            color="warn">Delete</button>
         <button mat-stroked-button [disabled]="packingGroup.invalid" color="primary">Save</button>
-        <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
+        <button mat-stroked-button [mat-dialog-close] color="warn">Close</button>
     </mat-dialog-actions>
 </form>

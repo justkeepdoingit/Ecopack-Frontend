@@ -47,9 +47,9 @@ export class PackingInnerDialogComponent implements OnInit {
     this.packingGroup = this.appservice.formBuilder.group({
       date: [this.datepipe.transform(new Date(), 'yyyy-MM-dd'), Validators.required],
       truck: ['', Validators.required],
-      capacity: [''],
-      total: [''],
-      percent: [''],
+      capacity: ['', Validators.required],
+      total: ['', Validators.required],
+      percent: ['', Validators.required],
       infodata: this.formGroupRows
     })
 
@@ -116,9 +116,9 @@ export class PackingInnerDialogComponent implements OnInit {
       name: '',
       truck: data.truck,
       date: this.datepipe.transform(data.date, 'yyyy-MM-dd'),
-      capacity: data.capacity,
-      total: data.total,
-      percent: data.percent
+      capacity: data.capacity.toString().replace(',', ''),
+      total: data.total.toString().replace(',', ''),
+      percent: data.percent.toString().replace(',', '')
     }
     let delivery: any[] = [];
 

@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from 'src/app/app.service';
 import { pickingModel2 } from 'src/app/models/pickingModel.model';
 import { truckModel, truckSelect } from 'src/app/models/truckModel.model';
+import { AddListDialogComponent } from './add-list-dialog/add-list-dialog.component';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -90,17 +91,25 @@ export class EditDialogComponent implements OnInit {
   }
 
   getValue(data: any) {
-    return this.formGroupRows.controls[data].value.qtydeliver;
+    try {
+      return this.formGroupRows.controls[data].value.qtydeliver;
+    } catch (error) {
+      console.log('False Error')
+    }
+
   }
+
   styles: string = '';
+  deleting: boolean = false;
   updateTotal(value: Event, data: pickingModel2) {
     const filterValue = (value.target as HTMLInputElement).value;
     let volumes = 0;
     let i = 0
     this.formGroupRows.controls.forEach(data => {
-      volumes += (parseInt(data.value.qtydeliver) * parseFloat(this.packingInfo[i].volume))
+      volumes += (parseInt(data.value.qtydeliver) * parseFloat(this.packingInfo[i]!.volume))
       i++
     })
+
 
     let a = this.packingGroup.controls['capacity'].value;
     let c = (volumes / a) * 100;
@@ -180,6 +189,78 @@ export class EditDialogComponent implements OnInit {
     this.packingGroup.patchValue({
       capacity: trucks[0].capacity,
       percent: c.toLocaleString()
+    })
+  }
+
+  addList(data: any) {
+    let dialog = this.appservice.dialog.open(AddListDialogComponent, {
+      data: data.id
+    })
+
+    dialog.afterClosed().subscribe(check => {
+      if (check) {
+        this.formGroupRows.clear();
+
+        let a = 0;
+        let b = this.packingGroup.controls['capacity'].value;
+
+
+        this.appservice.getTruckInfo2(check).subscribe(item => {
+          this.newDataSource.data = item
+          this.packingInfo = item;
+
+          this.packingInfo.forEach((data) => {
+            const rows = this.appservice.formBuilder.group({
+              id: [data.id],
+              qtydeliver: [data.qtydeliver, Validators.required],
+              name: [data.name]
+            })
+            this.formGroupRows.push(rows)
+            a += (parseFloat(data.volume) * parseInt(data.qtydeliver));
+          })
+
+          let c = (a / b) * 100
+
+          this.packingGroup.patchValue({
+            total: a.toLocaleString(),
+            percent: c.toLocaleString(),
+          })
+
+          this.changeColor(c);
+        })
+      }
+    })
+  }
+
+  deletePld(data: any) {
+    this.appservice.deletePld(data.id).subscribe(() => {
+      this.formGroupRows.clear();
+
+      let a = 0;
+      let b = this.packingGroup.controls['capacity'].value;
+
+      this.appservice.getTruckInfo2(data.plid).subscribe(item => {
+        this.newDataSource.data = item
+        this.packingInfo = item;
+
+        this.packingInfo.forEach((data) => {
+          const rows = this.appservice.formBuilder.group({
+            id: [data.id],
+            qtydeliver: [data.qtydeliver, Validators.required],
+            name: [data.name]
+          })
+          this.formGroupRows.push(rows)
+          a += (parseFloat(data.volume) * parseInt(data.qtydeliver));
+        })
+        let c = (a / b) * 100
+
+        this.packingGroup.patchValue({
+          total: a.toLocaleString(),
+          percent: c.toLocaleString(),
+        })
+
+        this.changeColor(c);
+      })
     })
   }
 

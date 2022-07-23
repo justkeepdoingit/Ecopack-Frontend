@@ -20,6 +20,7 @@ export class PrintDialogComponent implements OnInit, AfterViewInit {
     this.packingInfo = packing.pld
     this.newDataSource.data = packing.pld;
     this.truckInfo = packing.pl;
+    this.temporaryData = packing.pld
   }
 
   centered: boolean = false;
@@ -52,11 +53,40 @@ export class PrintDialogComponent implements OnInit, AfterViewInit {
     console.log(this.temporaryData);
   }
 
-  displayedColumns: string[] = ['cb', 'date', 'po', 'name', 'item', 'itemdesc', 'qty', 'qtydeliver', 'volume', 'volumet'];
+  displayedColumns: string[] = ['prio', 'date', 'po', 'name', 'item', 'qty', 'qtydeliver', 'volume', 'volumet'];
 
   newDataSource = new MatTableDataSource<pickingModel2>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   packingInfo: pickingModel2[] = [];
+
+  enableEdit = false;
+  enableEditIndex = null;
+  editValue = '';
+
+  editPrio(data: any) {
+    this.editValue = data.prio;
+    this.enableEdit = true;
+    this.enableEditIndex = data;
+  }
+
+  saveDR(data: any) {
+    this.enableEdit = false;
+    this.enableEditIndex = null;
+
+    let prio = {
+      prio: this.editValue,
+      plid: data.plid
+    }
+    this.appservice.updatePrio(prio, data.id).subscribe(() => {
+      this.appservice.getTruckInfo2(data.plid).subscribe(item => {
+        this.newDataSource.data = item;
+        this.temporaryData = item;
+        this.newDataSource.paginator = this.paginator
+        this.newDataSource.sort = this.matsort
+      })
+    })
+  }
+
 }

@@ -1,56 +1,32 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { FrontPageComponent } from '../front-page.component';
-import { MatSort } from '@angular/material/sort';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { shippingList, shippingTask } from 'src/app/models/shippingMode.model';
 import { AppService } from 'src/app/app.service';
-import { FormControl } from '@angular/forms';
-import { DeliveryDialogComponent } from './delivery-dialog/delivery-dialog.component';
-import { StatusDialogComponent } from './status-dialog/status-dialog.component';
+import { pickingModel, pickingTask } from 'src/app/models/pickingModel.model';
+import { truckModel, truckSelect } from 'src/app/models/truckModel.model';
+import { PackingInnerDialogComponent } from '../../packing-dialog/packing-inner-dialog/packing-inner-dialog.component';
+
 @Component({
-  selector: 'app-delivery',
-  templateUrl: './delivery.component.html',
-  styleUrls: ['./delivery.component.scss']
+  selector: 'app-add-list-dialog',
+  templateUrl: './add-list-dialog.component.html',
+  styleUrls: ['./add-list-dialog.component.scss']
 })
-export class DeliveryComponent implements OnInit {
+export class AddListDialogComponent implements OnInit {
 
-
-  constructor(private frontpage: FrontPageComponent, private appservice: AppService) {
-    frontpage.classStatus.planner = false;
-    frontpage.classStatus.dashboard = false;
-    frontpage.classStatus.statusPage = false
-    frontpage.classStatus.editOrders = false;
-    frontpage.classStatus.lineup = false;
-    frontpage.classStatus.importOrders = false
-    frontpage.classStatus.converting = false
-    frontpage.classStatus.fg = false
-    frontpage.classStatus.delivery = true
-    frontpage.classStatus.packing = false
+  constructor(@Inject(MAT_DIALOG_DATA) private id: number, private appservice: AppService,
+    private dialogRef: MatDialogRef<AddListDialogComponent>, public datepipe: DatePipe) {
+    this.plid = id
   }
-  filters = new FormControl([]);
+  plid: number;
+  packingGroup = new FormGroup({})
+  minDate = new Date()
 
-  selectedValue: string = '';
-  filter: any[] = [
-    { value: 'date', viewValue: 'Date' },
-    { value: 'so', viewValue: 'SO' },
-    { value: 'po', viewValue: 'PO' },
-    { value: 'name', viewValue: 'Name' },
-    { value: 'item', viewValue: 'Item' },
-    { value: 'itemdesc', viewValue: 'Item Description' },
-    { value: 'qty', viewValue: 'Order Qty' },
-    { value: 'deliverydate', viewValue: 'Date Needed' },
-    { value: 'deliveryqty', viewValue: 'Delivery Qty' }
-  ];
-
-  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'deliverydate', 'prodqty', 'shipstatus', 'deliveryqty'];
-  newDataSource = new MatTableDataSource<shippingList>();
-  filteredSource = new MatTableDataSource<shippingList>();
-  @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
-  @ViewChild(MatSort) matsort: MatSort = new MatSort()
-
-  ngOnInit(): void {
-    this.appservice.getDeliveryOrders().subscribe(data => {
+  refreshData() {
+    this.appservice.getPicking(1).subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
@@ -59,13 +35,122 @@ export class DeliveryComponent implements OnInit {
     })
   }
 
+  ngOnInit(): void {
+    this.refreshData()
+    this.packingGroup = this.appservice.formBuilder.group({
+      date: [this.datepipe.transform(new Date(), 'yyyy-MM-dd'), Validators.required],
+      truck: ['', Validators.required],
+      capacity: [''],
+      total: [''],
+      percent: ['']
+    })
+
+    this.appservice.getTrucks().subscribe(data => {
+      data.forEach(trucks => {
+        let truckData = {
+          value: trucks.id,
+          viewValue: `${trucks.name} - ${trucks.plate} - ${trucks.capacity}`
+        }
+        this.trucks.push(truckData)
+      })
+      this.truckInfos = [...data];
+    })
+  }
+
+  truckInfos: truckModel[] = [];
+
+  trucks: truckSelect[] = [];
+  filteredTrucks: truckSelect[] = [];
+  searching: boolean = false;
+  filterTrucks(data: Event) {
+    const filterValue = (data.target as HTMLInputElement).value.toLowerCase();
+
+    this.searching = filterValue.length == 0 ? false : true;
+
+    let filter = this.trucks.filter(data => {
+      return data.viewValue.toLowerCase().includes(filterValue);
+    })
+
+    this.filteredTrucks = filter;
+  }
+
+  enableEdit = false;
+  enableEditIndex = null;
+  editValue = '';
+
+  editVolume(data: any) {
+    this.editValue = data.volume;
+    this.enableEdit = true;
+    this.enableEditIndex = data;
+  }
+  saveVolume(data: any) {
+    this.enableEdit = false;
+    this.enableEditIndex = null;
+
+    let updateData = {
+      itemid: data.item,
+      volume: this.editValue
+    }
+
+    this.appservice.updateVolume(updateData).subscribe(() => {
+      this.appservice.getPicking(1).subscribe(data => {
+        this.newDataSource.data = data;
+        this.newDataSource.paginator = this.paginator
+        this.newDataSource.sort = this.matsort
+      })
+      this.appservice.snackbar.open('Data Updated', 'Dismiss', { duration: 2500 })
+    })
+  }
+
+  truckSelect(datas: any) {
+    let trucks = this.truckInfos.filter(data => {
+      return data.id == datas;
+    })
+
+    this.packingGroup.patchValue({
+      capacity: trucks[0].capacity
+    })
+  }
+
+  addItems() {
+    let delivery: any[] = [];
+    this.temporaryData.forEach(item => {
+      let plDetailes = {
+        plid: this.plid,
+        orderid: item.id,
+        qtydeliver: item.pendingqty
+      }
+      delivery.push(plDetailes)
+    })
+    this.appservice.savePld(delivery).subscribe(() => {
+      this.dialogRef.close(this.plid)
+    })
+  }
+  filters = new FormControl([]);
+
+  selectedValue: string = '';
+  filter: any[] = [
+    { value: 'date', viewValue: 'Date' },
+    { value: 'po', viewValue: 'PO' },
+    { value: 'name', viewValue: 'Name' },
+    { value: 'item', viewValue: 'Item' },
+    { value: 'itemdesc', viewValue: 'Item Description' },
+    { value: 'qty', viewValue: 'Order Qty' },
+    { value: 'pendingqty', viewValue: 'Pending Qty' },
+  ];
+
+  displayedColumns: string[] = ['cb', 'date', 'po', 'name', 'item', 'itemdesc', 'qty', 'pendingqty', 'volume', 'volumet'];
+  newDataSource = new MatTableDataSource<pickingModel>();
+  filteredSource = new MatTableDataSource<pickingModel>();
+  @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
+  @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
 
   multi: boolean = true;
 
-  expandedElement: shippingList[] = [];
+  expandedElement: pickingModel[] = [];
 
-  task: shippingTask = {
+  task: pickingTask = {
     taskName: 'Indeterminate',
     completed: false,
     color: 'warn',
@@ -83,36 +168,10 @@ export class DeliveryComponent implements OnInit {
   radius: number = 25
   unbounded: boolean = false;
   querying: boolean = false;
-
-
-  editInfo(datas: shippingList) {
-  }
-
-  editStatus(data: shippingList) {
-    if (data.shipstatus == 'Queue') {
-      this.appservice.snackbar.open('Order Still On Queue', '', { duration: 800 });
-    }
-    else {
-      this.querying = true;
-      this.appservice.getShipping(data.id).subscribe(datas => {
-        let dialog = this.appservice.dialog.open(StatusDialogComponent, {
-          data: datas
-        })
-        dialog.afterClosed().subscribe(dialogData => {
-          this.querying = false;
-          if (dialogData) {
-            this.clearTasks();
-            this.clearTasks();
-            this.appservice.snackbar.open('Order Updated!', 'dismiss', { duration: 2500 })
-            return
-          }
-        })
-      })
-    }
-  }
+  bypass: boolean = false;
 
   allComplete: boolean = false;
-  items: shippingList[] = []
+  items: pickingModel[] = []
   temporaryData: any[] = []
 
   setItems(data: any) {
@@ -123,6 +182,7 @@ export class DeliveryComponent implements OnInit {
     else {
       this.temporaryData = [...data]
     }
+    console.log(this.temporaryData.length)
   }
   //Checkbox logics
   updateAllComplete() {
@@ -167,7 +227,6 @@ export class DeliveryComponent implements OnInit {
   checkChange(data: any) {
     if (data.length > 0) {
       this.forFilters = data;
-      // this.multi = true
       this.columnSearching = true
       this.setDatasource();
 
@@ -178,12 +237,11 @@ export class DeliveryComponent implements OnInit {
       }
       return
     }
-    // this.multi = false;
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
     this.clearFilter()
-    this.ngOnInit()
+    this.refreshData()
   }
 
   isOptionDisabled(opt: any): boolean {
@@ -199,7 +257,7 @@ export class DeliveryComponent implements OnInit {
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
     this.filters.setValue([]);
-    this.ngOnInit()
+    this.refreshData()
   }
 
   applyFilter(event: Event, index: number) {
@@ -223,14 +281,14 @@ export class DeliveryComponent implements OnInit {
     else {
       this.forFilterValue[index] = filterValue.toString();
 
-      let filteredData: shippingList[] = []
+      let filteredData: pickingModel[] = []
       this.newDataSource.filter = ""
       this.columnSearching = true
 
       this.filteredSource.paginator = this.paginator
       this.filteredSource.sort = this.matsort
 
-      let obj: shippingList;
+      let obj: pickingModel;
 
 
       type ObjectKey = keyof typeof obj;
@@ -282,15 +340,15 @@ export class DeliveryComponent implements OnInit {
       return;
     }
     else if (!completed) {
-      this.clearTasks();
-      this.clearTasks()
+      this.temporaryData.length = 0;
+      this.task.subtasks!.forEach(t => { t.completed = false })
     }
     else if (completed) {
       this.allComplete = completed
       this.task.subtasks.forEach(t => { t.completed = true })
     }
 
-    let object: shippingList[] = []
+    let object: pickingModel[] = []
 
     this.task.subtasks!.forEach(t => {
       if (t.id?.toString().includes(this.filteredItems) && this.filteredItems != '') {
@@ -330,18 +388,6 @@ export class DeliveryComponent implements OnInit {
         return
       }
       else if (t.name.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.deliverydate?.includes(this.filteredItems) && this.filteredItems != '') {
         t.completed = completed
         object.push(t)
         if (t.completed) {
@@ -416,21 +462,21 @@ export class DeliveryComponent implements OnInit {
   }
 
 
-  updateMultiple() {
-    this.querying = true;
-    let newData = this.temporaryData
-    let dialog = this.appservice.dialog.open(DeliveryDialogComponent, {
-      data: newData
-    })
+  bypassList(sw: number) {
+    this.bypass = this.bypass ? false : true;
+    this.temporaryData.length = 0;
+    for (let i = 0; i < this.forFilters.length; i++) {
+      this.forFilterValue[i] = '';
+    }
+    this.task.subtasks!.forEach(t => { t.completed = false })
 
-    dialog.afterClosed().subscribe(data => {
-      if (data) {
-        this.clearTasks();
-        this.clearTasks();
-        this.appservice.snackbar.open('Setup Delivery Success', 'Dismiss', { duration: 2500 })
-        return
-      }
-      this.querying = false
+    this.appservice.getPicking(sw).subscribe(data => {
+      console.log(data);
+      this.newDataSource.data = data;
+      this.newDataSource.paginator = this.paginator
+      this.newDataSource.sort = this.matsort
+      this.task.subtasks = data;
+      this.columnSearching = false;
     })
   }
 
@@ -438,10 +484,11 @@ export class DeliveryComponent implements OnInit {
     this.temporaryData.length = 0;
     this.allComplete = false
     this.task.subtasks!.forEach(t => { t.completed = false })
-    this.ngOnInit()
+    this.refreshData()
     for (let i = 0; i < this.forFilters.length; i++) {
       this.forFilterValue[i] = '';
     }
     this.clearFilter()
   }
+
 }
