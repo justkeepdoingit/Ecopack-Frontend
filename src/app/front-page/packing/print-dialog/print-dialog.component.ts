@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -7,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from 'src/app/app.service';
 import { packingModel } from 'src/app/models/packingModel.model';
 import { pickingModel2 } from 'src/app/models/pickingModel.model';
-
+import { truckPipe } from 'src/app/componentPipes/truckPipes.pipe';
 @Component({
   selector: 'app-print-dialog',
   templateUrl: './print-dialog.component.html',
@@ -16,7 +17,7 @@ import { pickingModel2 } from 'src/app/models/pickingModel.model';
 export class PrintDialogComponent implements OnInit, AfterViewInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private packing: any, private appservice: AppService,
-    private dialogRef: MatDialogRef<PrintDialogComponent>, public datepipe: DatePipe) {
+    private dialogRef: MatDialogRef<PrintDialogComponent>, public datepipe: DatePipe, private truckpipe: truckPipe) {
     this.packingInfo = packing.pld
     this.newDataSource.data = packing.pld;
     this.truckInfo = packing.pl;
@@ -27,7 +28,20 @@ export class PrintDialogComponent implements OnInit, AfterViewInit {
   radius: number = 25
   unbounded: boolean = false;
 
+  prio = new FormGroup({})
+  prioArrange: any = new FormArray([])
   ngOnInit(): void {
+    this.packingInfo.forEach((data) => {
+      const arrays = this.appservice.formBuilder.group({
+        prio: [data.prio, Validators.required],
+        id: [data.id]
+      })
+      this.prioArrange.push(arrays)
+    })
+
+    this.prio = this.appservice.formBuilder.group({
+      prioArrange: this.prioArrange
+    })
 
   }
 
@@ -37,6 +51,10 @@ export class PrintDialogComponent implements OnInit, AfterViewInit {
   }
   temporaryData: any[] = []
   truckInfo: packingModel;
+
+  spliceName(name: string) {
+    return name.slice(0, 10)
+  }
 
   checkboxChecked(checked: boolean, data: any) {
     if (!checked) {
@@ -61,30 +79,28 @@ export class PrintDialogComponent implements OnInit, AfterViewInit {
 
   packingInfo: pickingModel2[] = [];
 
-  enableEdit = false;
-  enableEditIndex = null;
-  editValue = '';
-
-  editPrio(data: any) {
-    this.editValue = data.prio;
-    this.enableEdit = true;
-    this.enableEditIndex = data;
-  }
-
   saveDR(data: any) {
-    this.enableEdit = false;
-    this.enableEditIndex = null;
 
-    let prio = {
-      prio: this.editValue,
-      plid: data.plid
-    }
-    this.appservice.updatePrio(prio, data.id).subscribe(() => {
-      this.appservice.getTruckInfo2(data.plid).subscribe(item => {
+    var prioArrangement: any[] = [];
+
+    data.prioArrange.forEach((data: any) => {
+      let newPrio = {
+        prio: data.prio,
+        id: data.id
+      }
+      prioArrangement.push(newPrio)
+    })
+
+    let truckName = this.truckInfo.truck;
+    this.truckpipe.transform(truckName).subscribe(data => {
+      this.appservice.snackbar.open(`Order Update For ${data}`, 'Dismiss', { duration: 2500 })
+    })
+    this.dialogRef.close();
+
+    this.appservice.updatePrio(prioArrangement).subscribe(() => {
+      this.appservice.getTruckInfo2(this.temporaryData[0].plid).subscribe(item => {
         this.newDataSource.data = item;
         this.temporaryData = item;
-        this.newDataSource.paginator = this.paginator
-        this.newDataSource.sort = this.matsort
       })
     })
   }

@@ -16,10 +16,11 @@ export class ImportOrdersComponent implements OnInit {
     frontpage.classStatus.editOrders = false;
     frontpage.classStatus.lineup = false;
     frontpage.classStatus.importOrders = true
-    frontpage.classStatus.converting = true
+    frontpage.classStatus.converting = false
     frontpage.classStatus.fg = false
     frontpage.classStatus.delivery = false
     frontpage.classStatus.packing = false
+    frontpage.classStatus.returns = false
   }
 
   ngOnInit(): void {

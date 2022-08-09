@@ -5,16 +5,17 @@
             <mat-form-field appearance="legacy">
                 <mat-label>Username</mat-label>
                 <input formControlName="loguser" matInput placeholder="Enter Username">
-                <!-- <mat-error *ngIf="">Username Required</mat-error> -->
             </mat-form-field><br>
             <mat-form-field appearance="legacy">
                 <mat-label>Enter your password</mat-label>
                 <input formControlName="logpass" matInput [type]="hide ? 'password' : 'text'">
-                <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
             </mat-form-field><br>
-            <button mat-raised-button [disabled]="userLogin.invalid" color="primary">Login</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button mat-raised-button [disabled]="userLogin.invalid"
+                color="primary">Login</button>&nbsp;&nbsp;&nbsp;&nbsp;
             <button (click)="reg=true" mat-stroked-button color="primary">Register</button>
         </form>
     </div>
@@ -29,13 +30,12 @@
             <mat-form-field appearance="legacy">
                 <mat-label>Enter your password</mat-label>
                 <input formControlName="regpass" matInput [type]="hide ? 'password' : 'text'">
-                <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
             </mat-form-field><br>
-            <!-- <button mat-raised-button color="primary">Login</button>&nbsp;&nbsp;&nbsp;&nbsp; -->
             <button [disabled]="userReg.invalid" mat-stroked-button color="primary">Register Account</button>
         </form>
     </div>
 </div>
-

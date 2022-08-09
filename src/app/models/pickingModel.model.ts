@@ -26,6 +26,7 @@ export interface pickingTask {
 
 export interface pickingModel2 {
     id?: number
+    prio?: number
     date: string
     so: string
     po: string

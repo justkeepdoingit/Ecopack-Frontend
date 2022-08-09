@@ -1,0 +1,66 @@
+mat-table {
+    .ids {
+        max-width: 40px;
+        min-width: 40px;
+    }
+
+    .cb {
+        max-width: 50px;
+        min-width: 50px;
+    }
+
+    .po {
+        max-width: 80px;
+        min-width: 80px;
+    }
+
+    .dates {
+        max-width: 100px;
+        min-width: 100px;
+    }
+}
+
+@media screen and (max-width: 586px) {
+    mat-table {
+        min-width: 1000px;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:grid-cols-5 {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1;
+    }
+
+    .md\:grid-cols-4 {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1;
+
+    }
+
+    .md\:grid-cols-3 {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1;
+    }
+
+    .md\:grid-cols-2 {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1;
+
+    }
+
+    .md\:grid-cols-1 {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1;
+    }
+}

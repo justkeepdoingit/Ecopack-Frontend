@@ -1,196 +1,190 @@
 <h3 mat-dialog-title>Print List</h3>
-<mat-dialog-content>
+<form [formGroup]="prio">
+    <mat-dialog-content>
 
-    <div id="printData" class="flex flex-col">
-        <div id="prints" class="overflow-x-auto hidden">
-            <div id="divData" class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                <h2 id="listing" class=" hidden">Load Plan</h2>
+        <div id="printData" class="flex flex-col">
+            <div id="prints" class="overflow-x-auto hidden">
+                <div id="divData" class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                    <h2 id="listing" class=" hidden">Load Plan</h2>
 
-                <table class=" w-full">
-                    <thead class="border-b">
-                        <tr>
-                            <th colspan="3" scope="col"
-                                class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
-                                {{(truckInfo.truck | truckName) | async}}</th>
-                            <th colspan="2" scope="col"
-                                class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
-                                Capacity: {{truckInfo.capacity}}</th>
-                            <th colspan="2" scope="col"
-                                class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
-                                Total Load: {{truckInfo.total}}</th>
-                            <th colspan="2" scope="col"
-                                class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
-                                Percent Full: {{truckInfo.percent}}%</th>
-                        </tr>
-                        <tr>
-                            <th scope="col" class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
-                                #
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Order Date
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                PO #
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Customer Name
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Item
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Item Description
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Qty
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Estimated Qty
-                            </th>
-                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Actual Qty
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let data of temporaryData; let i = index">
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{i+1}}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{datepipe.transform(data.date,'yyyy-MM-dd')}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.po}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.name}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.item}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{data.itemdesc}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{data.qty.toLocaleString()}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{data.qtydeliver.toLocaleString()}}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                _____________
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class=" w-full">
+                        <thead class="border-b">
+                            <tr>
+                                <th colspan="3" scope="col"
+                                    class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
+                                    {{(truckInfo.truck | truckName) | async}}</th>
+                                <th colspan="2" scope="col"
+                                    class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
+                                    Capacity: {{truckInfo.capacity}}</th>
+                                <th colspan="2" scope="col"
+                                    class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
+                                    Total Load: {{truckInfo.total}}</th>
+                                <th colspan="2" scope="col"
+                                    class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
+                                    Percent Full: {{truckInfo.percent}}%</th>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="text-sm font-medium text-secondary-900 px-6 py-4 text-left">
+                                    #
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Order Date
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    PO #
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Customer Name
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Item
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Qty
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Estimated Qty
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Actual Qty
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of temporaryData; let i = index">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{i+1}}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {{datepipe.transform(data.date,'yyyy-MM-dd')}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{data.po}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{spliceName(data.name)}}...
+                                </td>
+                                <td class="px-6 py-4 text-xs font-medium text-gray-900">{{data.item}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {{data.qty.toLocaleString()}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {{data.qtydeliver.toLocaleString()}}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                    _____________
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <div class=" overflow-y-auto relative">
-        <div id="tables" class=" relative overflow-auto">
-            <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
-                [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort
-                [dataSource]="newDataSource">
+        <div class=" overflow-y-auto relative">
+            <div id="tables" class=" relative overflow-auto">
+                <mat-table matRipple formArrayName="prioArrange" [matRippleUnbounded]="unbounded"
+                    [matRippleCentered]="centered" [matRippleRadius]="radius"
+                    class=" text-secondary-700 font-medium cursor-pointer" #table matSort [dataSource]="newDataSource">
 
-                <ng-container matColumnDef="prio">
-                    <mat-header-cell mat-sort-header class="dates text-primary-900" *matHeaderCellDef> #
-                    </mat-header-cell>
-                    <mat-cell class="dates text-primary-900" *matCellDef="let element" (click)="editPrio(element)">
-                        <span class="text-primary-900" *ngIf="enableEditIndex != element">{{(element.prio)}}</span>
-                        <span style="color: red" *ngIf="enableEditIndex == element">
-                            <input [(ngModel)]="editValue" class=" w-full" matInput placeholder="Enter New Value"
-                                #input>
-                        </span>
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="prio">
+                        <mat-header-cell mat-sort-header class="dates text-primary-900" *matHeaderCellDef> #
+                        </mat-header-cell>
+                        <mat-cell class="dates text-primary-900" [formGroupName]="i"
+                            *matCellDef="let element; let i = index">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Prio</mat-label>
+                                <input formControlName="prio" matInput placeholder="Enter Prio">
+                            </mat-form-field>
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="date">
-                    <mat-header-cell mat-sort-header class="dates text-primary-900" *matHeaderCellDef> Date
-                    </mat-header-cell>
-                    <mat-cell class="dates text-primary-900" *matCellDef="let element">
-                        {{datepipe.transform(element.date, 'yyyy-MM-dd')}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="date">
+                        <mat-header-cell mat-sort-header class="dates text-primary-900" *matHeaderCellDef> Date
+                        </mat-header-cell>
+                        <mat-cell class="dates text-primary-900" *matCellDef="let element">
+                            {{datepipe.transform(element.date, 'yyyy-MM-dd')}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="so">
-                    <mat-header-cell mat-sort-header class="so text-secondary-900" *matHeaderCellDef> SO#
-                    </mat-header-cell>
-                    <mat-cell class="so text-secondary-900" *matCellDef="let element">
-                        {{element.so}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="so">
+                        <mat-header-cell mat-sort-header class="so text-secondary-900" *matHeaderCellDef> SO#
+                        </mat-header-cell>
+                        <mat-cell class="so text-secondary-900" *matCellDef="let element">
+                            {{element.so}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="po">
-                    <mat-header-cell mat-sort-header class="po text-primary-900" *matHeaderCellDef> PO#
-                    </mat-header-cell>
-                    <mat-cell class="po text-primary-900" *matCellDef="let element">
-                        {{element.po}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="po">
+                        <mat-header-cell mat-sort-header class="po text-primary-900" *matHeaderCellDef> PO#
+                        </mat-header-cell>
+                        <mat-cell class="po text-primary-900" *matCellDef="let element">
+                            {{element.po}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <mat-header-cell mat-sort-header class="names text-secondary-900" *matHeaderCellDef> Name
-                    </mat-header-cell>
-                    <mat-cell class="names text-secondary-900" *matCellDef="let element">
-                        {{element.name}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell mat-sort-header class="names text-secondary-900" *matHeaderCellDef> Name
+                        </mat-header-cell>
+                        <mat-cell class="names text-secondary-900" *matCellDef="let element">
+                            {{element.name}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="item">
-                    <mat-header-cell [ngStyle]="{'min-width':'150px'}" mat-sort-header class="items text-primary-900"
-                        *matHeaderCellDef> Item
-                    </mat-header-cell>
-                    <mat-cell [ngStyle]="{'min-width':'150px'}" class="items text-primary-900"
-                        *matCellDef="let element">
-                        {{element.item}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="item">
+                        <mat-header-cell [ngStyle]="{'min-width':'150px'}" mat-sort-header
+                            class="items text-primary-900" *matHeaderCellDef> Item
+                        </mat-header-cell>
+                        <mat-cell [ngStyle]="{'min-width':'150px'}" class="items text-primary-900"
+                            *matCellDef="let element">
+                            {{element.item}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="qty">
-                    <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef> Order Qty
-                    </mat-header-cell>
-                    <mat-cell class="text-primary-900" *matCellDef="let element"> {{element.qty}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="qty">
+                        <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef> Order Qty
+                        </mat-header-cell>
+                        <mat-cell class="text-primary-900" *matCellDef="let element"> {{element.qty}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="qtydeliver">
-                    <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef>Estimated Qty
-                    </mat-header-cell>
-                    <mat-cell class=" text-secondary-900" *matCellDef="let element; let i = index">
-                        {{element.qtydeliver}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="qtydeliver">
+                        <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef>Estimated Qty
+                        </mat-header-cell>
+                        <mat-cell class=" text-secondary-900" *matCellDef="let element; let i = index">
+                            {{element.qtydeliver}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="volume">
-                    <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef>Volume</mat-header-cell>
-                    <mat-cell class="text-primary-900" *matCellDef="let element"> {{(element.volume)}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="volume">
+                        <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef>Volume
+                        </mat-header-cell>
+                        <mat-cell class="text-primary-900" *matCellDef="let element"> {{(element.volume)}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="volumet">
-                    <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef>Total Volume
-                    </mat-header-cell>
-                    <mat-cell class=" text-secondary-900" *matCellDef="let element; let i = index">
-                        <span *ngIf="enableEdit && enableEditIndex == element">
-                            <button (click)="saveDR(element)" mat-stroked-button color="primary">Save</button>
-                        </span>
-                        <span class="text-secondary-900" *ngIf="!enableEdit && enableEditIndex != element">
+                    <ng-container matColumnDef="volumet">
+                        <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef>Total Volume
+                        </mat-header-cell>
+                        <mat-cell class=" text-secondary-900" *matCellDef="let element; let i = index">
                             {{(element.qtydeliver*element.volume).toLocaleString()}}
-                        </span>
+                        </mat-cell>
+                    </ng-container>
 
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
         </div>
-    </div>
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
-    </mat-paginator>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button *ngIf="temporaryData.length > 0" mat-stroked-button color="primary" printTitle="Pack Listing"
-        printSectionId="printData" styleSheetFile="../../../assets/printAsset.css" ngxPrint>Print</button>
-    <button mat-stroked-button color="warn" [mat-dialog-close]>
-        Close
-    </button>
-</mat-dialog-actions>
+        <!-- <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+    </mat-paginator> -->
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button type="button" *ngIf="temporaryData.length > 0" mat-stroked-button color="primary"
+            printTitle="Pack Listing" printSectionId="printData" styleSheetFile="../../../assets/printAsset.css"
+            ngxPrint>Print</button>
+        <button mat-stroked-button color="warn" [mat-dialog-close]>
+            Close
+        </button>
+        <button (click)="saveDR(prio.value)" mat-stroked-button color="accent" [disabled]="prio.invalid">Update
+            Arrangement</button>
+    </mat-dialog-actions>
+</form>

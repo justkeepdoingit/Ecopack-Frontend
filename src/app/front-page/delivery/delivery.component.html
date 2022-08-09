@@ -44,7 +44,7 @@
             [dataSource]="!columnSearching ? newDataSource : filteredSource">
             <ng-container matColumnDef="cb">
               <mat-header-cell class="cb" *matHeaderCellDef>
-                <mat-checkbox *ngIf="multi" [checked]="allComplete" [color]="task.color"
+                <mat-checkbox *ngIf="multi && generalFilter" [checked]="allComplete" [color]="task.color"
                   (click)="setItems(task.subtasks);" [indeterminate]="someComplete()"
                   (change)="setAll($event.checked, task.subtasks)">
                 </mat-checkbox>

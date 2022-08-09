@@ -30,7 +30,6 @@ import { filterPipes } from './componentPipes/filterPipes.pipe';
 import { filterPipes2 } from './componentPipes/filterPipes2.pipe';
 import { DeliveryComponent } from './front-page/delivery/delivery.component';
 import { DeliveryDialogComponent } from './front-page/delivery/delivery-dialog/delivery-dialog.component';
-import { StatusDialogComponent } from './front-page/delivery/status-dialog/status-dialog.component';
 import { PackingComponent } from './front-page/packing/packing.component';
 import { PackingDialogComponent } from './front-page/packing/packing-dialog/packing-dialog.component';
 import { TruckDialogComponent } from './front-page/packing/truck-dialog/truck-dialog.component';
@@ -41,6 +40,12 @@ import { EditDialogComponent } from './front-page/packing/edit-dialog/edit-dialo
 import { PrintDialogComponent } from './front-page/packing/print-dialog/print-dialog.component';
 import { PrintdrDialogComponent } from './front-page/packing/printdr-dialog/printdr-dialog.component';
 import { AddListDialogComponent } from './front-page/packing/edit-dialog/add-list-dialog/add-list-dialog.component';
+import { ReturnItemsComponent } from './front-page/return-items/return-items.component';
+import { statusName } from './componentPipes/statuspipe.pipe';
+import { StatussDialogComponent } from './front-page/status-page/status-dialog/status-dialog.component';
+import { StatusDialogComponent } from './front-page/delivery/status-dialog/status-dialog.component';
+import { datetime } from './componentPipes/dateTimePipe.pipe';
+import { OrderEditDialogComponent } from './front-page/edit-orders/order-edit-dialog/order-edit-dialog.component';
 @NgModule({
     declarations: [
         CanvasJSChart,
@@ -52,6 +57,7 @@ import { AddListDialogComponent } from './front-page/packing/edit-dialog/add-lis
         filterPipes,
         filterPipes2,
         truckPipe,
+        statusName,
         UserDialogComponent,
         StatusPageComponent,
         PlannerComponent,
@@ -66,7 +72,6 @@ import { AddListDialogComponent } from './front-page/packing/edit-dialog/add-lis
         FgDialogComponent,
         DeliveryComponent,
         DeliveryDialogComponent,
-        StatusDialogComponent,
         PackingComponent,
         PackingDialogComponent,
         TruckDialogComponent,
@@ -75,7 +80,12 @@ import { AddListDialogComponent } from './front-page/packing/edit-dialog/add-lis
         EditDialogComponent,
         PrintDialogComponent,
         PrintdrDialogComponent,
-        AddListDialogComponent
+        AddListDialogComponent,
+        ReturnItemsComponent,
+        StatusDialogComponent,
+        StatussDialogComponent,
+        datetime,
+        OrderEditDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -84,7 +94,7 @@ import { AddListDialogComponent } from './front-page/packing/edit-dialog/add-lis
         DesignmoduleModule,
         DataTablesModule
     ],
-    providers: [CookieService, DatePipe],
-    bootstrap: [AppComponent]
+    providers: [CookieService, DatePipe, truckPipe, statusName],
+    bootstrap: [AppComponent],
 })
 export class AppModule { }

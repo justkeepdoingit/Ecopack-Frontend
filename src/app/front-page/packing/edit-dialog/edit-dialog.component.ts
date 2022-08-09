@@ -9,7 +9,7 @@ import { AppService } from 'src/app/app.service';
 import { pickingModel2 } from 'src/app/models/pickingModel.model';
 import { truckModel, truckSelect } from 'src/app/models/truckModel.model';
 import { AddListDialogComponent } from './add-list-dialog/add-list-dialog.component';
-
+import { truckPipe } from 'src/app/componentPipes/truckPipes.pipe';
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
@@ -18,9 +18,15 @@ import { AddListDialogComponent } from './add-list-dialog/add-list-dialog.compon
 export class EditDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private packing: any, private appservice: AppService,
-    private dialogRef: MatDialogRef<EditDialogComponent>, public datepipe: DatePipe) {
+    private dialogRef: MatDialogRef<EditDialogComponent>, public datepipe: DatePipe, private truck: truckPipe) {
     this.newDataSource.data = packing.pld;
     this.packingInfo = packing.pld
+
+    let truckNames = truck.transform(packing.pl.truck).subscribe(data => {
+      appservice.snackbar.open(`Editing Data For ${data}`, 'Dismiss')
+
+    })
+
   }
 
   newDataSource = new MatTableDataSource<pickingModel2>();
@@ -55,7 +61,7 @@ export class EditDialogComponent implements OnInit {
       this.styles = 'green'
     }
   }
-
+  truckName = this.packing.pl.truck;
   ngOnInit(): void {
     this.packingGroup = this.appservice.formBuilder.group({
       id: [this.packing.pl.id],

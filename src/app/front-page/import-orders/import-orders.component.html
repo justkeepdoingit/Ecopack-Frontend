@@ -1,4 +1,9 @@
-<div id="uploadfile">  
-    <input id="fileUpload" [value]="reset" type="file" (change)="onFileSelected($event)">
-    <button mat-raised-button (click)="onUpload()">Upload PO csv</button>
+<div class="flex justify-center">
+    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
+        <h2 class="text-gray-900 text-xl leading-tight font-bold mb-2">Upload PO CSV</h2>
+        <div id="uploadfile">
+            <input id="fileUpload" [value]="reset" type="file" (change)="onFileSelected($event)">
+            <button mat-raised-button color="primary" (click)="onUpload()">Upload PO csv</button>
+        </div>
+    </div>
 </div>

@@ -32,6 +32,7 @@ export class PackingComponent implements OnInit {
     frontpage.classStatus.fg = false
     frontpage.classStatus.delivery = false
     frontpage.classStatus.packing = true
+    frontpage.classStatus.returns = false
   }
   filters = new FormControl([]);
 
@@ -53,7 +54,7 @@ export class PackingComponent implements OnInit {
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   ngOnInit(): void {
-    this.appservice.getPacking().subscribe(data => {
+    this.appservice.getPacking(1).subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
@@ -72,6 +73,7 @@ export class PackingComponent implements OnInit {
 
   multi: boolean = false;
   dr: boolean = false;
+  printed: boolean = false;
 
   editInfo(data: packingModel) {
     this.appservice.getTruckInfo(data).subscribe(item => {
@@ -99,15 +101,22 @@ export class PackingComponent implements OnInit {
           pl: data
         }
       })
+
+      dialog.afterClosed().subscribe((data) => {
+        if (data) {
+          this.clearTask()
+          this.clearTask()
+          this.appservice.snackbar.open('DR Successfully Printed!', 'Dismiss', { duration: 2500 })
+        }
+      })
     })
   }
 
   addTruck() {
     let dialog = this.appservice.dialog.open(TruckDialogComponent)
-
     dialog.afterClosed().subscribe(data => {
       if (data == 1) {
-        this.appservice.getPacking().subscribe(orders => {
+        this.appservice.getPacking(1).subscribe(orders => {
           this.newDataSource.data = orders;
         });
         this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
@@ -120,7 +129,7 @@ export class PackingComponent implements OnInit {
 
     dialog.afterClosed().subscribe(data => {
       if (data == 1) {
-        this.appservice.getPacking().subscribe(orders => {
+        this.appservice.getPacking(1).subscribe(orders => {
           this.newDataSource.data = orders;
         });
         this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
@@ -153,9 +162,9 @@ export class PackingComponent implements OnInit {
   }
 
   printDr(data: any) {
-    this.appservice.getShippingPl(data.id).subscribe(data => {
+    this.appservice.getShippingPl(data.id).subscribe(datas => {
       let dialog = this.appservice.dialog.open(PrintdrDialogComponent, {
-        data: data
+        data: { orderlist: datas, pl: data.id }
       })
 
       dialog.afterClosed().subscribe(data => {
@@ -166,8 +175,28 @@ export class PackingComponent implements OnInit {
     })
   }
 
+  showPrinted() {
+    this.printed = this.printed ? false : true;
+    if (this.printed) {
+      this.appservice.snackbar.open('Showing List Of Printed DRs', 'Dismiss')
+      this.appservice.getPacking(2).subscribe(data => {
+        this.newDataSource.data = data;
+        this.newDataSource.paginator = this.paginator
+        this.newDataSource.sort = this.matsort
+      })
+    }
+    else {
+      this.appservice.snackbar.open('Showing List Of Unprinted DRs', 'Dismiss', { duration: 2500 })
+      this.appservice.getPacking(1).subscribe(data => {
+        this.newDataSource.data = data;
+        this.newDataSource.paginator = this.paginator
+        this.newDataSource.sort = this.matsort
+      })
+    }
+  }
+
   clearTask() {
-    this.appservice.getPacking().subscribe(data => {
+    this.appservice.getPacking(1).subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort

@@ -12,7 +12,7 @@ import { ConvertingComponent } from './front-page/converting/converting.componen
 import { FgComponent } from './front-page/fg/fg.component';
 import { DeliveryComponent } from './front-page/delivery/delivery.component';
 import { PackingComponent } from './front-page/packing/packing.component';
-
+import { ReturnItemsComponent } from './front-page/return-items/return-items.component';
 const routes: Routes = [
   { path: 'Login', component: LogregComponent },
   {
@@ -27,6 +27,7 @@ const routes: Routes = [
       { path: 'Finished_Goods', component: FgComponent },
       { path: 'Delivery', component: DeliveryComponent },
       { path: 'Packing', component: PackingComponent },
+      { path: 'Return', component: ReturnItemsComponent },
     ]
   },
   { path: '', redirectTo: 'Login', pathMatch: 'full' },

@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
     frontpage.classStatus.fg = false
     frontpage.classStatus.delivery = false
     frontpage.classStatus.packing = false
+    frontpage.classStatus.returns = false
     this.admin = this.appservice.cookieService.get('user_rights')
   }
 

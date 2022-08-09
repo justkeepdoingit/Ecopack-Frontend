@@ -15,12 +15,14 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 })
 export class PrintdrDialogComponent implements OnInit, AfterViewInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) private orderList: orderList[], private appservice: AppService,
+  constructor(@Inject(MAT_DIALOG_DATA) private orderList: any, private appservice: AppService,
     private dialogRef: MatDialogRef<PrintdrDialogComponent>, public datepipe: DatePipe
   ) {
-    this.orderListInfo = orderList
-    this.newDataSource.data = orderList
+    this.orderListInfo = orderList.orderlist
+    this.newDataSource.data = orderList.orderlist
+    this.pl = orderList.pl
   }
+  pl: number;
   newDataSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
@@ -49,7 +51,6 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
         this.noDr = true
       }
 
-      console.log(data);
       const rows = this.appservice.formBuilder.group({
         id: [data.id],
         pl: [data.pl],
@@ -73,11 +74,11 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
     this.newDataSource.sort = this.matsort
   }
 
-
+  fc: boolean = true;
   updateData(edit: any) {
-    let i = 0;
-    edit.infodata.forEach((data: any) => {
-      let newData = {
+    let newData: any[] = [];
+    edit.infodata.forEach((data: any, i: number) => {
+      newData.push({
         id: edit.infodata[i].id,
         pl: edit.infodata[i].pl,
         receipt: edit.infodata[i].receipt,
@@ -86,13 +87,25 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
         orderid: edit.infodata[i].orderid,
         qtyship: edit.infodata[i].qty,
         itemid: edit.infodata[i].itemid
-      }
-      let link = `http://localhost:3000/order-list/updateShippingPl`;
-      this.appservice.getGeneralData(link, newData).subscribe(datas => {
-        this.dialogRef.close(1);
       })
-      i++;
     })
+    let link = `https://ecopack2.herokuapp.com/order-list/updateShippingPl`;
+    // if (this.fc && newData.length > 1) {
+    //   for (let i = 0; i < 2; i++) {
+    //     this.appservice.getGeneralData(link, newData).subscribe((datas) => {
+    //       this.orderListInfo = datas;
+    //     })
+    //   }
+    //   this.fc = false;
+    // }
+    // else {
+    this.appservice.getGeneralData(link, newData).subscribe((datas) => {
+      this.orderListInfo = datas;
+    })
+    this.noDr = false;
+    // }
+
+    this.appservice.snackbar.open('List Updated!', 'Dismiss', { duration: 2500 })
   }
 
   toString(data: any) {
@@ -100,6 +113,12 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
       return data.toLocaleString()
     }
     return null
+  }
+
+  printed() {
+    this.appservice.updatePrinted(this.pl).subscribe(() => {
+      this.dialogRef.close(1)
+    })
   }
 
 }

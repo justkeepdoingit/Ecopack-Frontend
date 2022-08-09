@@ -47,8 +47,9 @@
                                 matSort [dataSource]="!columnSearching ? newDataSource : filteredSource">
                                 <ng-container matColumnDef="cb">
                                     <mat-header-cell class="cb" *matHeaderCellDef>
-                                        <mat-checkbox *ngIf="multi" [checked]="allComplete" [color]="task.color"
-                                            (click)="setItems(task.subtasks);" [indeterminate]="someComplete()"
+                                        <mat-checkbox *ngIf="multi && generalFilter" [checked]="allComplete"
+                                            [color]="task.color" (click)="setItems(task.subtasks);"
+                                            [indeterminate]="someComplete()"
                                             (change)="setAll($event.checked, task.subtasks)">
                                         </mat-checkbox>
                                     </mat-header-cell>
@@ -177,6 +178,6 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button (click)="addItems()" mat-stroked-button color="primary" *ngIf="temporaryData.length > 0">Create</button>
+    <button (click)="addItems()" mat-stroked-button color="primary" *ngIf="temporaryData.length > 0">Add</button>
     <button mat-flat-button [matDialogClose] color="warn">Close</button>
 </mat-dialog-actions>

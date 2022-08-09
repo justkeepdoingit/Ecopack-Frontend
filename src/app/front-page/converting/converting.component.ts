@@ -26,6 +26,7 @@ export class ConvertingComponent implements OnInit {
     frontpage.classStatus.converting = true
     frontpage.classStatus.packing = false
     frontpage.classStatus.delivery = false
+    frontpage.classStatus.returns = false
   }
 
   displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'shipqty', 'deliverydate', 'status', 'comment'];
@@ -249,13 +250,18 @@ export class ConvertingComponent implements OnInit {
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
+    this.temporaryData.length = 0;
+    this.allComplete = false
     this.filters.setValue([]);
     this.ngOnInit()
   }
 
+  generalFilter: boolean = true;
+
   applyFilter(event: Event, index: number) {
+
     this.forFilterValue.length = this.forFilters.length;
-    const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
 
     if (this.forFilters.length == 0) {
       this.newDataSource.filter = filterValue.trim().toLowerCase();
@@ -269,14 +275,16 @@ export class ConvertingComponent implements OnInit {
 
       this.task.subtasks = this.newDataSource.data;
       this.selectedValue = '';
-    }
-    else {
-      this.forFilterValue[index] = filterValue.toString();
 
-      console.log(this.forFilterValue);
+      this.generalFilter = filterValue.length == 0 ? true : false;
+    }
+    else if (this.forFilters.length > 0) {
+
+      this.forFilterValue[index] = filterValue.toString();
 
       let filteredData: orderList[] = []
       this.newDataSource.filter = ""
+      this.filteredItems = ""
       this.columnSearching = true
 
       this.filteredSource.paginator = this.paginator
@@ -284,55 +292,47 @@ export class ConvertingComponent implements OnInit {
 
       let obj: orderList;
 
+
       type ObjectKey = keyof typeof obj;
       const myVar1 = this.forFilters[0] as ObjectKey;
       const myVar2 = this.forFilters[1] as ObjectKey;
       const myVar3 = this.forFilters[2] as ObjectKey;
       const myVar4 = this.forFilters[3] as ObjectKey;
       const myVar5 = this.forFilters[4] as ObjectKey;
-      try {
-        for (let i = 0; i < this.newDataSource.data.length; i++) {
-          if (this.forFilterValue.length == 1) {
-            if (this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0])) {
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if (this.forFilterValue.length == 2) {
-            if (this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1])) {
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if (this.forFilterValue.length == 3) {
-            if (this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2])) {
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if (this.forFilterValue.length == 4) {
-            if (this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3])) {
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
-          else if (this.forFilterValue.length == 5) {
-            if (this.newDataSource.data[i][myVar1]?.toString().trim().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().includes(this.forFilterValue[4])) {
-              filteredData.push(this.newDataSource.data[i])
-            }
-          }
+      filteredData = this.newDataSource.data.filter((data) => {
+        if (this.forFilterValue.length == 1) {
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0])
         }
-      } catch (error) {
-        this.appservice.snackbar.open('The column/s you\'re trying to search is probably empty, please try other filter', 'dismiss', { duration: 2500 });
-        for (let i = 0; i < this.newDataSource.data.length; i++) {
-          filteredData.push(this.newDataSource.data[i])
+        else if (this.forFilterValue.length == 2) {
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1])
         }
-      }
-
-
+        else if (this.forFilterValue.length == 3) {
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && data[myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2])
+        }
+        else if (this.forFilterValue.length == 4) {
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && data[myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && data[myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3])
+        }
+        else {
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && data[myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && data[myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3]) && data[myVar5]?.toString().trim().toLowerCase().includes(this.forFilterValue[4])
+        }
+      })
       this.filteredSource.data = filteredData
       this.task.subtasks = filteredData;
 
+      if (this.temporaryData.length == this.filteredSource.filteredData.length) {
+        this.allComplete = true
+      }
+      else {
+        this.allComplete = false
+      }
     }
-    if (!filterValue || this.forFilterValue.length == 0) {
-      this.temporaryData = []
-      this.allComplete = false
+    else {
+      if (this.temporaryData.length == this.newDataSource.filteredData.length) {
+        this.allComplete = true
+      }
+      else {
+        this.allComplete = false
+      }
     }
   }
 

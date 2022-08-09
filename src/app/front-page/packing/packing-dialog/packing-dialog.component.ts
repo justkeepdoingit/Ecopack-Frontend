@@ -252,9 +252,13 @@ export class PackingDialogComponent implements OnInit {
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
+    this.temporaryData.length = 0;
+    this.allComplete = false
     this.filters.setValue([]);
     this.refreshData()
   }
+
+  generalFilter: boolean = true;
 
   applyFilter(event: Event, index: number) {
 
@@ -273,12 +277,16 @@ export class PackingDialogComponent implements OnInit {
 
       this.task.subtasks = this.newDataSource.data;
       this.selectedValue = '';
+
+      this.generalFilter = filterValue.length == 0 ? true : false;
     }
-    else {
+    else if (this.forFilters.length > 0) {
+
       this.forFilterValue[index] = filterValue.toString();
 
       let filteredData: pickingModel[] = []
       this.newDataSource.filter = ""
+      this.filteredItems = ""
       this.columnSearching = true
 
       this.filteredSource.paginator = this.paginator
@@ -293,41 +301,41 @@ export class PackingDialogComponent implements OnInit {
       const myVar3 = this.forFilters[2] as ObjectKey;
       const myVar4 = this.forFilters[3] as ObjectKey;
       const myVar5 = this.forFilters[4] as ObjectKey;
-      for (let i = 0; i < this.newDataSource.data.length; i++) {
+
+      filteredData = this.newDataSource.data.filter((data) => {
         if (this.forFilterValue.length == 1) {
-          if (this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0])) {
-            filteredData.push(this.newDataSource.data[i])
-          }
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0])
         }
         else if (this.forFilterValue.length == 2) {
-          if (this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1])) {
-            filteredData.push(this.newDataSource.data[i])
-          }
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1])
         }
         else if (this.forFilterValue.length == 3) {
-          if (this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2])) {
-            filteredData.push(this.newDataSource.data[i])
-          }
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && data[myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2])
         }
         else if (this.forFilterValue.length == 4) {
-          if (this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3])) {
-            filteredData.push(this.newDataSource.data[i])
-          }
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && data[myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && data[myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3])
         }
-        else if (this.forFilterValue.length == 5) {
-          if (this.newDataSource.data[i][myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && this.newDataSource.data[i][myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && this.newDataSource.data[i][myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && this.newDataSource.data[i][myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3]) && this.newDataSource.data[i][myVar5]?.toString().trim().toLowerCase().includes(this.forFilterValue[4])) {
-            filteredData.push(this.newDataSource.data[i])
-          }
+        else {
+          return data[myVar1]?.toString().trim().toLowerCase().includes(this.forFilterValue[0]) && data[myVar2]?.toString().trim().toLowerCase().includes(this.forFilterValue[1]) && data[myVar3]?.toString().trim().toLowerCase().includes(this.forFilterValue[2]) && data[myVar4]?.toString().trim().toLowerCase().includes(this.forFilterValue[3]) && data[myVar5]?.toString().trim().toLowerCase().includes(this.forFilterValue[4])
         }
-      }
-
+      })
       this.filteredSource.data = filteredData
       this.task.subtasks = filteredData;
 
+      if (this.temporaryData.length == this.filteredSource.filteredData.length) {
+        this.allComplete = true
+      }
+      else {
+        this.allComplete = false
+      }
     }
-    if (!filterValue || this.forFilterValue.length == 0) {
-      this.temporaryData = []
-      this.allComplete = false
+    else {
+      if (this.temporaryData.length == this.newDataSource.filteredData.length) {
+        this.allComplete = true
+      }
+      else {
+        this.allComplete = false
+      }
     }
   }
 
@@ -345,116 +353,117 @@ export class PackingDialogComponent implements OnInit {
     }
 
     let object: pickingModel[] = []
-
-    this.task.subtasks!.forEach(t => {
-      if (t.id?.toString().includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.po.includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.so.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.name.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.itemdesc.toString().toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.item.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.date.includes(this.filteredItems) && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (t.qty.toString() == this.filteredItems && this.filteredItems != '') {
-        t.completed = completed
-        object.push(t)
-        if (t.completed) {
-          this.temporaryData = object;
-        }
-        else {
-          this.temporaryData = [];
-          this.task.subtasks?.forEach(t => { t.completed = false })
-        }
-        return
-      }
-      else if (this.filteredItems == '') {
-        if (!completed) {
-          t.completed = false
-          this.allComplete = false;
-          this.temporaryData = [];
-        }
-        else {
-          this.allComplete = completed
+    if (this.temporaryData.length == 0) {
+      this.task.subtasks!.forEach(t => {
+        if (t.id?.toString().includes(this.filteredItems)) {
           t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
         }
-      }
-    })
+        else if (t.po.includes(this.filteredItems)) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (t.so.toLowerCase().includes(this.filteredItems)) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (t.name.toLowerCase().includes(this.filteredItems)) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (t.itemdesc.toString().toLowerCase().includes(this.filteredItems)) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (t.item.toLowerCase().includes(this.filteredItems)) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (t.date.includes(this.filteredItems)) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (t.qty.toString() == this.filteredItems) {
+          t.completed = completed
+          object.push(t)
+          if (t.completed) {
+            this.temporaryData = object;
+          }
+          else {
+            this.temporaryData = [];
+            this.task.subtasks?.forEach(t => { t.completed = false })
+          }
+          return
+        }
+        else if (this.filteredItems == '') {
+          if (!completed) {
+            t.completed = false
+            this.allComplete = false;
+            this.temporaryData = [];
+          }
+          else {
+            this.allComplete = completed
+            t.completed = completed
+          }
+        }
+      })
+    }
   }
 
 
@@ -467,7 +476,6 @@ export class PackingDialogComponent implements OnInit {
     this.task.subtasks!.forEach(t => { t.completed = false })
 
     this.appservice.getPicking(sw).subscribe(data => {
-      console.log(data);
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort

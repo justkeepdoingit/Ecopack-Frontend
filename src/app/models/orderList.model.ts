@@ -1,5 +1,5 @@
 import { ThemePalette } from "@angular/material/core";
-export interface orderList{
+export interface orderList {
     id?: number
     date: string
     po: string
@@ -14,13 +14,24 @@ export interface orderList{
     delivery: boolean
     shipqty: number
     prodqty: number
+    pendingqty: number
     deliverydate: string
     comment: string
-    c: boolean,
-    p: boolean,
-    o: boolean,
-    f: boolean,
-    shipstatus: string,
+    lineuptime: string
+    converttime: string
+    fgtime: string
+    lastedited: string
+    deliverytime: string
+    c: boolean
+    p: boolean
+    o: boolean
+    f: boolean
+    shipstatus: string
+    orderstatus: string
+    creasingtime: string
+    printingtime: string
+    dcrtime: string
+    finishrtime: string
     color?: string
     completed?: boolean
     taskName?: string;
@@ -31,4 +42,4 @@ export interface orderTask {
     completed: boolean;
     color: ThemePalette;
     subtasks?: orderList[];
-  }
+}

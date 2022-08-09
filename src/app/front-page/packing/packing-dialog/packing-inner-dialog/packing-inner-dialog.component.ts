@@ -44,11 +44,15 @@ export class PackingInnerDialogComponent implements OnInit {
   packingGroup = new UntypedFormGroup({})
 
   ngOnInit(): void {
+    let b = 0;
+    this.packingInfo.forEach(data => {
+      b += parseFloat(data.volume) * parseInt(data.pendingqty)
+    })
     this.packingGroup = this.appservice.formBuilder.group({
       date: [this.datepipe.transform(new Date(), 'yyyy-MM-dd'), Validators.required],
       truck: ['', Validators.required],
       capacity: ['', Validators.required],
-      total: ['', Validators.required],
+      total: [b.toFixed(2), Validators.required],
       percent: ['', Validators.required],
       infodata: this.formGroupRows
     })

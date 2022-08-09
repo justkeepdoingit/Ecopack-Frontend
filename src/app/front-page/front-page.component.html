@@ -37,16 +37,42 @@
         <div class="hidden md:block ml-6">
           <div class="flex space-x-4">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a *ngIf="useracc == 'true' || user_rights == '1'" routerLink="Dashboard"
+            <a (click)="closeDrowpdown()" *ngIf="useracc == 'true' || user_rights == '1'" routerLink="Dashboard"
               [ngClass]="classStatus.dashboard ? classStrings.dashboardAcc : classStrings.dashboardInac"
               aria-current="page">Dashboard</a>
-            <a *ngIf="edit_orders == 'true' || user_rights == '1'" routerLink="Edit_Orders"
+            <a (click)="closeDrowpdown()" *ngIf="edit_orders == 'true' || user_rights == '1'" routerLink="Edit_Orders"
               [ngClass]="classStatus.editOrders ? classStrings.dashboardAcc : classStrings.dashboardInac">Order
               Editor</a>
-            <a *ngIf="import_orders == 'true' || user_rights == '1'" routerLink="Import_Orders"
+            <a (click)="closeDrowpdown()" *ngIf="import_orders == 'true' || user_rights == '1'"
+              routerLink="Import_Orders"
               [ngClass]="classStatus.importOrders? classStrings.dashboardAcc : classStrings.dashboardInac">Import
               Orders</a>
-            <div class=" relative inline-block text-left">
+            <!-- <span *ngIf="user_rights != '1'"> -->
+            <ng-template #user>
+              <a *ngIf="status_page == 'true'" routerLink="Status_Page"
+                [ngClass]="classStatus.statusPage ? classStrings.dashboardAcc : classStrings.dashboardInac">Status
+                Page</a>
+              <a *ngIf="planner == 'true'" routerLink="Planner"
+                [ngClass]="classStatus.planner ? classStrings.dashboardAcc : classStrings.dashboardInac">Planner</a>
+              <a *ngIf="lineup == 'true'" routerLink="Line_Up"
+                [ngClass]="classStatus.lineup ? classStrings.dashboardAcc : classStrings.dashboardInac">Line Up</a>
+              <a *ngIf="converting == 'true'" routerLink="Converting"
+                [ngClass]="classStatus.converting ? classStrings.dashboardAcc : classStrings.dashboardInac">Converting</a>
+              <a *ngIf="fg == 'true'" routerLink="Finished_Goods"
+                [ngClass]="classStatus.fg ? classStrings.dashboardAcc : classStrings.dashboardInac">FG</a>
+              <a *ngIf="delivery == 'true'" routerLink="Delivery"
+                [ngClass]="classStatus.delivery ? classStrings.dashboardAcc : classStrings.dashboardInac">Delivery</a>
+              <a *ngIf="packing == 'true'" routerLink="Packing"
+                [ngClass]="classStatus.packing ? classStrings.dashboardAcc : classStrings.dashboardInac">Packing</a>
+              <a *ngIf="returns == 'true'" routerLink="Return"
+                [ngClass]="classStatus.returns ? classStrings.dashboardAcc : classStrings.dashboardInac">Returns</a>
+              <a (click)="logout()"
+                class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Log
+                Out</a>
+            </ng-template>
+
+            <!-- </span> -->
+            <div *ngIf="user_rights == '1'; else user" class=" relative inline-block text-left">
               <div>
                 <button (click)="showDropdown()" type="button"
                   class=" inline-flex justify-center w-full rounded-md border-solid border-secondary-800 shadow-sm px-4 py-2 bg-secondary-200 text-sm font-medium text-secondary-800 hover:bg-primary-800 hover:text-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary-500 focus:ring-primary-800 focus:text-secondary-800"
@@ -65,24 +91,26 @@
                 class=" hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md bg-secondary-50 ring-1 ring-secondary-800 ring-opacity-5 focus:outline-none z-50"
                 role="menu" aria-orientation="vertical" aria-labelledby="dropdown" tabindex="-1">
                 <div class=" p-1 text-secondary-800" role="none">
-                  <a *ngIf="status_page == 'true' || user_rights == '1'" routerLink="Status_Page"
+                  <a (click)="closeDrowpdown()" *ngIf="status_page == 'true' || user_rights == '1'"
+                    routerLink="Status_Page"
                     [ngClass]="classStatus.statusPage ? classStrings.dashboardAcc : classStrings.dashboardInac">Status
                     Page</a>
-                  <a *ngIf="planner == 'true' || user_rights == '1'" routerLink="Planner"
+                  <a (click)="closeDrowpdown()" *ngIf="planner == 'true' || user_rights == '1'" routerLink="Planner"
                     [ngClass]="classStatus.planner ? classStrings.dashboardAcc : classStrings.dashboardInac">Planner</a>
-                  <a *ngIf="lineup == 'true' || user_rights == '1'" routerLink="Line_Up"
+                  <a (click)="closeDrowpdown()" *ngIf="lineup == 'true' || user_rights == '1'" routerLink="Line_Up"
                     [ngClass]="classStatus.lineup ? classStrings.dashboardAcc : classStrings.dashboardInac">Line Up</a>
-                  <a *ngIf="converting == 'true' || user_rights == '1'" routerLink="Converting"
+                  <a (click)="closeDrowpdown()" *ngIf="converting == 'true' || user_rights == '1'"
+                    routerLink="Converting"
                     [ngClass]="classStatus.converting ? classStrings.dashboardAcc : classStrings.dashboardInac">Converting</a>
-                  <a *ngIf="fg == 'true' || user_rights == '1'" routerLink="Finished_Goods"
+                  <a (click)="closeDrowpdown()" *ngIf="fg == 'true' || user_rights == '1'" routerLink="Finished_Goods"
                     [ngClass]="classStatus.fg ? classStrings.dashboardAcc : classStrings.dashboardInac">FG</a>
-                  <a *ngIf="delivery == 'true' || user_rights == '1'" routerLink="Delivery"
+                  <a (click)="closeDrowpdown()" *ngIf="delivery == 'true' || user_rights == '1'" routerLink="Delivery"
                     [ngClass]="classStatus.delivery ? classStrings.dashboardAcc : classStrings.dashboardInac">Delivery</a>
-                  <a *ngIf="packing == 'true' || user_rights == '1'" routerLink="Packing"
+                  <a (click)="closeDrowpdown()" *ngIf="packing == 'true' || user_rights == '1'" routerLink="Packing"
                     [ngClass]="classStatus.packing ? classStrings.dashboardAcc : classStrings.dashboardInac">Packing</a>
-                  <a *ngIf="returns == 'true' || user_rights == '1'"
-                    class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Returns</a>
-                  <a (click)="logout()"
+                  <a (click)="closeDrowpdown()" *ngIf="returns == 'true' || user_rights == '1'" routerLink="Return"
+                    [ngClass]="classStatus.returns ? classStrings.dashboardAcc : classStrings.dashboardInac">Returns</a>
+                  <a (click)="closeDrowpdown()" (click)="logout()"
                     class="text-secondary-700 block hover:bg-primary-700 hover:text-secondary-100 cursor-pointer transition-all px-3 py-2 rounded-md text-sm font-semibold">Log
                     Out</a>
                 </div>
@@ -153,8 +181,8 @@
         [ngClass]="classStatus.delivery ? classStrings.mobileAcc : classStrings.mobileInac">Delivery</a>
       <a routerLink="Packing" *ngIf="packing == 'true' || user_rights == '1'"
         [ngClass]="classStatus.packing ? classStrings.mobileAcc : classStrings.mobileInac">Packing</a>
-      <a *ngIf="returns == 'true' || user_rights == '1'"
-        class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Returns</a>
+      <a routerLink="Return" *ngIf="returns == 'true' || user_rights == '1'"
+        [ngClass]="classStatus.returns ? classStrings.mobileAcc : classStrings.mobileInac">Returns</a>
       <a (click)="logout()"
         class="text-gray-300 hover:bg-gray-700 transition-all hover:text-primary-700 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">Logout</a>
     </div>

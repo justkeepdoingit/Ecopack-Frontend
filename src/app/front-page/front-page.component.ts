@@ -48,8 +48,38 @@ export class FrontPageComponent implements OnInit {
         this.appservice.router.navigate(['Ecopack/Dashboard'])
       }
       else if (this.appservice.cookieService.get('user_rights') != '1') {
-        if (this.appservice.cookieService.get('useracc') != 'true') {
-          this.appservice.router.navigate(['Ecopack'])
+        // if (this.appservice.cookieService.get('useracc') != 'true') {
+        //   this.appservice.router.navigate(['Ecopack'])
+        // }
+        if (this.edit_orders == 'true') {
+          this.appservice.router.navigate(['Ecopack/Edit_Orders'])
+        }
+        else if (this.import_orders == 'true') {
+          this.appservice.router.navigate(['Ecopack/Import_Orders'])
+        }
+        else if (this.status_page == 'true') {
+          this.appservice.router.navigate(['Ecopack/Status_Page'])
+        }
+        else if (this.planner == 'true') {
+          this.appservice.router.navigate(['Ecopack/Planner'])
+        }
+        else if (this.lineup == 'true') {
+          this.appservice.router.navigate(['Ecopack/Line_Up'])
+        }
+        else if (this.converting == 'true') {
+          this.appservice.router.navigate(['Ecopack/Converting'])
+        }
+        else if (this.fg == 'true') {
+          this.appservice.router.navigate(['Ecopack/Finished_Goods'])
+        }
+        else if (this.delivery == 'true') {
+          this.appservice.router.navigate(['Ecopack/Delivery'])
+        }
+        else if (this.packing == 'true') {
+          this.appservice.router.navigate(['Ecopack/Packing'])
+        }
+        else if (this.returns == 'true') {
+          this.appservice.router.navigate(['Ecopack/Return'])
         }
       }
     }
@@ -88,7 +118,8 @@ export class FrontPageComponent implements OnInit {
     converting: false,
     fg: false,
     delivery: false,
-    packing: false
+    packing: false,
+    returns: false
   }
 
   menuCheck: boolean = false;
@@ -114,6 +145,11 @@ export class FrontPageComponent implements OnInit {
       dropdown!.style.display = 'none'
       this.dropdownCheck = false
     }
+  }
+  closeDrowpdown() {
+    const dropdown = document.getElementById('showDropdown')
+    dropdown!.style.display = 'none'
+    this.dropdownCheck = false
   }
 
 
@@ -144,7 +180,8 @@ export class FrontPageComponent implements OnInit {
     this.appservice.cookieService.delete('status_page', '/Ecopack')
     this.appservice.cookieService.delete('useracc', '/Ecopack')
     this.appservice.cookieService.delete('import_orders', '/Ecopack')
-    this.appservice.router.navigate([''])
-    this.appservice.http.get('https://ecopack2.herokuapp.com/user-account/logout', { withCredentials: true }).subscribe()
+    this.appservice.http.get('https://ecopack2.herokuapp.com/user-account/logout', { withCredentials: true }).subscribe(() => {
+      this.appservice.router.navigate([''])
+    })
   }
 }

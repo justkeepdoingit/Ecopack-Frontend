@@ -1,0 +1,62 @@
+<mat-dialog-content>
+
+    <h4 mat-dialog-title>HISTORY</h4>
+    <table id="table1" *ngFor="let i of orderListInfo">
+        <tr *ngIf="i.lineuptime">
+            <td>Lined Up</td>
+            <td>{{i.lineuptime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.converttime">
+            <td>Converting</td>
+            <td>{{i.converttime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.creasingtime">
+            <td>Creasing</td>
+            <td>{{i.creasingtime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.finishrtime">
+            <td>Finish</td>
+            <td>{{i.finishrtime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.dcrtime">
+            <td>DCR</td>
+            <td>{{i.dcrtime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.printingtime">
+            <td>Printing</td>
+            <td>{{i.printingtime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.fgtime">
+            <td>Finished Goods</td>
+            <td>{{i.fgtime | dateTime}}</td>
+        </tr>
+        <tr *ngIf="i.deliverytime">
+            <td>Delivery</td>
+            <td>{{i.deliverytime | dateTime}}</td>
+        </tr>
+    </table>
+    <br>
+    <div *ngIf="sw != 1">
+        {{orderListInfo[0].shipstatus}}<br>
+        [Total Qty Delievered: <span class=" text-primary-800 font-bold">{{totalQty}}</span>]
+        <br><br>
+        <table id="table2">
+            <tr>
+                <th>Delivery Date</th>
+                <th>Qty</th>
+                <th>DR#</th>
+                <th>Qty Ret</th>
+                <th>Return Reason</th>
+            </tr>
+            <tr *ngFor="let delivery of deliveryInfo">
+                <td>{{delivery.deliverydate | date}}</td>
+                <td>{{delivery.qtyship}}</td>
+                <td>{{delivery.receipt}}</td>
+                <td>{{delivery.qtyreturn}}</td>
+                <td>{{delivery.reason}}</td>
+            </tr>
+        </table>
+        <br>
+        [Total Qty Returned: <span class=" text-primary-800 font-bold">{{returnQty}}</span>]
+    </div>
+</mat-dialog-content>

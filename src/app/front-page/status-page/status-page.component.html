@@ -1,1 +1,133 @@
-<p>status-page works!</p>
+<div [ngClass]="dashboardAdmins.nonAdmin">
+    <div [ngClass]="dashboardAdmins.useraccNA">
+        <!-- <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg" alt="" /> -->
+        <div class="p-6 flex flex-col justify-start w-full">
+            <h2 class="text-secondary-700 text-xl font-medium mb-2">Order Status</h2>
+            <div *ngIf="columnSearching" [ngClass]="filterClass">
+                <div *ngFor="let filterData of forFilters; let i = index"
+                    class="flex flex-col md:flex-row md:max-w-full">
+                    <div class=" flex flex-col justify-start w-full">
+                        <mat-form-field *ngIf="columnSearching" style="width: 100%;" appearance="standard">
+                            <mat-label>Filter By {{filterData | filterName}}</mat-label>
+                            <input matInput (keyup)="applyFilter($event, i)" placeholder="Search" #input>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <mat-form-field *ngIf="!columnSearching" style="width: 100%;" appearance="standard">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event, 100)" placeholder="Search" #input>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Select Filter By Column</mat-label>
+                <mat-select #matSelect [formControl]="filters" (selectionChange)="checkChange($event.value)" multiple>
+                    <mat-select-trigger>
+                        {{filters.value?.[0] | filterName}}
+                        <span *ngIf="(filters.value?.length || 0) > 1" class="example-additional-selection">
+                            (+{{(filters.value?.length || 0) - 1}} {{filters.value?.length === 2 ? 'other' : 'others'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let filter of filter" [disabled]="isOptionDisabled(filter.value)"
+                        [value]="filter.value">
+                        {{filter.viewValue}}</mat-option>
+                </mat-select>
+                <button (click)="clearFilter()" *ngIf="columnSearching" matSuffix mat-icon-button aria-label="Clear">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class=" overflow-y-auto relative">
+                <div id="tables" class=" relative overflow-auto">
+                    <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
+                        [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort
+                        [dataSource]="!columnSearching ? newDataSource : filteredSource">
+
+                        <ng-container matColumnDef="date">
+                            <mat-header-cell class="dates text-primary-900" mat-sort-header *matHeaderCellDef> Date
+                            </mat-header-cell>
+                            <mat-cell class="dates text-primary-900" *matCellDef="let element">
+                                {{element.date}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="po">
+                            <mat-header-cell class="po text-secondary-900" mat-sort-header *matHeaderCellDef> PO#
+                            </mat-header-cell>
+                            <mat-cell class="po text-secondary-900" *matCellDef="let element">
+                                {{element.po}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="name">
+                            <mat-header-cell class="names text-primary-900" mat-sort-header *matHeaderCellDef> Name
+                            </mat-header-cell>
+                            <mat-cell class="names text-primary-900" *matCellDef="let element">
+                                {{element.name}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="item">
+                            <mat-header-cell class="items text-secondary-900" mat-sort-header *matHeaderCellDef> Item
+                            </mat-header-cell>
+                            <mat-cell class="items text-secondary-900" *matCellDef="let element">
+                                {{element.item}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="itemdesc">
+                            <mat-header-cell class="itemdesc text-primary-900" mat-sort-header *matHeaderCellDef> Item
+                                Desc
+                            </mat-header-cell>
+                            <mat-cell class="itemdesc text-primary-900" *matCellDef="let element">
+                                {{element.itemdesc}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="qty">
+                            <mat-header-cell class="text-secondary-900" mat-sort-header *matHeaderCellDef> Order Qty
+                            </mat-header-cell>
+                            <mat-cell class="text-secondary-900" *matCellDef="let element">
+                                {{element.qty}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="prodqty">
+                            <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef> Prod Qty
+                            </mat-header-cell>
+                            <mat-cell class="text-primary-900" *matCellDef="let element">
+                                {{element.prodqty}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="orderstatus">
+                            <mat-header-cell class="text-secondary-900" mat-sort-header *matHeaderCellDef>Status
+                            </mat-header-cell>
+                            <mat-cell (click)="checkStatus(element)" class="text-secondary-900"
+                                *matCellDef="let element">
+                                {{element.orderstatus}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lastedited">
+                            <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef>Last Updated
+                            </mat-header-cell>
+                            <mat-cell class="text-primary-900" *matCellDef="let element">
+                                {{element.lastedited | dateTime}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="deliverydate">
+                            <mat-header-cell class="text-secondary-900" mat-sort-header *matHeaderCellDef>Date Needed
+                            </mat-header-cell>
+                            <mat-cell class="text-secondary-900" *matCellDef="let element">
+                                {{element.deliverydate}} </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                    <mat-progress-bar *ngIf="querying" mode="query"></mat-progress-bar>
+                </div>
+            </div>
+
+            <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

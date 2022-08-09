@@ -1,0 +1,101 @@
+<div class="flex justify-center">
+    <div class="block p-6 rounded-lg shadow-lg bg-white w-full md:mx-24 my-8">
+        <h2 class="text-gray-900 text-xl leading-tight font-bold mb-2 ">Return Page</h2>
+        <form>
+            <mat-form-field style="width: 100%;" appearance="standard">
+                <mat-label>Search DR #</mat-label>
+                <input matInput placeholder="Search" [(ngModel)]="dr" [ngModelOptions]="{standalone:true}" #input>
+                <button (click)="searchDR()" matSuffix>
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+
+        <div class=" overflow-y-auto relative">
+            <form [formGroup]="returnForm">
+                <div id="tables" class=" relative overflow-auto">
+                    <button *ngIf="returning" [disabled]="returnForm.invalid" mat-stroked-button color="primary"
+                        (click)="saveReturn(returnForm.value)">Return</button>
+                    <mat-table formArrayName="returnArrays" matRipple [matRippleUnbounded]="unbounded"
+                        [matRippleCentered]="centered" [matRippleRadius]="radius"
+                        class=" text-secondary-700 font-medium cursor-pointer" #table matSort
+                        [dataSource]="newDataSource">
+
+                        <ng-container matColumnDef="name">
+                            <mat-header-cell class="names text-secondary-900" *matHeaderCellDef> Name
+                            </mat-header-cell>
+                            <mat-cell class="names text-secondary-900" *matCellDef="let element">
+                                {{element.name}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="item">
+                            <mat-header-cell class="items text-primary-900" *matHeaderCellDef> Item
+                            </mat-header-cell>
+                            <mat-cell class="items text-primary-900" *matCellDef="let element">
+                                {{element.item}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="qtyship">
+                            <mat-header-cell class="text-primary-900" *matHeaderCellDef> Order Qty </mat-header-cell>
+                            <mat-cell class="text-primary-900" *matCellDef="let element"> {{element.qtyship}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="qtyreturn">
+                            <mat-header-cell class=" text-secondary-900" *matHeaderCellDef>Qty Return</mat-header-cell>
+                            <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                                <mat-form-field class=" text-center" appearance="outline">
+                                    <mat-label>Entery Qty</mat-label>
+                                    <input formControlName="qtyreturn" matInput placeholder="Return Qty" #pending>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="reason">
+                            <mat-header-cell class=" text-secondary-900" *matHeaderCellDef>Reason</mat-header-cell>
+                            <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                                <mat-form-field class=" text-center" appearance="outline">
+                                    <mat-label>Enter Reason</mat-label>
+                                    <input formControlName="reason" matInput placeholder="Enter Reason" #pending>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell class=" text-secondary-900" *matHeaderCellDef>Action</mat-header-cell>
+                            <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Action</mat-label>
+                                    <mat-select formControlName="action">
+                                        <mat-option *ngFor="let option of options" [value]="option.value">
+                                            {{option.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="returndate">
+                            <mat-header-cell class=" text-secondary-900" *matHeaderCellDef>Date Returned
+                            </mat-header-cell>
+                            <mat-cell [formGroupName]="i" *matCellDef="let element; let i = index">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Return Date</mat-label>
+                                    <input formControlName="returndate" matInput [matDatepicker]="picker">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

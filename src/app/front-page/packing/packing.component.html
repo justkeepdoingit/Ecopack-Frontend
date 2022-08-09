@@ -101,6 +101,12 @@
                         <button mat-flat-button color="primary" (click)=" dr ? dr=false : dr=true" *ngIf="!multi && dr">
                             Print List</button>
                     </div>
+                    <div class="flex flex-col justify-start w-full">
+                        <button mat-flat-button color="primary" (click)="showPrinted()" *ngIf="!multi && !printed">
+                            Show Printed DR</button>
+                        <button mat-flat-button color="primary" (click)="showPrinted()" *ngIf="!multi && printed">
+                            Show Unprinted DR</button>
+                    </div>
                 </div>
             </div>
         </div>
