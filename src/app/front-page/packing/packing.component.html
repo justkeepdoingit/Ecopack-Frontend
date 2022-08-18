@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-            <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+            <mat-paginator [pageSize]="25" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
             </mat-paginator>
             <button mat-stroked-button color="warn" (click)="!multi ? multi = true : multi = false"
                 *ngIf="multi">Cancel</button>

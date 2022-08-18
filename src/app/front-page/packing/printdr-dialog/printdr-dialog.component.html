@@ -112,16 +112,9 @@
                     </ng-container>
 
                     <ng-container matColumnDef="item">
-                        <mat-header-cell class=" text-primary-900" mat-sort-header *matHeaderCellDef> Item ID
+                        <mat-header-cell class=" items text-primary-900" mat-sort-header *matHeaderCellDef> Item ID
                         </mat-header-cell>
-                        <mat-cell class=" text-primary-900" *matCellDef="let element"> {{element.item}}
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="itemdesc">
-                        <mat-header-cell class=" text-secondary-900" mat-sort-header *matHeaderCellDef> Item Desc
-                        </mat-header-cell>
-                        <mat-cell class=" text-secondary-900" *matCellDef="let element"> {{element.itemdesc}}
+                        <mat-cell class=" items text-primary-900" *matCellDef="let element"> {{element.item}}
                         </mat-cell>
                     </ng-container>
 

@@ -42,7 +42,7 @@ export class PlannerComponent implements OnInit {
     { value: 'deliverydate', viewValue: 'Date Needed' }
   ];
 
-  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'deliverydate', 'comment'];
+  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'qty', 'deliverydate', 'comment'];
   newDataSource = new MatTableDataSource<orderList>();
   filteredSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);

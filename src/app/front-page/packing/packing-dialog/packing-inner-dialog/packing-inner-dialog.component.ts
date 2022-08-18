@@ -29,7 +29,7 @@ export class PackingInnerDialogComponent implements OnInit {
 
   packingInfo: pickingModel[] = [];
 
-  displayedColumns: string[] = ['date', 'po', 'name', 'item', 'itemdesc', 'qty', 'pendingqty', 'volume', 'volumet'];
+  displayedColumns: string[] = ['date', 'po', 'name', 'item', 'qty', 'pendingqty', 'volume', 'volumet'];
 
   centered: boolean = false;
   radius: number = 25
@@ -94,15 +94,7 @@ export class PackingInnerDialogComponent implements OnInit {
     let a = this.packingGroup.controls['capacity'].value;
     let c = (volumes / a) * 100;
 
-    if (c < 60) {
-      this.styles = 'red'
-    }
-    else if (c > 61 && c < 80) {
-      this.styles = 'yellow'
-    }
-    else {
-      this.styles = 'green'
-    }
+    this.changeColor(c)
     this.packingGroup.patchValue({
       total: volumes.toLocaleString(),
       percent: c.toLocaleString()
@@ -112,6 +104,18 @@ export class PackingInnerDialogComponent implements OnInit {
   ngAfterViewInit(): void {
     this.newDataSource.paginator = this.paginator
     this.newDataSource.sort = this.matsort
+  }
+
+  changeColor(c: number) {
+    if (c < 60) {
+      this.styles = 'red'
+    }
+    else if (c > 61 && c < 80) {
+      this.styles = 'yellow'
+    }
+    else {
+      this.styles = 'green'
+    }
   }
 
 
@@ -165,8 +169,16 @@ export class PackingInnerDialogComponent implements OnInit {
       return data.id == datas;
     })
 
+    let a = trucks[0].capacity;
+    let b = this.packingGroup.controls['total'].value;
+    let c = (b / a) * 100;
+
+    this.changeColor(c);
+
+
     this.packingGroup.patchValue({
-      capacity: trucks[0].capacity
+      capacity: trucks[0].capacity,
+      percent: c.toLocaleString()
     })
   }
 }

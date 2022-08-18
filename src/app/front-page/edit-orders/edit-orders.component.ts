@@ -49,7 +49,7 @@ export class EditOrdersComponent implements OnInit {
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   ngOnInit(): void {
-    this.appservice.getAllOrders().subscribe(data => {
+    this.appservice.getAllOrders(1).subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort

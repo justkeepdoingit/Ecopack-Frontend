@@ -29,7 +29,7 @@ export class ConvertingComponent implements OnInit {
     frontpage.classStatus.returns = false
   }
 
-  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'shipqty', 'deliverydate', 'status', 'comment'];
+  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'qty', 'shipqty', 'deliverydate', 'status', 'comment'];
   newDataSource = new MatTableDataSource<orderList>();
   filteredSource = new MatTableDataSource<orderList>();
   expandedElement: orderList[] = [];

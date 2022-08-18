@@ -27,8 +27,8 @@ export class AppService {
 
   userInfos!: userModel;
 
-  getAllOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list')
+  getAllOrders(sw: number): Observable<orderList[]> {
+    return this.http.get<orderList[]>(`https://ecopack2.herokuapp.com/order-list/${sw}`)
   }
 
   getPlannerOrders(): Observable<orderList[]> {
@@ -243,6 +243,7 @@ export class AppService {
           this.cookieService.set('status_page', data.status_page.toString())
           this.cookieService.set('useracc', data.useracc.toString())
           this.cookieService.set('import_orders', data.import_orders.toString())
+          this.cookieService.set('packing', data.packing.toString())
           if (data.user_rights == 1 || data.useracc) {
             this.router.navigate(['/Ecopack/Dashboard']);
             this.snackbar.open(`Welcome ${data.username}!`, 'Dimiss', { duration: 3000 })

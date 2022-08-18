@@ -44,7 +44,7 @@ export class DeliveryComponent implements OnInit {
     { value: 'deliveryqty', viewValue: 'Delivery Qty' }
   ];
 
-  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'deliverydate', 'prodqty', 'shipstatus', 'deliveryqty'];
+  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'qty', 'deliverydate', 'prodqty', 'shipstatus', 'deliveryqty'];
   newDataSource = new MatTableDataSource<shippingList>();
   filteredSource = new MatTableDataSource<shippingList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);

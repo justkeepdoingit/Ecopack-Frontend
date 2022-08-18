@@ -170,6 +170,8 @@ export class PackingComponent implements OnInit {
       dialog.afterClosed().subscribe(data => {
         if (data) {
           this.appservice.snackbar.open('Order Updated!', 'Dismiss', { duration: 2500 })
+          this.clearTask()
+          this.clearTask()
         }
       })
     })

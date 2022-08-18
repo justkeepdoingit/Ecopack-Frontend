@@ -13,5 +13,12 @@
 }
 
 .po {
-    max-width: 80px;
+    max-width: 100px;
+    min-width: 100px;
+}
+
+
+.items {
+    min-width: 300px;
+    max-width: 300px;
 }

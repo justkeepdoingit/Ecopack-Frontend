@@ -29,7 +29,7 @@ export class LineupComponent implements OnInit {
   }
 
 
-  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'itemdesc', 'qty', 'deliverydate', 'shipqty', 'comment'];
+  displayedColumns: string[] = ['cb', 'date', 'so', 'po', 'name', 'item', 'qty', 'deliverydate', 'shipqty', 'comment'];
   newDataSource = new MatTableDataSource<orderList>();
   filteredSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);

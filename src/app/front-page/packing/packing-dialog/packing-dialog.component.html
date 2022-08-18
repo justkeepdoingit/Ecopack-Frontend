@@ -106,15 +106,6 @@
                                     </mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="itemdesc">
-                                    <mat-header-cell class="itemdesc text-secondary-900" mat-sort-header
-                                        *matHeaderCellDef> Item Desc
-                                    </mat-header-cell>
-                                    <mat-cell class="itemdesc text-secondary-900" *matCellDef="let element">
-                                        {{element.itemdesc}}
-                                    </mat-cell>
-                                </ng-container>
-
                                 <ng-container matColumnDef="qty">
                                     <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef> Order
                                         Qty </mat-header-cell>
@@ -166,7 +157,7 @@
                             </mat-table>
                         </div>
                     </div>
-                    <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+                    <mat-paginator [pageSize]="25" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
                     </mat-paginator>
                     <button (click)="bypassList(2)" *ngIf="!bypass" mat-stroked-button color="primary">Show All
                         Orders</button>

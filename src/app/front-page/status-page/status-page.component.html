@@ -37,6 +37,10 @@
             </mat-form-field>
             <div class=" overflow-y-auto relative">
                 <div id="tables" class=" relative overflow-auto">
+                    <button *ngIf="!pending" mat-stroked-button color="primary" (click)="showPendingDelivery()">Show
+                        Delivered</button>
+                    <button *ngIf="pending" mat-stroked-button color="primary" (click)="showPendingDelivery()">Show
+                        Pending Delivery</button>
                     <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
                         [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort
                         [dataSource]="!columnSearching ? newDataSource : filteredSource">
@@ -72,15 +76,6 @@
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="itemdesc">
-                            <mat-header-cell class="itemdesc text-primary-900" mat-sort-header *matHeaderCellDef> Item
-                                Desc
-                            </mat-header-cell>
-                            <mat-cell class="itemdesc text-primary-900" *matCellDef="let element">
-                                {{element.itemdesc}}
-                            </mat-cell>
-                        </ng-container>
-
                         <ng-container matColumnDef="qty">
                             <mat-header-cell class="text-secondary-900" mat-sort-header *matHeaderCellDef> Order Qty
                             </mat-header-cell>
@@ -102,7 +97,9 @@
                             </mat-header-cell>
                             <mat-cell (click)="checkStatus(element)" class="text-secondary-900"
                                 *matCellDef="let element">
-                                {{element.orderstatus}} </mat-cell>
+                                <span *ngIf="element.orderstatus != 'Delivery'">{{element.orderstatus}}</span>
+                                <span *ngIf="element.orderstatus == 'Delivery'">{{element.shipstatus}}</span>
+                            </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="lastedited">
@@ -126,7 +123,7 @@
                 </div>
             </div>
 
-            <mat-paginator [pageSize]="5" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
+            <mat-paginator [pageSize]="25" [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page">
             </mat-paginator>
         </div>
     </div>

@@ -91,6 +91,10 @@ export class PackingDialogComponent implements OnInit {
       volume: this.editValue
     }
 
+    this.temporaryData.length = 0;
+    this.task.subtasks!.forEach(t => { t.completed = false })
+    this.allComplete = false
+
     this.appservice.updateVolume(updateData).subscribe(() => {
       this.appservice.getPicking(1).subscribe(data => {
         this.newDataSource.data = data;
@@ -135,7 +139,7 @@ export class PackingDialogComponent implements OnInit {
     { value: 'pendingqty', viewValue: 'Pending Qty' },
   ];
 
-  displayedColumns: string[] = ['cb', 'date', 'po', 'name', 'item', 'itemdesc', 'qty', 'pendingqty', 'volume', 'volumet'];
+  displayedColumns: string[] = ['cb', 'date', 'po', 'name', 'item', 'qty', 'pendingqty', 'volume', 'volumet'];
   newDataSource = new MatTableDataSource<pickingModel>();
   filteredSource = new MatTableDataSource<pickingModel>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);

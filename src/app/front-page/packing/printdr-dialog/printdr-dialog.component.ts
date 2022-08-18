@@ -29,7 +29,7 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
 
   orderListInfo: any[] = [];
 
-  displayedColumns: string[] = ['receipt', 'so', 'po', 'name', 'item', 'itemdesc', 'qtyship', 'shipstatus'];
+  displayedColumns: string[] = ['receipt', 'so', 'po', 'name', 'item', 'qtyship', 'shipstatus'];
 
 
   centered: boolean = false;
@@ -90,20 +90,11 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
       })
     })
     let link = `https://ecopack2.herokuapp.com/order-list/updateShippingPl`;
-    // if (this.fc && newData.length > 1) {
-    //   for (let i = 0; i < 2; i++) {
-    //     this.appservice.getGeneralData(link, newData).subscribe((datas) => {
-    //       this.orderListInfo = datas;
-    //     })
-    //   }
-    //   this.fc = false;
-    // }
-    // else {
     this.appservice.getGeneralData(link, newData).subscribe((datas) => {
       this.orderListInfo = datas;
+      console.log(datas);
     })
     this.noDr = false;
-    // }
 
     this.appservice.snackbar.open('List Updated!', 'Dismiss', { duration: 2500 })
   }

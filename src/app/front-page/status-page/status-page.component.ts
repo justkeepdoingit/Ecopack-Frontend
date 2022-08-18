@@ -44,14 +44,14 @@ export class StatusPageComponent implements OnInit {
     { value: 'deliverydate', viewValue: 'Date Needed' }
   ];
 
-  displayedColumns: string[] = ['date', 'po', 'name', 'item', 'itemdesc', 'qty', 'prodqty', 'orderstatus', 'lastedited', 'deliverydate'];
+  displayedColumns: string[] = ['date', 'po', 'name', 'item', 'qty', 'prodqty', 'orderstatus', 'lastedited', 'deliverydate'];
   newDataSource = new MatTableDataSource<orderList>();
   filteredSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) matsort: MatSort = new MatSort()
 
   ngOnInit(): void {
-    this.appservice.getAllOrders().subscribe(data => {
+    this.appservice.getAllOrders(2).subscribe(data => {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
@@ -71,12 +71,26 @@ export class StatusPageComponent implements OnInit {
   unbounded: boolean = false;
 
   querying: boolean = false;
+  pending: boolean = false;
   //Checkbox logics
 
   filteredItems: string = ''
 
   columnSearching: boolean = false;
   forFilterValue: any[] = []
+
+
+  showPendingDelivery() {
+    this.pending == false ?
+      this.appservice.getAllOrders(3).subscribe(data => {
+        this.newDataSource.data = data;
+        this.newDataSource.paginator = this.paginator
+        this.newDataSource.sort = this.matsort
+        this.columnSearching = false;
+        this.pending = true
+      }) :
+      this.ngOnInit(); this.pending = false;
+  }
 
   setDatasource() {
     this.filteredSource.data = this.newDataSource.data

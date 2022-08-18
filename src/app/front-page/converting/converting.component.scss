@@ -12,8 +12,14 @@ mat-table {
     }
 
     .po {
-        max-width: 50px;
-        min-width: 50px;
+        max-width: 100px;
+        min-width: 100px;
+    }
+
+
+    .items {
+        min-width: 250px;
+        max-width: 250px;
     }
 
     .so {
