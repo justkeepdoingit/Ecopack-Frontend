@@ -28,155 +28,155 @@ export class AppService {
   userInfos!: userModel;
 
   getAllOrders(sw: number): Observable<orderList[]> {
-    return this.http.get<orderList[]>(`https://ecopack2.herokuapp.com/order-list/${sw}`)
+    return this.http.get<orderList[]>(`api/order-list/${sw}`)
   }
 
   getPlannerOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/planners')
+    return this.http.get<orderList[]>('api/order-list/planners')
   }
 
   saveTruck(data: truckModel): Observable<truckModel> {
-    return this.http.post<truckModel>('https://ecopack2.herokuapp.com/packing-list/saveTruck', data)
+    return this.http.post<truckModel>('api/packing-list/saveTruck', data)
   }
 
   savePld(data: any): Observable<any> {
-    return this.http.post<any>('https://ecopack2.herokuapp.com/packing-list/savePld', data)
+    return this.http.post<any>('api/packing-list/savePld', data)
   }
 
   deletePld(data: any): Observable<any> {
-    return this.http.delete<any>(`https://ecopack2.herokuapp.com/packing-list/deletePld/${data}`)
+    return this.http.delete<any>(`api/packing-list/deletePld/${data}`)
   }
 
   getTrucks(): Observable<truckModel[]> {
-    return this.http.get<truckModel[]>('https://ecopack2.herokuapp.com/packing-list/')
+    return this.http.get<truckModel[]>('api/packing-list/')
   }
 
   getTruckInfo(data: packingModel): Observable<any> {
-    return this.http.get<any>(`https://ecopack2.herokuapp.com/packing-list/findTruckInfo/${data.id}`)
+    return this.http.get<any>(`api/packing-list/findTruckInfo/${data.id}`)
   }
 
   getTruckInfo2(data: any): Observable<any> {
-    return this.http.get<any>(`https://ecopack2.herokuapp.com/packing-list/findTruckInfo/${data}`)
+    return this.http.get<any>(`api/packing-list/findTruckInfo/${data}`)
   }
 
   get1Truck(data: any): Observable<truckModel> {
-    return this.http.get<truckModel>(`https://ecopack2.herokuapp.com/packing-list/findTruck/${data}`)
+    return this.http.get<truckModel>(`api/packing-list/findTruck/${data}`)
   }
 
   getVolume(): Observable<itemModel[]> {
-    return this.http.get<itemModel[]>('https://ecopack2.herokuapp.com/order-list/getVolume')
+    return this.http.get<itemModel[]>('api/order-list/getVolume')
   }
 
   getLineupOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/lineupOrders')
+    return this.http.get<orderList[]>('api/order-list/lineupOrders')
   }
 
   getConverting(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/convertOrders')
+    return this.http.get<orderList[]>('api/order-list/convertOrders')
   }
 
   getFgOrders(): Observable<orderList[]> {
-    return this.http.get<orderList[]>('https://ecopack2.herokuapp.com/order-list/fgOrders')
+    return this.http.get<orderList[]>('api/order-list/fgOrders')
   }
 
   getDeliveryOrders(): Observable<shippingList[]> {
-    return this.http.get<shippingList[]>('https://ecopack2.herokuapp.com/order-list/deliveryOrders')
+    return this.http.get<shippingList[]>('api/order-list/deliveryOrders')
   }
 
   getPacking(sw: number): Observable<packingModel[]> {
-    return this.http.get<packingModel[]>(`https://ecopack2.herokuapp.com/packing-list/${sw}`)
+    return this.http.get<packingModel[]>(`api/packing-list/${sw}`)
   }
 
   getAllUsers(): Observable<userModel[]> {
-    return this.http.get<userModel[]>('https://ecopack2.herokuapp.com/user-account/getAllUsers')
+    return this.http.get<userModel[]>('api/user-account/getAllUsers')
   }
 
   getRejects(orderid: any): Observable<rejectList> {
-    return this.http.get<rejectList>(`https://ecopack2.herokuapp.com/order-list/getReject/${orderid}`)
+    return this.http.get<rejectList>(`api/order-list/getReject/${orderid}`)
   }
 
   deletePacking(data: packingModel): Observable<any> {
-    return this.http.delete<any>(`https://ecopack2.herokuapp.com/packing-list/deletePacking/${data.id}`)
+    return this.http.delete<any>(`api/packing-list/deletePacking/${data.id}`)
   }
 
   getInfo(id: number): Observable<userModel> {
-    return this.http.get<userModel>(`https://ecopack2.herokuapp.com/user-account/findUser/${id}`, { withCredentials: true })
+    return this.http.get<userModel>(`api/user-account/findUser/${id}`, { withCredentials: true })
   }
 
   getShipping(id: number | undefined): Observable<deliveryModel[]> {
-    return this.http.get<deliveryModel[]>(`https://ecopack2.herokuapp.com/order-list/getShipping/${id}`)
+    return this.http.get<deliveryModel[]>(`api/order-list/getShipping/${id}`)
   }
 
   getShippingReturn(id: number | undefined): Observable<any> {
-    return this.http.get<deliveryModel[]>(`https://ecopack2.herokuapp.com/order-list/getShippingReturn/${id}`)
+    return this.http.get<deliveryModel[]>(`api/order-list/getShippingReturn/${id}`)
   }
 
   getShippingPl(id: number): Observable<any[]> {
-    return this.http.get<any[]>(`https://ecopack2.herokuapp.com/order-list/getShippingPl/${id}`)
+    return this.http.get<any[]>(`api/order-list/getShippingPl/${id}`)
   }
 
   updateReject(data: rejectList, id: any): Observable<rejectList> {
-    return this.http.post<rejectList>(`https://ecopack2.herokuapp.com/order-list/updateReject/${id}`, data);
+    return this.http.post<rejectList>(`api/order-list/updateReject/${id}`, data);
   }
 
   updatePrio(data: any): Observable<pickingModel2[]> {
-    return this.http.patch<pickingModel2[]>(`https://ecopack2.herokuapp.com/packing-list/updatePrio/`, data)
+    return this.http.patch<pickingModel2[]>(`api/packing-list/updatePrio/`, data)
   }
 
   updatePrinted(id: number): Observable<any> {
-    return this.http.patch<any>(`https://ecopack2.herokuapp.com/packing-list/printed/${id}`, {})
+    return this.http.patch<any>(`api/packing-list/printed/${id}`, {})
   }
 
   getOrderStatus(): Observable<any[]> {
-    return this.http.get<any[]>('https://ecopack2.herokuapp.com/order-list/getStatuses');
+    return this.http.get<any[]>('api/order-list/getStatuses');
   }
 
   getPicking(sw: number): Observable<pickingModel[]> {
-    return this.http.get<pickingModel[]>(`https://ecopack2.herokuapp.com/order-list/getPicking/${sw}`);
+    return this.http.get<pickingModel[]>(`api/order-list/getPicking/${sw}`);
   }
 
   savePacking(data: any, list: any[]): Observable<any> {
-    return this.http.post<any[]>('https://ecopack2.herokuapp.com/packing-list/savePacking', {
+    return this.http.post<any[]>('api/packing-list/savePacking', {
       data, list
     })
   }
 
   editPacking(data: any, list: any[]): Observable<any> {
-    return this.http.post<any[]>('https://ecopack2.herokuapp.com/packing-list/editPacking', {
+    return this.http.post<any[]>('api/packing-list/editPacking', {
       data, list
     })
   }
 
   updatePending(data: any): Observable<any> {
-    return this.http.post<any>('https://ecopack2.herokuapp.com/order-list/updatePending', data)
+    return this.http.post<any>('api/order-list/updatePending', data)
   }
 
   exportData(): Observable<any> {
-    return this.http.get('https://ecopack2.herokuapp.com/order-list/exportData')
+    return this.http.get('api/order-list/exportData')
   }
 
   findDr(data: string): Observable<any> {
-    return this.http.get<any>(`https://ecopack2.herokuapp.com/order-list/findDr/${data}`)
+    return this.http.get<any>(`api/order-list/findDr/${data}`)
   }
 
   saveReturn(element: any): Observable<any> {
-    return this.http.post<any>('https://ecopack2.herokuapp.com/order-list/saveReturn', element)
+    return this.http.post<any>('api/order-list/saveReturn', element)
   }
 
   deleteData(data: any): Observable<any> {
-    return this.http.post(`https://ecopack2.herokuapp.com/order-list/deleteData`, data);
+    return this.http.post(`api/order-list/deleteData`, data);
   }
 
   updateWhole(data: any): Observable<any> {
-    return this.http.post<any>('https://ecopack2.herokuapp.com/order-list/updateWhole', data);
+    return this.http.post<any>('api/order-list/updateWhole', data);
   }
 
   // updateVolume(data: itemModel): Observable<itemModel[]> {
-  //   return this.http.post<itemModel[]>(`https://ecopack2.herokuapp.com/order-list/updateVolume/${data.id}`, data);
+  //   return this.http.post<itemModel[]>(`api/order-list/updateVolume/${data.id}`, data);
   // }
 
   updateVolume(data: any): Observable<any[]> {
-    return this.http.post<any[]>(`https://ecopack2.herokuapp.com/order-list/updateVolume`, data);
+    return this.http.post<any[]>(`api/order-list/updateVolume`, data);
   }
 
   updateUsers(datas: userModel) {
@@ -190,7 +190,7 @@ export class AppService {
     else {
       rights = 2
     }
-    this.http.patch<userModel>(`https://ecopack2.herokuapp.com/user-account/updateUsers/${datas.id}`, {
+    this.http.patch<userModel>(`api/user-account/updateUsers/${datas.id}`, {
       id: datas.id,
       username: datas.username,
       password: datas.password,
@@ -215,7 +215,7 @@ export class AppService {
 
   logreg(username: string, password: string, status: number) {
     if (status == 2) {
-      this.http.post<userModel>('https://ecopack2.herokuapp.com/user-account/register', {
+      this.http.post<userModel>('api/user-account/register', {
         username: username,
         password: password
       }).subscribe(data => {
@@ -223,7 +223,7 @@ export class AppService {
       })
     }
     else {
-      this.http.post<userModel>('https://ecopack2.herokuapp.com/user-account/login', {
+      this.http.post<userModel>('api/user-account/login', {
         username: username,
         password: password
       }, { withCredentials: true }).subscribe(data => {

@@ -5,8 +5,9 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from 'src/app/app.service';
-import { orderList } from 'src/app/models/orderList.model';
+import { orderList, orderTask } from 'src/app/models/orderList.model';
 import { FrontPageComponent } from '../front-page.component';
+import { PlannerDialogComponent } from '../planner/planner-dialog/planner-dialog.component';
 import { StatussDialogComponent } from './status-dialog/status-dialog.component';
 
 @Component({
@@ -44,7 +45,7 @@ export class StatusPageComponent implements OnInit {
     { value: 'deliverydate', viewValue: 'Date Needed' }
   ];
 
-  displayedColumns: string[] = ['date', 'po', 'name', 'item', 'qty', 'prodqty', 'orderstatus', 'lastedited', 'deliverydate'];
+  displayedColumns: string[] = ['cb', 'date', 'po', 'name', 'item', 'qty', 'prodqty', 'orderstatus', 'lastedited', 'deliverydate', 'comment'];
   newDataSource = new MatTableDataSource<orderList>();
   filteredSource = new MatTableDataSource<orderList>();
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
@@ -55,6 +56,7 @@ export class StatusPageComponent implements OnInit {
       this.newDataSource.data = data;
       this.newDataSource.paginator = this.paginator
       this.newDataSource.sort = this.matsort
+      this.task.subtasks = data;
       this.columnSearching = false;
     })
   }
@@ -129,6 +131,7 @@ export class StatusPageComponent implements OnInit {
   }
 
   clearFilter() {
+    this.temporaryData.length = 0
     this.columnSearching = false;
     this.forFilterValue.length = 0;
     this.forFilters.length = 0;
@@ -233,5 +236,211 @@ export class StatusPageComponent implements OnInit {
         })
       })
     }
+  }
+
+  allComplete: boolean = false;
+  items: orderList[] = []
+  temporaryData: any[] = []
+
+  setItems(data: any) {
+    if (this.allComplete) {
+      this.items = []
+      this.temporaryData.length = 0
+    }
+    else {
+      this.temporaryData = [...data]
+    }
+  }
+  //Checkbox logics
+  updateAllComplete() {
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  }
+
+  checkboxChecked(checked: boolean, data: any) {
+    if (!checked) {
+      for (let i = 0; i < this.temporaryData.length; i++) {
+        if (data.id == this.temporaryData[i].id) {
+          this.temporaryData.splice(i, 1)
+          break;
+        }
+      }
+    }
+    else {
+      this.temporaryData.push(data)
+    }
+  }
+
+  multi: boolean = true;
+
+  task: orderTask = {
+    taskName: 'Indeterminate',
+    completed: false,
+    color: 'warn',
+    subtasks: [],
+  };
+
+  someComplete(): boolean {
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
+  }
+
+  setAll(completed: boolean, data: any) {
+    if (this.task.subtasks == null) {
+      return;
+    }
+    else if (!completed) {
+      this.clearTasks();
+      this.clearTasks()
+    }
+    else if (completed) {
+      this.allComplete = completed
+      this.task.subtasks.forEach(t => { t.completed = true })
+    }
+
+    let object: orderList[] = []
+
+    this.task.subtasks!.forEach(t => {
+      if (t.id?.toString().includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.po.includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.so.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.name.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.deliverydate?.includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.itemdesc.toString().toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.item.toLowerCase().includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.date.includes(this.filteredItems) && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (t.qty.toString() == this.filteredItems && this.filteredItems != '') {
+        t.completed = completed
+        object.push(t)
+        if (t.completed) {
+          this.temporaryData = object;
+        }
+        else {
+          this.temporaryData.length = 0;
+          this.task.subtasks?.forEach(t => { t.completed = false })
+        }
+        return
+      }
+      else if (this.filteredItems == '') {
+        if (!completed) {
+          t.completed = false
+          this.allComplete = false;
+          this.temporaryData.length = 0;
+        }
+        else {
+          this.allComplete = completed
+          t.completed = completed
+        }
+      }
+    })
+  }
+
+  updateMultiple() {
+    this.querying = true
+    let newData = this.temporaryData
+    let dialog = this.appservice.dialog.open(PlannerDialogComponent, {
+      data: newData
+    })
+
+
+    dialog.afterClosed().subscribe(data => {
+      if (data) {
+        this.querying = false
+        this.clearTasks();
+        this.clearTasks();
+        this.appservice.snackbar.open('Data Updated!', 'Dismiss', { duration: 2500 })
+        return
+      }
+      this.querying = false;
+    })
   }
 }

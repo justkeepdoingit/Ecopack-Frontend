@@ -125,14 +125,13 @@ export class FrontPageComponent implements OnInit {
   menuCheck: boolean = false;
   openMenu() {
     const menuButton = document.getElementById('menuB');
-    if (!this.menuCheck) {
+    $("#menuB").mouseenter(() => {
       menuButton!.style.display = 'block';
       this.menuCheck = true
-    }
-    else {
+    }).mouseleave(() => {
       menuButton!.style.display = 'none';
       this.menuCheck = false
-    }
+    })
   }
   dropdownCheck: boolean = false;
   showDropdown() {
@@ -180,7 +179,7 @@ export class FrontPageComponent implements OnInit {
     this.appservice.cookieService.delete('status_page', '/Ecopack')
     this.appservice.cookieService.delete('useracc', '/Ecopack')
     this.appservice.cookieService.delete('import_orders', '/Ecopack')
-    this.appservice.http.get('https://ecopack2.herokuapp.com/user-account/logout', { withCredentials: true }).subscribe(() => {
+    this.appservice.http.get('api/user-account/logout', { withCredentials: true }).subscribe(() => {
       this.appservice.router.navigate([''])
     })
   }

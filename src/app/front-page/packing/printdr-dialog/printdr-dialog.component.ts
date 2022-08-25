@@ -77,6 +77,7 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
   fc: boolean = true;
   updateData(edit: any) {
     let newData: any[] = [];
+    let updateData: any[] = [];
     edit.infodata.forEach((data: any, i: number) => {
       newData.push({
         id: edit.infodata[i].id,
@@ -88,11 +89,34 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
         qtyship: edit.infodata[i].qty,
         itemid: edit.infodata[i].itemid
       })
+
+
+
+      updateData = this.orderListInfo.map((data, index) => {
+        let indexs = updateData.indexOf(data.id);
+        if (indexs == -1) {
+          return {
+            id: edit.infodata[index].id,
+            pl: edit.infodata[index].pl,
+            receipt: edit.infodata[index].receipt,
+            deliverydate: edit.deliverydate,
+            shipstatus: edit.infodata[index].deliverySelect,
+            orderid: edit.infodata[index].orderid,
+            qtyship: edit.infodata[index].qty,
+            item: data.item,
+            itemdesc: data.itemdesc,
+            so: data.so,
+            po: data.po,
+            name: data.name,
+          }
+        }
+        return
+      })
     })
-    let link = `https://ecopack2.herokuapp.com/order-list/updateShippingPl`;
+
+    let link = `api/order-list/updateShippingPl`;
     this.appservice.getGeneralData(link, newData).subscribe((datas) => {
-      this.orderListInfo = datas;
-      console.log(datas);
+      this.orderListInfo = updateData;
     })
     this.noDr = false;
 
@@ -106,7 +130,7 @@ export class PrintdrDialogComponent implements OnInit, AfterViewInit {
     return null
   }
 
-  printed() {
+  printed(editData: any) {
     this.appservice.updatePrinted(this.pl).subscribe(() => {
       this.dialogRef.close(1)
     })

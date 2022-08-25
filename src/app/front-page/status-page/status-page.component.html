@@ -37,6 +37,10 @@
             </mat-form-field>
             <div class=" overflow-y-auto relative">
                 <div id="tables" class=" relative overflow-auto">
+                    <button *ngIf="temporaryData.length > 0"
+                        (click)="updateMultiple(); matSelect.value = null; !columnSearching"
+                        style="margin-left: 0.5rem; margin-right: 0.5rem" mat-stroked-button color="primary">Date and
+                        Comment</button>
                     <button *ngIf="!pending" mat-stroked-button color="primary" (click)="showPendingDelivery()">Show
                         Delivered</button>
                     <button *ngIf="pending" mat-stroked-button color="primary" (click)="showPendingDelivery()">Show
@@ -44,6 +48,22 @@
                     <mat-table matRipple [matRippleUnbounded]="unbounded" [matRippleCentered]="centered"
                         [matRippleRadius]="radius" class=" text-secondary-700 font-medium cursor-pointer" #table matSort
                         [dataSource]="!columnSearching ? newDataSource : filteredSource">
+
+                        <ng-container matColumnDef="cb">
+                            <mat-header-cell class="cb" *matHeaderCellDef>
+                                <mat-checkbox *ngIf="multi && generalFilter" [checked]="allComplete"
+                                    [color]="task.color" (click)="setItems(task.subtasks);"
+                                    [indeterminate]="someComplete()" (change)="setAll($event.checked, task.subtasks)">
+                                </mat-checkbox>
+                            </mat-header-cell>
+                            <mat-cell class="cb" *matCellDef="let subtask; let i = index">
+                                <mat-checkbox *ngIf="multi" [(ngModel)]="subtask.completed"
+                                    [ngModelOptions]="{standalone: true}" [color]="subtask.color"
+                                    (change)="checkboxChecked($event.checked,subtask)"
+                                    (ngModelChange)="updateAllComplete()">
+                                </mat-checkbox>
+                            </mat-cell>
+                        </ng-container>
 
                         <ng-container matColumnDef="date">
                             <mat-header-cell class="dates text-primary-900" mat-sort-header *matHeaderCellDef> Date
@@ -114,6 +134,13 @@
                             </mat-header-cell>
                             <mat-cell class="text-secondary-900" *matCellDef="let element">
                                 {{element.deliverydate}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="comment">
+                            <mat-header-cell class="text-primary-900" mat-sort-header *matHeaderCellDef>Comment
+                            </mat-header-cell>
+                            <mat-cell class="text-primary-900" *matCellDef="let element">
+                                {{element.comment}} </mat-cell>
                         </ng-container>
 
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -87,7 +87,7 @@
                 </button>
               </div>
 
-              <div @fadeIn id="showDropdown"
+              <div (mouseleave)="closeDrowpdown()" @fadeIn id="showDropdown"
                 class=" hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md bg-secondary-50 ring-1 ring-secondary-800 ring-opacity-5 focus:outline-none z-50"
                 role="menu" aria-orientation="vertical" aria-labelledby="dropdown" tabindex="-1">
                 <div class=" p-1 text-secondary-800" role="none">

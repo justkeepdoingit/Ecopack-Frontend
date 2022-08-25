@@ -91,16 +91,24 @@ export class PrintDialogComponent implements OnInit, AfterViewInit {
       prioArrangement.push(newPrio)
     })
 
+    prioArrangement.forEach((data: any, index: number) => {
+      this.temporaryData[index].prio = data.prio;
+    })
+
+    let newData = this.temporaryData.map((data) => (
+      data
+    )).sort((a: any, b: any) => { return a.prio - b.prio });
+
+    this.temporaryData = newData
+
     let truckName = this.truckInfo.truck;
     this.truckpipe.transform(truckName).subscribe(data => {
       this.appservice.snackbar.open(`Order Update For ${data}`, 'Dismiss', { duration: 2500 })
     })
-    this.dialogRef.close();
 
     this.appservice.updatePrio(prioArrangement).subscribe(() => {
       this.appservice.getTruckInfo2(this.temporaryData[0].plid).subscribe(item => {
-        this.newDataSource.data = item;
-        this.temporaryData = item;
+
       })
     })
   }

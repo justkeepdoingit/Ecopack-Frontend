@@ -81,7 +81,7 @@ export class DeliveryDialogComponent implements OnInit, AfterViewInit {
         itemid: data.item
       }
       i++;
-      let link = `https://ecopack2.herokuapp.com/order-list/updateDelivery`;
+      let link = `api/order-list/updateDelivery`;
       this.appservice.getGeneralData(link, newData).subscribe(datas => {
         this.dialogRef.close(1);
       })

@@ -150,9 +150,10 @@
         </mat-paginator> -->
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button (click)="printed()" matTooltip="Warning! Printing DR will mark this List as Printed and will be removed"
-            mat mat-raised-button type="button" color="accent" *ngIf="!noDr" printTitle="Pack Listing"
-            printSectionId="printData" styleSheetFile="../../../assets/printAsset.css" ngxPrint>Print</button>
+        <button (click)="printed(dateComment.value)"
+            matTooltip="Warning! Printing DR will mark this List as Printed and will be removed" mat mat-raised-button
+            type="button" color="accent" *ngIf="!noDr" printTitle="Pack Listing" printSectionId="printData"
+            styleSheetFile="../../../assets/printAsset.css" ngxPrint>Print</button>
         <button mat-stroked-button [disabled]="dateComment.invalid" color="primary">Save</button>
         <button mat-stroked-button [mat-dialog-close] color="warn">Cancel</button>
     </mat-dialog-actions>

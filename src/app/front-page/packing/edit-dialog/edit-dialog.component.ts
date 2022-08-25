@@ -23,7 +23,7 @@ export class EditDialogComponent implements OnInit {
     this.packingInfo = packing.pld
 
     let truckNames = truck.transform(packing.pl.truck).subscribe(data => {
-      appservice.snackbar.open(`Editing Data For ${data}`, 'Dismiss')
+      appservice.snackbar.open(`Editing Data For ${data}`, 'Dismiss', { duration: 2500 })
 
     })
 

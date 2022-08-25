@@ -78,7 +78,7 @@ export class StatusDialogComponent implements OnInit {
         itemid: data.forDelivery_itemid
       }
       i++;
-      let link = `https://ecopack2.herokuapp.com/order-list/updateShipping`;
+      let link = `api/order-list/updateShipping`;
       this.appservice.getGeneralData(link, newData).subscribe(datas => {
         this.dialogRef.close(1);
       })

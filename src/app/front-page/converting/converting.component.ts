@@ -477,7 +477,7 @@ export class ConvertingComponent implements OnInit {
   moveToFG() {
     this.querying = true
     let newData = this.temporaryData
-    let link = `https://ecopack2.herokuapp.com/order-list/fg/`
+    let link = `api/order-list/fg/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();

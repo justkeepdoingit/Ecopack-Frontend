@@ -439,7 +439,7 @@ export class FgComponent implements OnInit {
   moveToDelivery() {
     this.querying = true
     let newData = this.temporaryData
-    let link = `https://ecopack2.herokuapp.com/order-list/delivery/`
+    let link = `api/order-list/delivery/`
     this.appservice.movementPost(link, newData).subscribe(data => {
       this.clearTasks();
       this.clearTasks();
